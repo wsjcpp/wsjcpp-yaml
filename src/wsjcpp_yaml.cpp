@@ -1,6 +1,6 @@
 
 #include "wsjcpp_yaml.h"
-#include <fallen.h>
+#include <wsjcpp_core.h>
 
 // ---------------------------------------------------------------------
 // WSJCppYAMLItem
@@ -80,7 +80,7 @@ void WSJCppYAMLItem::doEmpty() {
     if (m_nItemType == WSJCPP_YAML_ITEM_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_ITEM_EMPTY;
     } else {
-        Log::throw_err(TAG, "Element already defined as '" + this->getItemTypeAsString() + "'");
+        WSJCppLog::throw_err(TAG, "Element already defined as '" + this->getItemTypeAsString() + "'");
     }
 }
 
@@ -96,7 +96,7 @@ void WSJCppYAMLItem::doArray() {
     if (m_nItemType == WSJCPP_YAML_ITEM_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_ITEM_ARRAY;
     } else {
-        Log::throw_err(TAG, "Element already defined as '" + this->getItemTypeAsString() + "'");
+        WSJCppLog::throw_err(TAG, "Element already defined as '" + this->getItemTypeAsString() + "'");
     }
 }
 
@@ -106,7 +106,7 @@ void WSJCppYAMLItem::doMap() {
     if (m_nItemType == WSJCPP_YAML_ITEM_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_ITEM_MAP;
     } else {
-        Log::throw_err(TAG, "Element already defined as '" + this->getItemTypeAsString() + "'");
+        WSJCppLog::throw_err(TAG, "Element already defined as '" + this->getItemTypeAsString() + "'");
     }
 }
 
@@ -120,7 +120,7 @@ bool WSJCppYAMLItem::isMap() {
 
 bool WSJCppYAMLItem::hasElement(const std::string &sName) {
     if (m_nItemType != WSJCPP_YAML_ITEM_MAP) {
-        Log::throw_err(TAG, "hasElement('" + sName + "'): Element must be map");
+        WSJCppLog::throw_err(TAG, "hasElement('" + sName + "'): Element must be map");
     }
     for (int i = 0; i < m_vObjects.size(); i++) {
         if (m_vObjects[i]->getName() == sName) {
@@ -134,7 +134,7 @@ bool WSJCppYAMLItem::hasElement(const std::string &sName) {
 
 WSJCppYAMLItem *WSJCppYAMLItem::getElement(const std::string &sName) {
     if (m_nItemType != WSJCPP_YAML_ITEM_MAP) {
-        Log::throw_err(TAG, "getElement: Element must be map");
+        WSJCppLog::throw_err(TAG, "getElement: Element must be map");
     }
     
     for (int i = 0; i < m_vObjects.size(); i++) {
@@ -142,7 +142,7 @@ WSJCppYAMLItem *WSJCppYAMLItem::getElement(const std::string &sName) {
             return m_vObjects[i];
         }
     }
-    Log::throw_err(TAG, "Element '" + sName + "' not found");    
+    WSJCppLog::throw_err(TAG, "Element '" + sName + "' not found");    
     return nullptr;
 }
 
@@ -154,11 +154,11 @@ bool WSJCppYAMLItem::setElement(const std::string &sName, WSJCppYAMLItem *pItem)
     }
 
     if (m_nItemType != WSJCPP_YAML_ITEM_MAP) {
-        Log::throw_err(TAG, "setElement, Element must be 'map' for line(" + std::to_string(pItem->getOriginalNumberOfLine()) + "): '" + pItem->getOriginalLine() + "'");
+        WSJCppLog::throw_err(TAG, "setElement, Element must be 'map' for line(" + std::to_string(pItem->getOriginalNumberOfLine()) + "): '" + pItem->getOriginalLine() + "'");
     }
     
     if (this->hasElement(sName)) { // TODO remove previous element
-        Log::throw_err(TAG, "setElement: Map already has element with this name: '" + sName + "'");
+        WSJCppLog::throw_err(TAG, "setElement: Map already has element with this name: '" + sName + "'");
     }
     m_vObjects.push_back(pItem); // TODO create clone
     return true;
@@ -168,7 +168,7 @@ bool WSJCppYAMLItem::setElement(const std::string &sName, WSJCppYAMLItem *pItem)
 
 bool WSJCppYAMLItem::removeElement(const std::string &sName) {
     if (m_nItemType != WSJCPP_YAML_ITEM_MAP) {
-        Log::throw_err(TAG, "removeElement: Element must be map");
+        WSJCppLog::throw_err(TAG, "removeElement: Element must be map");
     }
     // TODO erase
     return false;
@@ -184,7 +184,7 @@ bool WSJCppYAMLItem::isArray() {
 
 int WSJCppYAMLItem::getLength() {
     if (m_nItemType != WSJCPP_YAML_ITEM_ARRAY) {
-        Log::throw_err(TAG, "getLength, Element must be array");
+        WSJCppLog::throw_err(TAG, "getLength, Element must be array");
     }
     int nCount = 0;
     for (int i = 0; i < m_vObjects.size(); i++) {
@@ -199,10 +199,10 @@ int WSJCppYAMLItem::getLength() {
 
 WSJCppYAMLItem *WSJCppYAMLItem::getElement(int i) {
     if (m_nItemType != WSJCPP_YAML_ITEM_ARRAY) {
-        Log::throw_err(TAG, "getElement, Element must be array");
+        WSJCppLog::throw_err(TAG, "getElement, Element must be array");
     }
     if( i > m_vObjects.size()-1) {
-        Log::throw_err(TAG, "getElement, Out of range in array");
+        WSJCppLog::throw_err(TAG, "getElement, Out of range in array");
     }
     return m_vObjects[i];
 }
@@ -215,7 +215,7 @@ bool WSJCppYAMLItem::appendElement(WSJCppYAMLItem *pItem) {
         return true;
     }
     if (m_nItemType != WSJCPP_YAML_ITEM_ARRAY) {
-        Log::throw_err(TAG, "appendElement, Element must be array for line(" + std::to_string(pItem->getOriginalNumberOfLine()) + "): '" + pItem->getOriginalLine() + "'");
+        WSJCppLog::throw_err(TAG, "appendElement, Element must be array for line(" + std::to_string(pItem->getOriginalNumberOfLine()) + "): '" + pItem->getOriginalLine() + "'");
     }
     m_vObjects.push_back(pItem); // TODO clone object
     return true;
@@ -287,7 +287,7 @@ std::string WSJCppYAMLItem::toString(std::string sIntent) {
         sRet = "TODO: undefined";
     }
     if (sIntent == "") {
-        Fallen::trim(sRet);
+        WSJCppCore::trim(sRet);
     }
     return sRet;
 }
@@ -432,7 +432,7 @@ void WSJCppYAMLParsebleLine::parseLine(const std::string &sLine) {
     if (state == WSJCppYAMLParserLineStates::STRING 
       || state == WSJCppYAMLParserLineStates::ESCAPING
     ) {
-        Log::throw_err(TAG, "wrong format");
+        WSJCppLog::throw_err(TAG, "wrong format");
     }
 
     // split name and value
@@ -446,19 +446,19 @@ void WSJCppYAMLParsebleLine::parseLine(const std::string &sLine) {
         }
     }
     
-    Fallen::trim(m_sName);
+    WSJCppCore::trim(m_sName);
     if (m_sName.length() > 0 && m_sName[0] == '"') {
         m_bNameWasWithQuotes = true;
         m_sName = removeStringDoubleQuotes(m_sName);
     }
 
-    Fallen::trim(m_sValue);
+    WSJCppCore::trim(m_sValue);
     if (m_sValue.length() > 0 && m_sValue[0] == '"') {
         m_bValueWasWithQuotes = true;
         m_sValue = removeStringDoubleQuotes(m_sValue);
     }
 
-    Fallen::trim(m_sComment);
+    WSJCppCore::trim(m_sComment);
 }
 
 // ---------------------------------------------------------------------
@@ -494,7 +494,7 @@ std::string WSJCppYAMLParsebleLine::removeStringDoubleQuotes(const std::string &
 // WSJCppYAMLParserStatus
 
 void WSJCppYAMLParserStatus::logUnknownLine(const std::string &sPrefix) {
-    Log::warn(sPrefix, "Unknown line (" + std::to_string(nLine) + "): '" + sLine + "' \n"
+    WSJCppLog::warn(sPrefix, "Unknown line (" + std::to_string(nLine) + "): '" + sLine + "' \n"
         + "Current Intent: " + std::to_string(nIntent) +  "\n"
         + "Current Item(line: " + std::to_string(pCurItem->getOriginalNumberOfLine()) + "): '" + pCurItem->getOriginalLine() + "'"
     );
@@ -539,7 +539,7 @@ bool WSJCppYAML::loadFromString(std::string &sBuffer) {
 
 // ---------------------------------------------------------------------
 
-bool WSJCppYAML::saveToString(std::string &sBuffer) { // TODO move to fallen
+bool WSJCppYAML::saveToString(std::string &sBuffer) { // TODO move to WSJCppCore
     sBuffer = m_pRoot->toString();
     return true;
 }
@@ -581,7 +581,7 @@ bool WSJCppYAML::parse(const std::string &sBuffer) {
 
     for (int nLine = 0; nLine < vLines.size(); nLine++) {
         st.sLine = vLines[nLine];
-        // Log::info(TAG, "Line(" + std::to_string(nLine) + ") '" + st.sLine + "'");
+        // WSJCppLog::info(TAG, "Line(" + std::to_string(nLine) + ") '" + st.sLine + "'");
         st.nLine = nLine;
         st.line = WSJCppYAMLParsebleLine(nLine);
         st.line.parseLine(st.sLine);
@@ -602,7 +602,7 @@ bool WSJCppYAML::parse(const std::string &sBuffer) {
             st.nIntent = st.nIntent - 2;
             nDiffIntent = nLineIntent - st.nIntent;
             if (st.pCurItem == nullptr) {
-                Log::throw_err(TAG, "cur item is nullptr");
+                WSJCppLog::throw_err(TAG, "cur item is nullptr");
             }
         }
 

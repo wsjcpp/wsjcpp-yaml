@@ -1,23 +1,23 @@
 #include <string>
-#include <fallen.h>
+#include <wsjcpp_core.h>
 #include <unit_tests.h>
 
 int main(int argc, char** argv) {
-    Fallen::initRandom();
+    WSJCppCore::initRandom();
     std::string TAG = "UnitTests";
-    Log::setPrefixLogFile("unit-tests");
+    WSJCppLog::setPrefixLogFile("unit-tests");
     std::string sLogDir = "./logs"; 
-    if (!Fallen::dirExists(sLogDir)) {
-        Fallen::makeDir(sLogDir);
+    if (!WSJCppCore::dirExists(sLogDir)) {
+        WSJCppCore::makeDir(sLogDir);
     }
-    Log::setLogDirectory(sLogDir);
-    if (!Fallen::dirExists(sLogDir)) {
-        Log::err(TAG, "Directory '" + sLogDir + "' did'not exists");
+    WSJCppLog::setLogDirectory(sLogDir);
+    if (!WSJCppCore::dirExists(sLogDir)) {
+        WSJCppLog::err(TAG, "Directory '" + sLogDir + "' did'not exists");
         return -1;
     }
 
     if (!UnitTests::runUnitTests()) {
-        Log::err(TAG, "Some unit tests failed");
+        WSJCppLog::err(TAG, "Some unit tests failed");
         return -1;
     }
     return 0;

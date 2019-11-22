@@ -1,24 +1,24 @@
-#include "unit_test_yaml_parser_simple_map.h"
+#include "unit_test_yaml_parser_hierarchical_map.h"
 #include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
 
-REGISTRY_UNIT_TEST(UnitTestYamlParserSimpleMap)
+REGISTRY_UNIT_TEST(UnitTestYamlParserHierarchicalMap)
 
-UnitTestYamlParserSimpleMap::UnitTestYamlParserSimpleMap()
-    : UnitTestBase("UnitTestYamlParserSimpleMap") {
+UnitTestYamlParserHierarchicalMap::UnitTestYamlParserHierarchicalMap()
+    : UnitTestBase("UnitTestYamlParserHierarchicalMap") {
     //
 }
 
 // ---------------------------------------------------------------------
 
-void UnitTestYamlParserSimpleMap::init() {
+void UnitTestYamlParserHierarchicalMap::init() {
     // nothing
 }
 
 // ---------------------------------------------------------------------
 
-bool UnitTestYamlParserSimpleMap::run() {
+bool UnitTestYamlParserHierarchicalMap::run() {
 
     std::string g_sTestYaml = 
         "# Some comment 1\n"
@@ -31,8 +31,8 @@ bool UnitTestYamlParserSimpleMap::run() {
     
     WSJCppYAML yaml;
     if (yaml.loadFromString(g_sTestYaml)) {
-        WSJCppLog::err(TAG, "Error parsing");
-        return false;
+        WSJCppLog::throw_err(TAG, "Error parsing");
+        return -1;
     }
     
     WSJCppYAMLItem *pItem = nullptr;

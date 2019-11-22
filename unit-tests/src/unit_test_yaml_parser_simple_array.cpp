@@ -1,7 +1,6 @@
 #include "unit_test_yaml_parser_simple_array.h"
 #include <vector>
 #include <iostream>
-#include <fallen.h>
 #include <wsjcpp_yaml.h>
 
 REGISTRY_UNIT_TEST(UnitTestYamlParserSimpleArray)
@@ -39,8 +38,8 @@ bool UnitTestYamlParserSimpleArray::run() {
     
     WSJCppYAML yaml;
     if (yaml.loadFromString(g_sTestYaml)) {
-        Log::throw_err(TAG, "Error parsing");
-        return -1;
+        WSJCppLog::err(TAG, "Error parsing");
+        return false;
     }
     
     WSJCppYAMLItem *pItem = nullptr;
@@ -77,7 +76,7 @@ bool UnitTestYamlParserSimpleArray::run() {
             "  - 1"
         );
     } else {
-        Log::err(TAG, "Could not save to string");
+        WSJCppLog::err(TAG, "Could not save to string");
         bTestSuccess = false;
     }
     return bTestSuccess;

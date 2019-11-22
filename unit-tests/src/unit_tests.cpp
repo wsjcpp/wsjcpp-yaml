@@ -17,7 +17,7 @@ std::string UnitTestBase::name() {
 void UnitTestBase::compareS(bool &bTestSuccess, const std::string &sPoint,
     const std::string &sValue, const std::string &sExpected) {
     if (sValue != sExpected) {
-        Log::err(TAG, sPoint + ", expeceted '" + sExpected + "', but got '" + sValue + "'");
+        WSJCppLog::err(TAG, sPoint + ", expeceted '" + sExpected + "', but got '" + sValue + "'");
         bTestSuccess = false;
     }
 }
@@ -26,7 +26,7 @@ void UnitTestBase::compareS(bool &bTestSuccess, const std::string &sPoint,
 
 bool UnitTestBase::compareN(bool &bTestSuccess, const std::string &sPoint, int nValue, int nExpected) {
     if (nValue != nExpected) {
-        Log::err(TAG, " {" + sPoint + "} Expeceted '" + std::to_string(nExpected) + "', but got '" + std::to_string(nValue) + "'");
+        WSJCppLog::err(TAG, " {" + sPoint + "} Expeceted '" + std::to_string(nExpected) + "', but got '" + std::to_string(nValue) + "'");
         bTestSuccess = false;
         return false;
     }
@@ -37,7 +37,7 @@ bool UnitTestBase::compareN(bool &bTestSuccess, const std::string &sPoint, int n
 
 void UnitTestBase::compareB(bool &bTestSuccess, const std::string &sPoint, bool bValue, bool bExpected) {
     if (bValue != bExpected) {
-        Log::err(TAG, sPoint + ", expeceted '" + (bExpected ? "true" : "false") + "', but got '" + (bValue ? "true" : "false") + "'");
+        WSJCppLog::err(TAG, sPoint + ", expeceted '" + (bExpected ? "true" : "false") + "', but got '" + (bValue ? "true" : "false") + "'");
         bTestSuccess = false;
     }
 }
@@ -48,7 +48,7 @@ std::vector<UnitTestBase*> *g_pUnitTests = NULL;
 
 void UnitTests::initGlobalVariables() {
     if (g_pUnitTests == NULL) {
-        // Log::info(std::string(), "Create handlers map");
+        // WSJCppLog::info(std::string(), "Create handlers map");
         g_pUnitTests = new std::vector<UnitTestBase*>();
     }
 }
@@ -66,10 +66,10 @@ void UnitTests::addUnitTest(const std::string &sTestName, UnitTestBase* pUnitTes
     }
     
     if (bFound) {
-        Log::err(sTestName, "Already registered");
+        WSJCppLog::err(sTestName, "Already registered");
     } else {
         g_pUnitTests->push_back(pUnitTest);
-        // Log::info(sCmd, "Registered");
+        // WSJCppLog::info(sCmd, "Registered");
     }
 }
 
@@ -78,20 +78,20 @@ void UnitTests::addUnitTest(const std::string &sTestName, UnitTestBase* pUnitTes
 bool UnitTests::runUnitTests() {
     UnitTests::initGlobalVariables();
     int nAll = g_pUnitTests->size();
-    Log::info("runUnitTests",  "All tests count " + std::to_string(nAll));
+    WSJCppLog::info("runUnitTests",  "All tests count " + std::to_string(nAll));
     int nSuccess = 0;
     for (int i = 0; i < g_pUnitTests->size(); i++) {
         UnitTestBase* pUnitTest = g_pUnitTests->at(i);
         std::string sTestName = pUnitTest->name();
-        Log::info("runUnitTests",  "Run test " + sTestName);
+        WSJCppLog::info("runUnitTests",  "Run test " + sTestName);
         if (pUnitTest->run()) {
-            Log::ok(sTestName,  "Test passed");
+            WSJCppLog::ok(sTestName,  "Test passed");
             nSuccess++;
         } else {
-            Log::err(sTestName,  "Test failed");
+            WSJCppLog::err(sTestName,  "Test failed");
         }
     }
-    Log::info("runUnitTests",  "Passed tests " + std::to_string(nSuccess) + " / " + std::to_string(nAll));
+    WSJCppLog::info("runUnitTests",  "Passed tests " + std::to_string(nSuccess) + " / " + std::to_string(nAll));
     return nSuccess == nAll;
 }
 
