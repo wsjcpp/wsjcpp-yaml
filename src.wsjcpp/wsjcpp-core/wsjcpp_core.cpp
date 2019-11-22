@@ -1,10 +1,9 @@
-#include "fallen.h"
+#include "wsjcpp_core.h"
 #include <dirent.h>
 #include <sys/stat.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>
 #include <ctime>
@@ -14,25 +13,114 @@
 #include <algorithm>
 #include <cstdlib>
 #include <thread>
+#include <cstdint>
+#include <unistd.h>
 
 // ---------------------------------------------------------------------
 
-long Fallen::currentTime_milliseconds() {
+bool WSJCppCore::init(
+    int argc, char** argv, 
+    const std::string &sApplicationName,
+    const std::string &sApplicationVersion,
+    const std::string &sApplicationAuthor,
+    const std::string &sLibraryNameForExports
+) {
+    // init random
+    std::srand(std::rand() + std::time(0));
+    // WSJCppCore::initRandom();
+    return true;
+}
+
+// ---------------------------------------------------------------------
+
+std::string WSJCppCore::doNormalizePath(const std::string & sPath) {
+    // split path by /
+    std::vector<std::string> vNames;
+    std::string s = "";
+    int nStrLen = sPath.length();
+    for (int i = 0; i < sPath.length(); i++) {
+        if (sPath[i] == '/') {
+            vNames.push_back(s);
+            s = "";
+            if (i == nStrLen-1) {
+                vNames.push_back("");
+            }
+        } else {
+            s += sPath[i];
+        }
+    }
+    if (s != "") {
+         vNames.push_back(s);
+    }
+
+    // fildered
+    int nLen = vNames.size();
+    std::vector<std::string> vNewNames;
+    for (int i = 0; i < nLen; i++) {
+        std::string sCurrent = vNames[i];
+        if (sCurrent == "" && i == nLen-1) {
+            vNewNames.push_back(sCurrent);
+            continue;
+        }
+
+        if ((sCurrent == "" || sCurrent == ".") && i != 0) {
+            continue;
+        }
+
+        if (sCurrent == ".." && vNewNames.size() > 0) {
+            std::string sPrev = vNewNames[vNewNames.size()-1];
+            if (sPrev == "") {
+                vNewNames.pop_back();
+                vNewNames.push_back(sCurrent);
+            } else if (sPrev != "." && sPrev != "..") {
+                vNewNames.pop_back();
+            } else {
+                vNewNames.push_back(sCurrent);
+            }
+        } else {
+            vNewNames.push_back(sCurrent);
+        }
+    }
+    std::string sRet = "";
+    int nNewLen = vNewNames.size();
+    int nLastNew = nNewLen-1;
+    for (int i = 0; i < nNewLen; i++) {
+        sRet += vNewNames[i];
+        if (i != nLastNew) {
+            sRet += "/";
+        }
+    }
+    return sRet;
+}
+
+// ---------------------------------------------------------------------
+
+std::string WSJCppCore::getCurrentDirectory() {
+    char cwd[PATH_MAX];
+    if (getcwd(cwd, sizeof(cwd)) == NULL) {
+        WSJCppLog::throw_err("getCurrentDirectory", "Could not get current directory");
+    }
+    return std::string(cwd) + "/";
+}
+
+// ---------------------------------------------------------------------
+
+long WSJCppCore::currentTime_milliseconds() {
     long nTimeStart = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     return nTimeStart;
 }
 
 // ---------------------------------------------------------------------
 
-long Fallen::currentTime_seconds() {
+long WSJCppCore::currentTime_seconds() {
     long nTimeStart = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     return nTimeStart;
 }
 
 // ---------------------------------------------------------------------
 
-std::string Fallen::currentTime_logformat() {
-    long nTimeStart = Fallen::currentTime_milliseconds();
+std::string WSJCppCore::currentTime_logformat() {
+    long nTimeStart = WSJCppCore::currentTime_milliseconds();
     std::string sMilliseconds = std::to_string(int(nTimeStart % 1000));
     nTimeStart = nTimeStart / 1000;
 
@@ -49,7 +137,7 @@ std::string Fallen::currentTime_logformat() {
 
 // ---------------------------------------------------------------------
 
-std::string Fallen::threadId() {
+std::string WSJCppCore::threadId() {
     std::thread::id this_id = std::this_thread::get_id();
     std::stringstream stream;
     stream << std::hex << this_id;
@@ -58,7 +146,7 @@ std::string Fallen::threadId() {
 
 // ---------------------------------------------------------------------
 
-std::string Fallen::formatTimeForWeb(long nTimeInSec) {
+std::string WSJCppCore::formatTimeForWeb(long nTimeInSec) {
     std::time_t tm_ = long(nTimeInSec);
     // struct tm tstruct = *localtime(&tm_);
     struct tm tstruct = *gmtime ( &tm_ );
@@ -74,14 +162,14 @@ std::string Fallen::formatTimeForWeb(long nTimeInSec) {
 
 // ---------------------------------------------------------------------
 
-std::string Fallen::currentTime_forFilename() {
-    long nTimeStart = Fallen::currentTime_seconds();
-    return Fallen::formatTimeForFilename(nTimeStart);
+std::string WSJCppCore::currentTime_forFilename() {
+    long nTimeStart = WSJCppCore::currentTime_seconds();
+    return WSJCppCore::formatTimeForFilename(nTimeStart);
 }
 
 // ---------------------------------------------------------------------
 
-std::string Fallen::formatTimeForFilename(long nTimeInSec) {
+std::string WSJCppCore::formatTimeForFilename(long nTimeInSec) {
     std::time_t tm_ = long(nTimeInSec);
     // struct tm tstruct = *localtime(&tm_);
     struct tm tstruct = *gmtime ( &tm_ );
@@ -95,7 +183,7 @@ std::string Fallen::formatTimeForFilename(long nTimeInSec) {
 
 // ---------------------------------------------------------------------
 
-std::string Fallen::formatTimeUTC(int nTimeInSec) {
+std::string WSJCppCore::formatTimeUTC(int nTimeInSec) {
     // datetime
     std::time_t tm_ = long(nTimeInSec);
     // struct tm tstruct = *localtime(&tm_);
@@ -110,7 +198,7 @@ std::string Fallen::formatTimeUTC(int nTimeInSec) {
 
 // ---------------------------------------------------------------------
 
-bool Fallen::fileExists(const std::string &sFilename) {
+bool WSJCppCore::fileExists(const std::string &sFilename) {
     struct stat st;
     bool bExists = (stat(sFilename.c_str(), &st) == 0);
     if (bExists) {
@@ -121,7 +209,7 @@ bool Fallen::fileExists(const std::string &sFilename) {
 
 // ---------------------------------------------------------------------
 
-bool Fallen::dirExists(const std::string &sDirname) {
+bool WSJCppCore::dirExists(const std::string &sDirname) {
     struct stat st;
     bool bExists = (stat(sDirname.c_str(), &st) == 0);
     if (bExists) {
@@ -132,9 +220,9 @@ bool Fallen::dirExists(const std::string &sDirname) {
 
 // ---------------------------------------------------------------------
 
-std::vector<std::string> Fallen::listOfDirs(const std::string &sDirname) {
+std::vector<std::string> WSJCppCore::listOfDirs(const std::string &sDirname) {
     std::vector<std::string> vDirs;
-    if (!Fallen::dirExists(sDirname)) {
+    if (!WSJCppCore::dirExists(sDirname)) {
         return vDirs;
     }
     DIR *dir = opendir(sDirname.c_str());
@@ -154,9 +242,9 @@ std::vector<std::string> Fallen::listOfDirs(const std::string &sDirname) {
 
 // ---------------------------------------------------------------------
 
-std::vector<std::string> Fallen::listOfFiles(const std::string &sDirname) {
+std::vector<std::string> WSJCppCore::listOfFiles(const std::string &sDirname) {
     std::vector<std::string> vFiles;
-    if (!Fallen::dirExists(sDirname)) {
+    if (!WSJCppCore::dirExists(sDirname)) {
         return vFiles;
     }
     DIR *dir = opendir(sDirname.c_str());
@@ -176,7 +264,7 @@ std::vector<std::string> Fallen::listOfFiles(const std::string &sDirname) {
 
 // ---------------------------------------------------------------------
 
-bool Fallen::makeDir(const std::string &sDirname) {
+bool WSJCppCore::makeDir(const std::string &sDirname) {
     struct stat st;
     int nStatus = mkdir(sDirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     if (nStatus == 0) {
@@ -192,7 +280,7 @@ bool Fallen::makeDir(const std::string &sDirname) {
 
 // ---------------------------------------------------------------------
 
-bool Fallen::writeFile(const std::string &sFilename, const std::string &sContent) {
+bool WSJCppCore::writeFile(const std::string &sFilename, const std::string &sContent) {
     
     std::ofstream f(sFilename, std::ios::out);
     if (!f) {
@@ -207,7 +295,7 @@ bool Fallen::writeFile(const std::string &sFilename, const std::string &sContent
 
 // ---------------------------------------------------------------------
 
-bool Fallen::writeFile(const std::string &sFilename, const char *pBuffer, const int nBufferSize) {
+bool WSJCppCore::writeFile(const std::string &sFilename, const char *pBuffer, const int nBufferSize) {
     std::ofstream f(sFilename, std::ios::out | std::ios::binary);
     if (!f) {
         std::cout << "FAILED could not create file to wtite " << sFilename << std::endl;
@@ -221,27 +309,27 @@ bool Fallen::writeFile(const std::string &sFilename, const char *pBuffer, const 
 
 // ---------------------------------------------------------------------
 
-std::string& Fallen::ltrim(std::string& str, const std::string& chars) {
+std::string& WSJCppCore::ltrim(std::string& str, const std::string& chars) {
     str.erase(0, str.find_first_not_of(chars));
     return str;
 }
 
 // ---------------------------------------------------------------------
 
-std::string& Fallen::rtrim(std::string& str, const std::string& chars) {
+std::string& WSJCppCore::rtrim(std::string& str, const std::string& chars) {
     str.erase(str.find_last_not_of(chars) + 1);
     return str;
 }
 
 // ---------------------------------------------------------------------
 
-std::string& Fallen::trim(std::string& str, const std::string& chars) {
-    return Fallen::ltrim(Fallen::rtrim(str, chars), chars);
+std::string& WSJCppCore::trim(std::string& str, const std::string& chars) {
+    return WSJCppCore::ltrim(WSJCppCore::rtrim(str, chars), chars);
 }
 
 // ---------------------------------------------------------------------
 
-std::string& Fallen::to_lower(std::string& str) {
+std::string& WSJCppCore::to_lower(std::string& str) {
     std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     return str;
 }
@@ -249,13 +337,13 @@ std::string& Fallen::to_lower(std::string& str) {
 
 // ---------------------------------------------------------------------
 
-void Fallen::initRandom() {
+void WSJCppCore::initRandom() {
     std::srand(std::rand() + std::time(0));
 }
 
 // ---------------------------------------------------------------------
 
-std::string Fallen::createUuid() {
+std::string WSJCppCore::createUuid() {
     std::string sRet = "00000000-0000-0000-0000-000000000000";
     const std::string sAlphabet = "0123456789abcdef";
     // unsigned t = std::time(0);
@@ -269,102 +357,102 @@ std::string Fallen::createUuid() {
 }
 
 // ---------------------------------------------------------------------
-// Log
+// WSJCppLog
 
 // Last log messages
 std::deque<std::string> *g_LAST_LOG_MESSAGES = NULL;
 std::mutex *g_LOG_MUTEX = NULL;
-std::string Log::g_LOG_DIR = "./";
-std::string Log::g_LOG_FILE = "";
-std::string Log::g_PREFIX_LOG_FILE = "";
-long Log::g_LOG_START_TIME = 0;
+std::string WSJCppLog::g_LOG_DIR = "./";
+std::string WSJCppLog::g_LOG_FILE = "";
+std::string WSJCppLog::g_PREFIX_LOG_FILE = "";
+long WSJCppLog::g_LOG_START_TIME = 0;
 
 // ---------------------------------------------------------------------
 
-void Log::doLogRotateUpdateFilename(bool bForce) {
-    long t = Fallen::currentTime_seconds();
+void WSJCppLog::doLogRotateUpdateFilename(bool bForce) {
+    long t = WSJCppCore::currentTime_seconds();
     long nEverySeconds = 51000; // rotate log if started now or if time left more then 1 day
     if (g_LOG_START_TIME == 0 || t - g_LOG_START_TIME > nEverySeconds || bForce) {
         g_LOG_START_TIME = t;
-        g_LOG_FILE = g_LOG_DIR + "/" + Log::g_PREFIX_LOG_FILE + "_" + Fallen::formatTimeForFilename(g_LOG_START_TIME) + ".log";
+        g_LOG_FILE = g_LOG_DIR + "/" + WSJCppLog::g_PREFIX_LOG_FILE + "_" + WSJCppCore::formatTimeForFilename(g_LOG_START_TIME) + ".log";
     }
 }
 
 // ---------------------------------------------------------------------
 
-void Log::info(const std::string & sTag, const std::string &sMessage) {
-    Color::Modifier def(Color::FG_DEFAULT);
-    Log::add(def, "INFO", sTag, sMessage);
+void WSJCppLog::info(const std::string & sTag, const std::string &sMessage) {
+    WSJCppColorModifier def(WSJCppColorCode::FG_DEFAULT);
+    WSJCppLog::add(def, "INFO", sTag, sMessage);
 }
 
 // ---------------------------------------------------------------------
 
-void Log::err(const std::string & sTag, const std::string &sMessage) {
-    Color::Modifier red(Color::FG_RED);
-    Log::add(red, "ERR", sTag, sMessage);
+void WSJCppLog::err(const std::string & sTag, const std::string &sMessage) {
+    WSJCppColorModifier red(WSJCppColorCode::FG_RED);
+    WSJCppLog::add(red, "ERR", sTag, sMessage);
 }
 
 // ---------------------------------------------------------------------
 
-void Log::throw_err(const std::string &sTag, const std::string &sMessage) {
-    Color::Modifier red(Color::FG_RED);
-    Log::add(red, "ERR", sTag, sMessage);
+void WSJCppLog::throw_err(const std::string &sTag, const std::string &sMessage) {
+    WSJCppColorModifier red(WSJCppColorCode::FG_RED);
+    WSJCppLog::add(red, "ERR", sTag, sMessage);
     throw std::runtime_error(sMessage);
 }
 
 // ---------------------------------------------------------------------
 
-void Log::warn(const std::string & sTag, const std::string &sMessage) {
-    Color::Modifier yellow(Color::FG_YELLOW);
-    Log::add(yellow, "WARN",sTag, sMessage);
+void WSJCppLog::warn(const std::string & sTag, const std::string &sMessage) {
+    WSJCppColorModifier yellow(WSJCppColorCode::FG_YELLOW);
+    WSJCppLog::add(yellow, "WARN",sTag, sMessage);
 }
 
 // ---------------------------------------------------------------------
 
-void Log::ok(const std::string &sTag, const std::string &sMessage) {
-    Color::Modifier green(Color::FG_GREEN);
-    Log::add(green, "OK", sTag, sMessage);
+void WSJCppLog::ok(const std::string &sTag, const std::string &sMessage) {
+    WSJCppColorModifier green(WSJCppColorCode::FG_GREEN);
+    WSJCppLog::add(green, "OK", sTag, sMessage);
 }
 
 // ---------------------------------------------------------------------
 
-void Log::setLogDirectory(const std::string &sDirectoryPath) {
-    Log::g_LOG_DIR = sDirectoryPath;
-    Log::doLogRotateUpdateFilename(true);
+void WSJCppLog::setLogDirectory(const std::string &sDirectoryPath) {
+    WSJCppLog::g_LOG_DIR = sDirectoryPath;
+    WSJCppLog::doLogRotateUpdateFilename(true);
 }
 
 // ---------------------------------------------------------------------
 
-void Log::setPrefixLogFile(const std::string &sPrefixLogFile) {
-    Log::g_PREFIX_LOG_FILE = sPrefixLogFile;
-    Log::doLogRotateUpdateFilename(true);
+void WSJCppLog::setPrefixLogFile(const std::string &sPrefixLogFile) {
+    WSJCppLog::g_PREFIX_LOG_FILE = sPrefixLogFile;
+    WSJCppLog::doLogRotateUpdateFilename(true);
 }
 
 // ---------------------------------------------------------------------
 
-void Log::initGlobalVariables() {
+void WSJCppLog::initGlobalVariables() {
     // create deque if not created
     if (g_LAST_LOG_MESSAGES == NULL) {
         g_LAST_LOG_MESSAGES = new std::deque<std::string>();
-        // std::cout << Fallen::currentTime_logformat() + ", " + Fallen::threadId() + " Init last messages deque\r\n";
+        // std::cout << WSJCppCore::currentTime_logformat() + ", " + WSJCppCore::threadId() + " Init last messages deque\r\n";
     }
     // create mutex if not created
     if (g_LOG_MUTEX == NULL) {
         g_LOG_MUTEX = new std::mutex();
-        // std::cout << Fallen::currentTime_logformat() + ", " + Fallen::threadId() + " Init mutex for log\r\n";
+        // std::cout << WSJCppCore::currentTime_logformat() + ", " + WSJCppCore::threadId() + " Init mutex for log\r\n";
     }
 }
 
 // ---------------------------------------------------------------------
 
-void Log::add(Color::Modifier &clr, const std::string &sType, const std::string &sTag, const std::string &sMessage) {
-    Log::initGlobalVariables();
-    Log::doLogRotateUpdateFilename();
+void WSJCppLog::add(WSJCppColorModifier &clr, const std::string &sType, const std::string &sTag, const std::string &sMessage) {
+    WSJCppLog::initGlobalVariables();
+    WSJCppLog::doLogRotateUpdateFilename();
 
     std::lock_guard<std::mutex> lock(*g_LOG_MUTEX);
-    Color::Modifier def(Color::FG_DEFAULT);
+    WSJCppColorModifier def(WSJCppColorCode::FG_DEFAULT);
 
-    std::string sLogMessage = Fallen::currentTime_logformat() + ", " + Fallen::threadId()
+    std::string sLogMessage = WSJCppCore::currentTime_logformat() + ", " + WSJCppCore::threadId()
          + " [" + sType + "] " + sTag + ": " + sMessage;
     std::cout << clr << sLogMessage << def << std::endl;
 
@@ -373,7 +461,7 @@ void Log::add(Color::Modifier &clr, const std::string &sType, const std::string 
         g_LAST_LOG_MESSAGES->pop_back();
     }
     // TODO try create global variable
-    std::ofstream logFile(Log::g_LOG_FILE, std::ios::app);
+    std::ofstream logFile(WSJCppLog::g_LOG_FILE, std::ios::app);
     if (!logFile) {
         std::cout << "Error Opening File" << std::endl;
         return;
@@ -382,109 +470,3 @@ void Log::add(Color::Modifier &clr, const std::string &sType, const std::string 
     logFile << sLogMessage << std::endl;
     logFile.close();
 }
-
-// ---------------------------------------------------------------------
-// WJSCppParseConfig
-// TODO rename WJSCppParseConfig
-
-WJSCppParseConfig::WJSCppParseConfig(const std::string &sFilepathConf) {
-    TAG = "WJSCppParseConfig";
-    m_sFilepathConf = sFilepathConf;
-}
-
-// ---------------------------------------------------------------------
-
-bool WJSCppParseConfig::load() {
-    std::ifstream isConfigFile( m_sFilepathConf );
-    int nLineNumber = 0;
-    for (std::string sLine; getline(isConfigFile, sLine);) {
-        nLineNumber++;
-        std::string sOrigLine = sLine;
-        std::size_t nFoundComment = sLine.find("#");
-        
-        if (nFoundComment != std::string::npos) {
-            // remove all after #
-            sLine.erase(sLine.begin() + nFoundComment, sLine.end());
-        }
-
-        Fallen::trim(sLine);
-        if (sLine == "") { // skip empty strings
-            continue;
-        }
-        
-        // std::cout << "Line (" << nLineNumber << "): [" << sLine << "]" << std::endl;
-        
-        std::size_t nFoundEqualChar = sLine.find("=");
-        if (nFoundEqualChar != std::string::npos) {
-            // split name of param and value
-            std::string sParamName = sLine;
-            std::string sParamValue = sLine;
-            
-            sParamName.erase (sParamName.begin() + nFoundEqualChar, sParamName.end());
-            sParamValue.erase (sParamValue.begin(), sParamValue.begin() + nFoundEqualChar + 1);
-            Fallen::trim(sParamName);
-            Fallen::trim(sParamValue);
-            
-            // std::cout << " [" << sParamName << "]  => [" << sParamValue << "]" << std::endl;
-            
-            if (m_mapConfigValues.count(sParamName)) {
-                Log::warn(TAG, "Ignoring duplicate of option line(" + std::to_string(nLineNumber) + ") in config: " + m_sFilepathConf);
-            } else {
-                m_mapConfigValues.insert(std::pair<std::string,std::string>(sParamName, sParamValue));    
-            }
-        } else {
-            Log::warn(TAG, "Ignoring invalid line(" + std::to_string(nLineNumber) + ") in config: " + m_sFilepathConf);
-        }
-        
-    }
-    return true;
-}
-
-// ---------------------------------------------------------------------
-
-bool WJSCppParseConfig::has(const std::string &sParamName) {
-    return m_mapConfigValues.count(sParamName);
-}
-
-// ---------------------------------------------------------------------
-
-std::string WJSCppParseConfig::stringValue(const std::string &sParamName, const std::string &defaultValue) {
-    std::string sResult = defaultValue;
-    if (m_mapConfigValues.count(sParamName)) {
-        sResult = m_mapConfigValues.at(sParamName);
-    } else {
-        Log::warn(TAG, sParamName + " - not found in " + m_sFilepathConf + "\n\t Will be used default value: " + defaultValue);
-    }
-    return sResult;
-}
-
-// ---------------------------------------------------------------------
-
-int WJSCppParseConfig::intValue(const std::string &sParamName, int defaultValue) {
-    int nResult = defaultValue;
-    if (m_mapConfigValues.count(sParamName)) {
-        std::string sParamValue = m_mapConfigValues.at(sParamName);
-        std::istringstream isBuffer(sParamValue);
-        isBuffer >> nResult;
-    } else {
-        Log::warn(TAG, sParamName + " - not found in " + m_sFilepathConf + "\n\t Will be used default value: " + std::to_string(defaultValue));
-    }
-    return nResult;
-}
-
-// ---------------------------------------------------------------------
-
-bool WJSCppParseConfig::boolValue(const std::string &sParamName, bool defaultValue) {
-    bool bResult = defaultValue;
-
-    if (m_mapConfigValues.count(sParamName)) {
-        std::string sParamValue = m_mapConfigValues.at(sParamName);
-        std::transform(sParamValue.begin(), sParamValue.end(), sParamValue.begin(), ::tolower);
-        bResult = (sParamValue == "yes");
-    } else {
-        Log::warn(TAG, sParamName + " - not found in " + m_sFilepathConf + "\n\t Will be used default value: " + (defaultValue ? "yes" : "no"));
-    }
-    return bResult;
-}
-
-// ---------------------------------------------------------------------

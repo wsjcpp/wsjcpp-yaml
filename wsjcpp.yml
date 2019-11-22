@@ -24,8 +24,7 @@ requirements:
   libs:
     - pthread
   packages:
-    - "https://github.com/wsjcpp/wsjcpp-core:0.0.1"
-    - "https://github.com/wsjcpp/wsjcpp-logger:0.0.1"
+    - "https://github.com/wsjcpp/wsjcpp-core:v0.0.1"
 
 distribution:
   sources:
@@ -36,4 +35,18 @@ distribution:
       to: wsjcpp_yaml.h
       sha1: ""
   # scripts:
-    
+
+unit-tests:
+  folder: unit-tests # default
+  files:
+    - unit-tests/src/main.cpp
+    - unit-tests/src/unit_tests.h
+    - unit-tests/src/unit_tests.cpp
+    - unit-tests/src/unit_test_line_parser.h
+    - unit-tests/src//unit_test_line_parser.cpp
+    - unit-tests/src//unit_test_yaml_parser_simple_array.h
+    - unit-tests/src//unit_test_yaml_parser_simple_array.cpp
+    - unit-tests/src//unit_test_yaml_parser_simple_map.h
+    - unit-tests/src//unit_test_yaml_parser_simple_map.cpp
+    - unit-tests/src//unit_test_yaml_parser_hierarchical_map.h
+    - unit-tests/src//unit_test_yaml_parser_hierarchical_map.cpp

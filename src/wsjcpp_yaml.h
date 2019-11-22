@@ -62,7 +62,7 @@ class WSJCppYAMLItem {
         std::string getValue();
         void setValue(const std::string &sValue);
 
-        std::string toString();
+        std::string toString(std::string sIntent = "");
         std::string getItemTypeAsString();
 
     private:

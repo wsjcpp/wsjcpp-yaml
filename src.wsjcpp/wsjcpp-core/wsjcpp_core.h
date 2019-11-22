@@ -1,5 +1,5 @@
-#ifndef FALLEN_H
-#define FALLEN_H
+#ifndef WSJCPP_CORE_H
+#define WSJCPP_CORE_H
 
 #include <string>
 #include <vector>
@@ -8,8 +8,19 @@
 #include <deque>
 #include <iostream>
 
-class Fallen {
+class WSJCppCore {
     public:
+        static bool init(
+            int argc, char** argv, 
+            const std::string &sApplicationName,
+            const std::string &sApplicationVersion,
+            const std::string &sApplicationAuthor,
+            const std::string &sLibraryNameForExports
+        );
+
+        static std::string doNormalizePath(const std::string & sPath);
+        static std::string getCurrentDirectory();
+
         static long currentTime_milliseconds();
         static long currentTime_seconds();
         static std::string currentTime_forFilename();
@@ -36,34 +47,36 @@ class Fallen {
         static std::string createUuid();
 };
 
+
 // ---------------------------------------------------------------------
 
-namespace Color {
-    enum Code {
-        FG_RED      = 31,
-        FG_GREEN    = 32,
-        FG_YELLOW   = 93,
-        FG_BLUE     = 34,
-        FG_DEFAULT  = 39,
-        BG_RED      = 41,
-        BG_GREEN    = 42,
-        BG_BLUE     = 44,
-        BG_DEFAULT  = 49
-    };
-    class Modifier {
-        Code code;
-    public:
-        Modifier(Code pCode) : code(pCode) {}
-        friend std::ostream&
-        operator<<(std::ostream& os, const Modifier& mod) {
-            return os << "\033[" << mod.code << "m";
-        }
-    };
+enum WSJCppColorCode {
+    FG_RED      = 31,
+    FG_GREEN    = 32,
+    FG_YELLOW   = 93,
+    FG_BLUE     = 34,
+    FG_DEFAULT  = 39,
+    BG_RED      = 41,
+    BG_GREEN    = 42,
+    BG_BLUE     = 44,
+    BG_DEFAULT  = 49
 };
 
 // ---------------------------------------------------------------------
 
-class Log {
+class WSJCppColorModifier {
+    WSJCppColorCode code;
+    public:
+        WSJCppColorModifier(WSJCppColorCode pCode) : code(pCode) {}
+        friend std::ostream&
+        operator<<(std::ostream& os, const WSJCppColorModifier& mod) {
+            return os << "\033[" << mod.code << "m";
+        }
+};
+
+// ---------------------------------------------------------------------
+
+class WSJCppLog {
     public:
         static std::string g_LOG_DIR;
         static std::string g_PREFIX_LOG_FILE;
@@ -82,31 +95,7 @@ class Log {
         static void initGlobalVariables();
 
     private:
-        static void add(Color::Modifier &clr, const std::string &sType, const std::string &sTag, const std::string &sMessage);
+        static void add(WSJCppColorModifier &clr, const std::string &sType, const std::string &sTag, const std::string &sMessage);
 };
 
-// TODO redesign to extern
-
-extern std::mutex *g_LOG_MUTEX;
-extern std::deque<std::string> *g_LAST_LOG_MESSAGES;
-
-// ---------------------------------------------------------------------
-
-class WJSCppParseConfig {
-
-    public:
-        WJSCppParseConfig(const std::string &sFilepathConf);
-        bool load();
-
-        bool has(const std::string &sParamName);
-        std::string stringValue(const std::string &sParamName, const std::string &defaultValue);
-        int intValue(const std::string &sParamName, int defaultValue);
-        bool boolValue(const std::string &sParamName, bool defaultValue);
-
-    private:
-        std::string TAG;
-        std::string m_sFilepathConf;
-        std::map<std::string,std::string> m_mapConfigValues;
-};
-
-#endif // FALLEN_H
+#endif // WSJCPP_CORE_H

@@ -11,10 +11,10 @@ set (WSJCPP_SOURCES "")
 
 # Sources
 
-# wsjcpp-logger
-list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp-logger/fallen.cpp")
-list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp-logger/fallen.h")
-list (APPEND WSJCPP_INCLUDE_DIRS "../src.wsjcpp/wsjcpp-logger/")
+# wsjcpp-core
+list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp-core/wsjcpp_core.cpp")
+list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp-core/wsjcpp_core.h")
+list (APPEND WSJCPP_INCLUDE_DIRS "../src.wsjcpp/wsjcpp-core/")
 
 # wsjcpp-yaml
 list (APPEND WSJCPP_SOURCES "../src/wsjcpp_yaml.h")
@@ -29,8 +29,16 @@ list (APPEND WSJCPP_SOURCES "./src/unit_tests.h")
 list (APPEND WSJCPP_SOURCES "./src/unit_tests.cpp")
 list (APPEND WSJCPP_SOURCES "./src/unit_test_line_parser.h")
 list (APPEND WSJCPP_SOURCES "./src/unit_test_line_parser.cpp")
-list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser.h")
-list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser.cpp")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_simple_array.h")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_simple_array.cpp")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_simple_map.h")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_simple_map.cpp")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_hierarchical_map.h")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_hierarchical_map.cpp")
+
+# list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser.h")
+# list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser.cpp")
+
 list (APPEND WSJCPP_SOURCES "./src/main.cpp")
 
 include_directories(${WSJCPP_INCLUDE_DIRS})
