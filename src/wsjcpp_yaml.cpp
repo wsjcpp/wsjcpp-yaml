@@ -240,10 +240,15 @@ std::string WSJCppYAMLItem::toString() {
     if (this->isValue()) {
         sRet = m_sValue;
         if (m_sComment.length() > 0) {
-            sRet += " #" + m_sComment;    
+            if (sRet.length() > 0) {
+                sRet += " ";
+            }
+            sRet += "#" + m_sComment;
         }
     } else if (this->isEmpty()) {
-        sRet = "#" + m_sComment;
+        if (m_sComment.length() > 0) {
+            sRet += "#" + m_sComment;
+        }
     } else if (this->isArray()) {
         sRet += "\n";
         for (int i = 0; i < m_vObjects.size(); i++) {
@@ -511,7 +516,7 @@ bool WSJCppYAML::loadFromString(std::string &sBuffer) {
 
 // ---------------------------------------------------------------------
 
-bool WSJCppYAML::saveToString(std::string &sBuffer) {
+bool WSJCppYAML::saveToString(std::string &sBuffer) { // TODO move to fallen
     sBuffer = m_pRoot->toString();
     return true;
 }
@@ -553,7 +558,7 @@ bool WSJCppYAML::parse(const std::string &sBuffer) {
 
     for (int nLine = 0; nLine < vLines.size(); nLine++) {
         st.sLine = vLines[nLine];
-        Log::info(TAG, "Line(" + std::to_string(nLine) + ") '" + st.sLine + "'");
+        // Log::info(TAG, "Line(" + std::to_string(nLine) + ") '" + st.sLine + "'");
         st.nLine = nLine;
         st.line = WSJCppYAMLParsebleLine(nLine);
         st.line.parseLine(st.sLine);
