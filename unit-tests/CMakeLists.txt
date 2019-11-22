@@ -29,6 +29,8 @@ list (APPEND WSJCPP_SOURCES "./src/unit_tests.h")
 list (APPEND WSJCPP_SOURCES "./src/unit_tests.cpp")
 list (APPEND WSJCPP_SOURCES "./src/unit_test_line_parser.h")
 list (APPEND WSJCPP_SOURCES "./src/unit_test_line_parser.cpp")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser.h")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser.cpp")
 list (APPEND WSJCPP_SOURCES "./src/main.cpp")
 
 include_directories(${WSJCPP_INCLUDE_DIRS})
