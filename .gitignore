@@ -1,3 +1,7 @@
+wsjcpp-yaml
+tmp/*
+.wsjcpp-yaml-logs/*
+
 # Prerequisites
 *.d
 
