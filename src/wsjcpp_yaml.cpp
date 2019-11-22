@@ -235,7 +235,7 @@ void WSJCppYAMLItem::setValue(const std::string &sValue) {
 
 // ---------------------------------------------------------------------
 
-std::string WSJCppYAMLItem::toString() {
+std::string WSJCppYAMLItem::toString(std::string sIntent) {
     std::string sRet = "";
     if (this->isValue()) {
         sRet = m_sValue;
@@ -243,22 +243,29 @@ std::string WSJCppYAMLItem::toString() {
             if (sRet.length() > 0) {
                 sRet += " ";
             }
-            sRet += "#" + m_sComment;
+            sRet += "# " + m_sComment;
         }
     } else if (this->isEmpty()) {
         if (m_sComment.length() > 0) {
-            sRet += "#" + m_sComment;
+            sRet += "# " + m_sComment;
         }
     } else if (this->isArray()) {
         sRet += "\n";
         for (int i = 0; i < m_vObjects.size(); i++) {
-            sRet += " - " + m_vObjects[i]->toString();
+            sRet += sIntent + "- " + m_vObjects[i]->toString();
             sRet += "\n";
         }
     } else if (this->isMap()) {
         for (int i = 0; i < m_vObjects.size(); i++) {
-            if (m_vObjects[i]->isEmpty() ) {
-                sRet += m_vObjects[i]->toString();
+            WSJCppYAMLItem *pItem = m_vObjects[i];
+            if (pItem->isEmpty() ) {
+                sRet += pItem->toString(sIntent + "  ");
+            } else if (pItem->isArray() || pItem->isMap()) {
+                sRet += pItem->getName() + ":";
+                if (pItem->getComment().length() > 0) {
+                    sRet += " # " + pItem->getComment(); 
+                }
+                sRet += m_vObjects[i]->toString(sIntent + "  ");
             } else {
                 sRet += m_vObjects[i]->getName() + ": " + m_vObjects[i]->toString();
             }
@@ -267,7 +274,9 @@ std::string WSJCppYAMLItem::toString() {
     } else {
         sRet = "TODO: undefined";
     }
-
+    if (sIntent == "") {
+        Fallen::trim(sRet);
+    }
     return sRet;
 }
 
@@ -436,6 +445,8 @@ void WSJCppYAMLParsebleLine::parseLine(const std::string &sLine) {
         m_bValueWasWithQuotes = true;
         m_sValue = removeStringDoubleQuotes(m_sValue);
     }
+
+    Fallen::trim(m_sComment);
 }
 
 // ---------------------------------------------------------------------
@@ -695,7 +706,15 @@ void WSJCppYAML::process_sameIntent_emptyName_hasValue_noArrayItem(WSJCppYAMLPar
 // ---------------------------------------------------------------------
 
 void WSJCppYAML::process_sameIntent_emptyName_emptyValue_arrayItem(WSJCppYAMLParserStatus &st) {
-    st.logUnknownLine("TODO process_sameIntent_emptyName_emptyValue_arrayItem");
+    if (st.pCurItem->isUndefined()) {
+        st.pCurItem->doArray();
+    }
+    WSJCppYAMLItem *pItem = new WSJCppYAMLItem(st.pCurItem, st.nLine, st.sLine, WSJCppYAMLItemType::WSJCPP_YAML_ITEM_VALUE);
+    pItem->setComment(st.line.getComment());
+    pItem->setValue(st.line.getValue());
+    st.pCurItem->appendElement(pItem);
+    st.pCurItem = pItem;
+    st.nIntent = st.nIntent + 2;
 }
 
 // ---------------------------------------------------------------------

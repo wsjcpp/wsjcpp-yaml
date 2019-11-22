@@ -39,10 +39,15 @@ bool UnitTestYamlParserSimpleMap::run() {
     WSJCppYAMLItem *pItem = nullptr;
     compareS(bTestSuccess, "param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
     compareS(bTestSuccess, "param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
+    compareS(bTestSuccess, "param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
     std::string sSaved = "";
     if (yaml.saveToString(sSaved)) {
-        compareS(bTestSuccess, "yaml_save", sSaved, g_sTestYaml);
+        compareS(bTestSuccess, "yaml_save", sSaved,
+            "# Some comment 1\n"
+            "param1: value1\n"
+            "param2: value2 # some comment 2"
+        );
     } else {
         Log::err(TAG, "Could not save to string");
         bTestSuccess = false;

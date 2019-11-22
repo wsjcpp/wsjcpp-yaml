@@ -67,7 +67,7 @@ bool UnitTestYamlParser::run() {
 
     pItem = yaml.getRoot()->getElement("array30")->getElement(0);
     compareS(bTestSuccess, "test30_value", pItem->getValue(), "one31");
-    compareS(bTestSuccess, "test30_comment", pItem->getComment(), " this field for test array30 ");
+    compareS(bTestSuccess, "test30_comment", pItem->getComment(), "this field for test array30");
     pItem = yaml.getRoot()->getElement("array30")->getElement(1);
     compareS(bTestSuccess, "test40_value", pItem->getValue(), "two32");
     compareS(bTestSuccess, "test40_comment", pItem->getComment(), "");

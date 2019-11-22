@@ -50,8 +50,8 @@ bool UnitTestLineParser::run() {
 
     std::vector<LineTest> vTestLines;
 
-    vTestLines.push_back(LineTest(1, "# Some comment 1 ", "", false, "", "", " Some comment 1 "));
-    vTestLines.push_back(LineTest(2, "  test2: \"t\\\"wo\" # some comment 2", "  ", false, "test2", "t\"wo", " some comment 2"));
+    vTestLines.push_back(LineTest(1, "# Some comment 1 ", "", false, "", "", "Some comment 1"));
+    vTestLines.push_back(LineTest(2, "  test2: \"t\\\"wo\" # some comment 2  ", "  ", false, "test2", "t\"wo", "some comment 2"));
     vTestLines.push_back(LineTest(3, "  test3:", "  ", false, "test3", "", ""));
     vTestLines.push_back(LineTest(4, "  - test4", "  ", true, "", "test4", ""));
     vTestLines.push_back(LineTest(5, "", "", false, "", "", ""));
