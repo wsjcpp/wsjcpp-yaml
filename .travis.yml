@@ -1,0 +1,22 @@
+language: cpp
+
+branches:
+  only:
+    - master
+
+dist: bionic
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - make
+    - g++
+    - pkg-config
+
+# Build steps
+script:
+  - ./build_simple.sh
+  - cd unit-tests
+  - ./build_simple.sh
+  - ./unit-tests
