@@ -6,7 +6,10 @@ int main(int argc, char** argv) {
     Fallen::initRandom();
     std::string TAG = "UnitTests";
     Log::setPrefixLogFile("unit-tests");
-    std::string sLogDir = "./"; 
+    std::string sLogDir = "./logs"; 
+    if (!Fallen::dirExists(sLogDir)) {
+        Fallen::makeDir(sLogDir);
+    }
     Log::setLogDirectory(sLogDir);
     if (!Fallen::dirExists(sLogDir)) {
         Log::err(TAG, "Directory '" + sLogDir + "' did'not exists");

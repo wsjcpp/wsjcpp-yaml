@@ -50,25 +50,6 @@ void check(std::string sTestName, bool bGotValue, bool bExpectedValue) {
     Log::ok(sTestName, "fine");
 };
 
-void testLine(
-    int nNumberOfTest, 
-    std::string sLine,
-    std::string sPrefix,
-    bool isArrayItem,
-    std::string sName,
-    std::string sValue,
-    std::string sComment
-) {
-    std::string TAG = "LINE" + std::to_string(nNumberOfTest);
-    WSJCppYAMLParsebleLine line(nNumberOfTest);
-    Log::info(TAG, "Test line" + std::to_string(nNumberOfTest) + ": '" + sLine + "'");
-    line.parseLine(sLine);
-    check(TAG + "-prefix", line.getPrefix(), sPrefix);
-    check(TAG + "-arrayitem", line.isArrayItem(), isArrayItem);
-    check(TAG + "-name", line.getName(), sName);
-    check(TAG + "-value", line.getValue(), sValue);
-    check(TAG + "-comment", line.getComment(), sComment);
-};
 
 int main(int argc, char* argv[]) {
     std::string TAG = "MAIN";
@@ -79,13 +60,6 @@ int main(int argc, char* argv[]) {
     if (!Fallen::dirExists(appLogPath)) {
         Fallen::makeDir(appLogPath);
     }
-
-    // tests for line parser
-    testLine(1, "# Some comment 1 ", "", false, "", "", " Some comment 1 ");
-    testLine(2, "  test2: \"t\\\"wo\" # some comment 2", "  ", false, "test2", "t\"wo", " some comment 2");
-    testLine(3, "  test3:", "  ", false, "test3", "", "");
-    testLine(4, "  - test4", "  ", true, "", "test4", "");
-    testLine(5, "", "", false, "", "", "");
 
     // tests
     

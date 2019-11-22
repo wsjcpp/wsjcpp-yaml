@@ -5,7 +5,7 @@ project(wsjcpp-yaml)
 include(${CMAKE_CURRENT_SOURCE_DIR}/src.wsjcpp/CMakeLists.txt)
 
 set(CMAKE_CXX_STANDARD 11)
-set(EXECUTABLE_OUTPUT_PATH ${wsjcpp_SOURCE_DIR})
+set(EXECUTABLE_OUTPUT_PATH ${wsjcpp-yaml_SOURCE_DIR})
 
 # Sources
 
