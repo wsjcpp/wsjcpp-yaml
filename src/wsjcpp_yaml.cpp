@@ -186,7 +186,13 @@ int WSJCppYAMLItem::getLength() {
     if (m_nItemType != WSJCPP_YAML_ITEM_ARRAY) {
         Log::throw_err(TAG, "getLength, Element must be array");
     }
-    return m_vObjects.size();
+    int nCount = 0;
+    for (int i = 0; i < m_vObjects.size(); i++) {
+        if (!m_vObjects[i]->isEmpty()) {
+            nCount++;
+        }
+    }
+    return nCount;
 }
 
 // ---------------------------------------------------------------------
@@ -247,12 +253,18 @@ std::string WSJCppYAMLItem::toString(std::string sIntent) {
         }
     } else if (this->isEmpty()) {
         if (m_sComment.length() > 0) {
-            sRet += "# " + m_sComment;
+            sRet += sIntent + "# " + m_sComment;
         }
     } else if (this->isArray()) {
         sRet += "\n";
         for (int i = 0; i < m_vObjects.size(); i++) {
-            sRet += sIntent + "- " + m_vObjects[i]->toString();
+            WSJCppYAMLItem *pItem = m_vObjects[i];
+            if (pItem->isEmpty()) {
+                sRet += sIntent + pItem->toString();
+            } else {
+                sRet += sIntent + "- " + pItem->toString();
+            }
+            
             sRet += "\n";
         }
     } else if (this->isMap()) {
