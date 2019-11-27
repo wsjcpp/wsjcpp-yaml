@@ -37,23 +37,37 @@ int main(int argc, char* argv[]) {
     WSJCppYAML yaml;
     if (yaml.loadFromString(
         "# yaml content\n"
-        "yaml: nice format\n"
+        "yaml1: nice format\n"
         "some-map: value1\n"
         "some-map2: value2\n"
         "some-array:\n"
         "  - test1 \n"
         "  - test2 \n"
+        "some-am: # array + map element \n"
+        "  - p1: v1 \n"
+        "    p2: v2 \n"
+        "  - p1: v3 \n"
+        "    p2: v4 \n"
+        "param2: 111\n"
     )) {
         WSJCppLog::throw_err(TAG, "Error parsing");
         return -1;
     }
 
-    std::cout << "yaml is " << yaml.getRoot()->getElement("yaml")->getValue() << std::endl;
-    std::cout << "some-map is " << yaml.getRoot()->getElement("some-map")->getValue() << std::endl;
-    std::cout << "some-map2 is " << yaml.getRoot()->getElement("some-map2")->getValue() << std::endl;
-    std::cout << "some-array has " << std::to_string(yaml.getRoot()->getElement("some-array")->getLength()) << std::endl;
-    std::cout << "some-array element 1 is " << yaml.getRoot()->getElement("some-array")->->getElement(0)->getValue() << std::endl;
-    std::cout << "some-array element 2 is " << yaml.getRoot()->getElement("some-array")->->getElement(1)->getValue() << std::endl;
+    std::cout << "yaml is " << yaml["yaml1"].getValue() << std::endl;
+    std::cout << "some-map is " << yaml["some-map"].getValue() << std::endl;
+    std::cout << "some-map2 is " << yaml["some-map2"].getValue() << std::endl;
+    std::cout << "some-array has " << std::to_string(yaml["some-array"].getLength()) << std::endl;
+    std::cout << "some-array element 0 is " << yaml["some-array"][0].getValue() << std::endl;
+    std::cout << "some-array element 1 is " << yaml["some-array"][1].getValue() << std::endl;
+    std::cout << "some-am has " << std::to_string(yaml["some-am"].getLength()) << std::endl;
+    std::cout << "some-am is array: " << (yaml["some-am"].isArray() ? "yes" : "no") << std::endl;
+    std::cout << "some-am has comment " << yaml["some-am"].getComment() << std::endl;
+    std::cout << "some-am element 0 : p1 is  " << yaml["some-am"][0]["p1"].getValue() << std::endl;
+    std::cout << "some-am element 0 : p2 is  " << yaml["some-am"][0]["p2"].getValue() << std::endl;
+    std::cout << "some-am element 1 : p1 is  " << yaml["some-am"][1]["p1"].getValue() << std::endl;
+    std::cout << "some-am element 1 : p2 is  " << yaml["some-am"][1]["p2"].getValue() << std::endl;
+
     return 0;
 }
 

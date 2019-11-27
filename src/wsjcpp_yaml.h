@@ -37,8 +37,9 @@ class WSJCppYAMLItem {
         void setComment(const std::string &sComment);
         std::string getComment();
 
-        void setName(const std::string &sName);
+        void setName(const std::string &sName, bool bHasQuotes);
         std::string getName();
+        bool hasNameDoubleQuotes();
 
         bool isEmpty();
         void doEmpty();
@@ -46,6 +47,7 @@ class WSJCppYAMLItem {
         bool isUndefined();
         void doArray();
         void doMap();
+        void doValue();
 
         bool isMap();
         bool hasElement(const std::string &sName);
@@ -60,10 +62,14 @@ class WSJCppYAMLItem {
 
         bool isValue();
         std::string getValue();
-        void setValue(const std::string &sValue);
+        void setValue(const std::string &sValue, bool bHasQuotes);
+        bool hasValueDoubleQuotes();
 
         std::string toString(std::string sIntent = "");
         std::string getItemTypeAsString();
+
+        WSJCppYAMLItem &operator[](int idx) { return *(this->getElement(idx)); }
+        WSJCppYAMLItem &operator[](const std::string &sName) { return *(this->getElement(sName)); }
 
     private:
         std::string TAG;
@@ -73,16 +79,17 @@ class WSJCppYAMLItem {
         WSJCppYAMLItemType m_nItemType;
         std::vector<WSJCppYAMLItem *> m_vObjects;
         std::string m_sValue; // if it is not array or map
+        bool m_bValueHasDoubleQuotes;
         std::string m_sName;
+        bool m_bNameHasDoubleQuotes;
         std::string m_sComment;
-        
 };
 
 // ---------------------------------------------------------------------
 
 enum WSJCppYAMLParserLineStates {
     NO,
-    NAME_AND_VALUE,
+    VALUE,
     COMMENT,
     STRING,
     ESCAPING
@@ -101,8 +108,10 @@ class WSJCppYAMLParsebleLine {
         bool isArrayItem();
         std::string getComment();
         std::string getName();
+        bool hasNameDoubleQuotes();
         bool isEmptyName();
         std::string getValue();
+        bool hasValueDoubleQuotes();
         bool isEmptyValue();
 
         void parseLine(const std::string &sLine);
@@ -114,11 +123,10 @@ class WSJCppYAMLParsebleLine {
         std::string m_sPrefix;
         bool m_bArrayItem;
         std::string m_sComment;
-        std::string m_sNameAndValue;
         std::string m_sName;
         std::string m_sValue;
-        bool m_bNameWasWithQuotes;
-        bool m_bValueWasWithQuotes;
+        bool m_bNameHasQuotes;
+        bool m_bValueHasQuotes;
 
         std::string removeStringDoubleQuotes(const std::string &sValue);
 };
@@ -147,7 +155,10 @@ class WSJCppYAML {
         bool loadFromString(const std::string &sBuffer);
         bool loadFromString(std::string &sBuffer);
         bool saveToString(std::string &sBuffer);
+
         WSJCppYAMLItem *getRoot();
+        WSJCppYAMLItem &operator[](int idx) { return *(getRoot()->getElement(idx)); }
+        WSJCppYAMLItem &operator[](const std::string &sName) { return *(getRoot()->getElement(sName)); }
 
     private:
         std::string TAG;

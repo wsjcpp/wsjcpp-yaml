@@ -14,8 +14,16 @@ int main(int argc, char* argv[]) {
     if (!WSJCppCore::dirExists(appLogPath)) {
         WSJCppCore::makeDir(appLogPath);
     }
-
-    // TODO load and check yaml format
+    WSJCppYAML yaml;
+    if (!yaml.loadFromFile("./wsjcpp.yml")) {
+        WSJCppLog::err(TAG, "Could not read data from file");
+        return -1;
+    }
+    
+    if (!yaml.saveToFile("./wsjcpp.yml")) {
+        WSJCppLog::err(TAG, "Could not save data to file");
+        return -1;
+    }
 
     return 0;
 }

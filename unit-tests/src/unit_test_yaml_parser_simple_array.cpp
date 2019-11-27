@@ -32,12 +32,13 @@ bool UnitTestYamlParserSimpleArray::run() {
         "  - free@free   \n"
         "  - # empty \n"
         "  - 1\n"
+        "param2: val2 #  value 2 \n"
     ;
 
     bool bTestSuccess = true;
     
     WSJCppYAML yaml;
-    if (yaml.loadFromString(g_sTestYaml)) {
+    if (!yaml.loadFromString(g_sTestYaml)) {
         WSJCppLog::err(TAG, "Error parsing");
         return false;
     }
@@ -60,6 +61,36 @@ bool UnitTestYamlParserSimpleArray::run() {
     compareS(bTestSuccess, "array-test2-element1-value", pItem->getValue(), "value22");
     compareS(bTestSuccess, "array-test2-element1-comment", pItem->getComment(), "comment v22");
 
+    compareS(bTestSuccess, "array-test2-element2-value", yaml["array-test2"][2].getValue(), "true");
+    compareS(bTestSuccess, "array-test2-element2-line", yaml["array-test2"][2].getOriginalLine(), "  - true # comment true ");
+    compareN(bTestSuccess, "array-test2-element2-original-number-of-line", yaml["array-test2"][2].getOriginalNumberOfLine(), 5);
+    compareS(bTestSuccess, "array-test2-element2-comment", yaml["array-test2"][2].getComment(), "comment true");
+
+    compareS(bTestSuccess, "array-test2-element3-value", yaml["array-test2"][3].getValue(), "falsesome");
+    compareS(bTestSuccess, "array-test2-element3-line", yaml["array-test2"][3].getOriginalLine(), "  - falsesome   ");
+    compareN(bTestSuccess, "array-test2-element3-original-number-of-line", yaml["array-test2"][3].getOriginalNumberOfLine(), 7);
+    compareS(bTestSuccess, "array-test2-element3-comment", yaml["array-test2"][3].getComment(), "");
+    
+    compareS(bTestSuccess, "array-test2-element4-value", yaml["array-test2"][4].getValue(), "free@free");
+    compareS(bTestSuccess, "array-test2-element4-line", yaml["array-test2"][4].getOriginalLine(), "  - free@free   ");
+    compareN(bTestSuccess, "array-test2-element4-original-number-of-line", yaml["array-test2"][4].getOriginalNumberOfLine(), 8);
+    compareS(bTestSuccess, "array-test2-element4-comment", yaml["array-test2"][4].getComment(), "");
+
+    compareS(bTestSuccess, "array-test2-element5-value", yaml["array-test2"][5].getValue(), "");
+    compareS(bTestSuccess, "array-test2-element5-line", yaml["array-test2"][5].getOriginalLine(), "  - # empty ");
+    compareN(bTestSuccess, "array-test2-element5-original-number-of-line", yaml["array-test2"][5].getOriginalNumberOfLine(), 9);
+    compareS(bTestSuccess, "array-test2-element5-comment", yaml["array-test2"][5].getComment(), "empty");
+
+    compareS(bTestSuccess, "array-test2-element6-value", yaml["array-test2"][6].getValue(), "1");
+    compareS(bTestSuccess, "array-test2-element6-line", yaml["array-test2"][6].getOriginalLine(), "  - 1");
+    compareN(bTestSuccess, "array-test2-element6-original-number-of-line", yaml["array-test2"][6].getOriginalNumberOfLine(), 10);
+    compareS(bTestSuccess, "array-test2-element6-comment", yaml["array-test2"][6].getComment(), "");
+
+    compareS(bTestSuccess, "param2-value", yaml.getRoot()->getElement("param2")->getValue(), "val2");
+    compareS(bTestSuccess, "param2-line", yaml.getRoot()->getElement("param2")->getOriginalLine(), "param2: val2 #  value 2 ");
+    compareN(bTestSuccess, "param2-original-number-of-line", yaml.getRoot()->getElement("param2")->getOriginalNumberOfLine(), 11);
+    compareS(bTestSuccess, "param2-comment", yaml.getRoot()->getElement("param2")->getComment(), "value 2");
+
     std::string sSaved = "";
     if (yaml.saveToString(sSaved)) {
         compareS(bTestSuccess, "yaml_save", sSaved, 
@@ -73,7 +104,8 @@ bool UnitTestYamlParserSimpleArray::run() {
             "  - falsesome\n"
             "  - free@free\n"
             "  - # empty\n"
-            "  - 1"
+            "  - 1\n"
+            "param2: val2 # value 2"
         );
     } else {
         WSJCppLog::err(TAG, "Could not save to string");

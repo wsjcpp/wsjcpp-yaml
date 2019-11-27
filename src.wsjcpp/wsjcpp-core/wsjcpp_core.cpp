@@ -15,6 +15,7 @@
 #include <thread>
 #include <cstdint>
 #include <unistd.h>
+#include <streambuf>
 
 // ---------------------------------------------------------------------
 
@@ -282,7 +283,7 @@ bool WSJCppCore::makeDir(const std::string &sDirname) {
 
 bool WSJCppCore::writeFile(const std::string &sFilename, const std::string &sContent) {
     
-    std::ofstream f(sFilename, std::ios::out);
+    std::ofstream f(sFilename, std::ifstream::in);
     if (!f) {
         std::cout << "FAILED could not create file to wtite " << sFilename << std::endl;
         return false;
@@ -290,6 +291,24 @@ bool WSJCppCore::writeFile(const std::string &sFilename, const std::string &sCon
 
     f << sContent << std::endl;
     f.close();
+    return true;
+}
+
+// ---------------------------------------------------------------------
+
+bool WSJCppCore::readTextFile(const std::string &sFilename, std::string &sContent) {
+    
+    std::ifstream f(sFilename);
+    if (!f) {
+        std::cout << "FAILED could not open file to read " << sFilename << std::endl;
+        return false;
+    }
+
+    sContent = std::string(
+        (std::istreambuf_iterator<char>(f)),
+        std::istreambuf_iterator<char>()
+    );
+
     return true;
 }
 
@@ -305,6 +324,7 @@ bool WSJCppCore::writeFile(const std::string &sFilename, const char *pBuffer, co
     f.close();
     return true;
 }
+
 
 
 // ---------------------------------------------------------------------

@@ -15,6 +15,8 @@ WSJCppYAMLItem::WSJCppYAMLItem(
     m_nOriginalNumberOfLine = nOriginalNumberOfLine;
     m_sOriginalLine = sOriginalLine;
     m_nItemType = nItemType;
+    m_bValueHasDoubleQuotes = false;
+    m_bNameHasDoubleQuotes = false;
     TAG = "WSJCppYAMLItem(line:" + std::to_string(m_nOriginalNumberOfLine) + ":'" + sOriginalLine + "')";
 }
 
@@ -58,14 +60,21 @@ std::string WSJCppYAMLItem::getComment() {
 
 // ---------------------------------------------------------------------
 
-void WSJCppYAMLItem::setName(const std::string &sName) {
+void WSJCppYAMLItem::setName(const std::string &sName, bool bHasQuotes) {
     m_sName = sName;
+    m_bNameHasDoubleQuotes = bHasQuotes;
 }
 
 // ---------------------------------------------------------------------
 
 std::string WSJCppYAMLItem::getName() {
     return m_sName;
+}
+
+// ---------------------------------------------------------------------
+
+bool WSJCppYAMLItem::hasNameDoubleQuotes() {
+    return m_bNameHasDoubleQuotes;
 }
 
 // ---------------------------------------------------------------------
@@ -105,6 +114,16 @@ void WSJCppYAMLItem::doArray() {
 void WSJCppYAMLItem::doMap() {
     if (m_nItemType == WSJCPP_YAML_ITEM_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_ITEM_MAP;
+    } else {
+        WSJCppLog::throw_err(TAG, "Element already defined as '" + this->getItemTypeAsString() + "'");
+    }
+}
+
+// ---------------------------------------------------------------------
+
+void WSJCppYAMLItem::doValue() {
+    if (m_nItemType == WSJCPP_YAML_ITEM_UNDEFINED) {
+        m_nItemType = WSJCPP_YAML_ITEM_VALUE;
     } else {
         WSJCppLog::throw_err(TAG, "Element already defined as '" + this->getItemTypeAsString() + "'");
     }
@@ -201,10 +220,21 @@ WSJCppYAMLItem *WSJCppYAMLItem::getElement(int i) {
     if (m_nItemType != WSJCPP_YAML_ITEM_ARRAY) {
         WSJCppLog::throw_err(TAG, "getElement, Element must be array");
     }
-    if( i > m_vObjects.size()-1) {
-        WSJCppLog::throw_err(TAG, "getElement, Out of range in array");
+    int nCounter = -1;
+    WSJCppYAMLItem *pItem = nullptr;
+    for (int n = 0; n < m_vObjects.size(); n++) {
+        if (!m_vObjects[n]->isEmpty()) {
+            nCounter++;
+            if (nCounter == i) {
+                pItem = m_vObjects[n];
+                break; 
+            }
+        }
     }
-    return m_vObjects[i];
+    if (pItem == nullptr) {
+        WSJCppLog::throw_err(TAG, "getElement(" + std::to_string(i) +  "), Out of range in array for '" + this->getOriginalLine() + "'");
+    }
+    return pItem;
 }
 
 // ---------------------------------------------------------------------
@@ -230,13 +260,26 @@ bool WSJCppYAMLItem::isValue() {
 // ---------------------------------------------------------------------
 
 std::string  WSJCppYAMLItem::getValue() {
+    if (m_nItemType != WSJCPP_YAML_ITEM_VALUE) {
+        WSJCppLog::throw_err(TAG, "getValue, Element must be value for line");
+    }
     return m_sValue;
 }
 
 // ---------------------------------------------------------------------
 
-void WSJCppYAMLItem::setValue(const std::string &sValue) {
+void WSJCppYAMLItem::setValue(const std::string &sValue, bool bHasQuotes) {
+    if (m_nItemType != WSJCPP_YAML_ITEM_VALUE) {
+        WSJCppLog::throw_err(TAG, "setValue, Element must be value for line(" + std::to_string(this->getOriginalNumberOfLine()) + "): '" + this->getOriginalLine() + "'");
+    }
+    m_bValueHasDoubleQuotes = bHasQuotes;
     m_sValue = sValue;
+}
+
+// ---------------------------------------------------------------------
+
+bool WSJCppYAMLItem::hasValueDoubleQuotes() {
+    return m_bValueHasDoubleQuotes;
 }
 
 // ---------------------------------------------------------------------
@@ -244,7 +287,11 @@ void WSJCppYAMLItem::setValue(const std::string &sValue) {
 std::string WSJCppYAMLItem::toString(std::string sIntent) {
     std::string sRet = "";
     if (this->isValue()) {
-        sRet = m_sValue;
+        if (m_bValueHasDoubleQuotes) {
+            sRet = "\"" + m_sValue + "\"";
+        } else {
+            sRet = m_sValue;
+        }
         if (m_sComment.length() > 0) {
             if (sRet.length() > 0) {
                 sRet += " ";
@@ -256,32 +303,44 @@ std::string WSJCppYAMLItem::toString(std::string sIntent) {
             sRet += sIntent + "# " + m_sComment;
         }
     } else if (this->isArray()) {
-        sRet += "\n";
         for (int i = 0; i < m_vObjects.size(); i++) {
             WSJCppYAMLItem *pItem = m_vObjects[i];
             if (pItem->isEmpty()) {
                 sRet += sIntent + pItem->toString();
+            } else if (pItem->isMap()) {
+                std::string s = pItem->toString(sIntent + "  ");
+                WSJCppCore::trim(s);
+                sRet += sIntent + "- " + s;
             } else {
                 sRet += sIntent + "- " + pItem->toString();
             }
-            
             sRet += "\n";
         }
     } else if (this->isMap()) {
         for (int i = 0; i < m_vObjects.size(); i++) {
             WSJCppYAMLItem *pItem = m_vObjects[i];
             if (pItem->isEmpty() ) {
-                sRet += pItem->toString(sIntent + "  ");
+                sRet += sIntent + pItem->toString();
+                sRet += "\n";
             } else if (pItem->isArray() || pItem->isMap()) {
-                sRet += pItem->getName() + ":";
+                if (pItem->hasNameDoubleQuotes()) {
+                    sRet += sIntent + "\"" + pItem->getName() + "\":";
+                } else {
+                    sRet += sIntent + pItem->getName() + ":";
+                }
                 if (pItem->getComment().length() > 0) {
                     sRet += " # " + pItem->getComment(); 
                 }
-                sRet += m_vObjects[i]->toString(sIntent + "  ");
+                sRet += "\n";
+                sRet += pItem->toString(sIntent + "  ");
             } else {
-                sRet += m_vObjects[i]->getName() + ": " + m_vObjects[i]->toString();
+                if (pItem->hasNameDoubleQuotes()) {
+                    sRet += sIntent + "\"" + pItem->getName() + "\": " + pItem->toString();
+                } else {
+                    sRet += sIntent + pItem->getName() + ": " + pItem->toString();
+                }
+                sRet += "\n";
             }
-            sRet += "\n";
         }
     } else {
         sRet = "TODO: undefined";
@@ -359,6 +418,12 @@ std::string WSJCppYAMLParsebleLine::getName() {
 
 // ---------------------------------------------------------------------
 
+bool WSJCppYAMLParsebleLine::hasNameDoubleQuotes() {
+    return m_bNameHasQuotes;
+}
+
+// ---------------------------------------------------------------------
+
 bool WSJCppYAMLParsebleLine::isEmptyName() {
     return m_sName.length() == 0;
 }
@@ -367,6 +432,12 @@ bool WSJCppYAMLParsebleLine::isEmptyName() {
 
 std::string WSJCppYAMLParsebleLine::getValue() {
     return m_sValue;
+}
+
+// ---------------------------------------------------------------------
+
+bool WSJCppYAMLParsebleLine::hasValueDoubleQuotes() {
+    return m_bValueHasQuotes;
 }
 
 // ---------------------------------------------------------------------
@@ -382,18 +453,17 @@ void WSJCppYAMLParsebleLine::parseLine(const std::string &sLine) {
     m_bArrayItem = false;
     m_sPrefix = "";
     m_sComment = "";
-    m_sNameAndValue = "";
     m_sName = "";
     m_sValue = "";
-    m_bNameWasWithQuotes = false;
-    m_bValueWasWithQuotes = false;
+    m_bNameHasQuotes = false;
+    m_bValueHasQuotes = false;
 
     WSJCppYAMLParserLineStates state = WSJCppYAMLParserLineStates::NO;
     for (int i = 0; i < sLine.length(); i++) {
         char c = sLine[i];
         if ((c == ' ' || c == '\t') && state == WSJCppYAMLParserLineStates::NO) {
             m_sPrefix += c;
-        } else if (c == '#' && (state == WSJCppYAMLParserLineStates::NO || state == WSJCppYAMLParserLineStates::NAME_AND_VALUE)) {
+        } else if (c == '#' && (state == WSJCppYAMLParserLineStates::NO || state == WSJCppYAMLParserLineStates::VALUE)) {
             state = WSJCppYAMLParserLineStates::COMMENT;
         } else if (state == WSJCppYAMLParserLineStates::COMMENT) {
             if (c != '\r') {
@@ -401,29 +471,36 @@ void WSJCppYAMLParsebleLine::parseLine(const std::string &sLine) {
             }
         } else if (c == '-' && state == WSJCppYAMLParserLineStates::NO) {
             m_bArrayItem = true;
-            state = WSJCppYAMLParserLineStates::NAME_AND_VALUE;
+            state = WSJCppYAMLParserLineStates::VALUE;
         } else if ((c != ' ' && c != '\t') && state == WSJCppYAMLParserLineStates::NO) {
-            state = WSJCppYAMLParserLineStates::NAME_AND_VALUE;
-            m_sNameAndValue += c;
+            state = WSJCppYAMLParserLineStates::VALUE;
+            m_sValue += c;
             if (c == '"') {
                 state = WSJCppYAMLParserLineStates::STRING;
             }
-        } else if (c == '"' && state == WSJCppYAMLParserLineStates::NAME_AND_VALUE) {
+        } else if (c == '"' && state == WSJCppYAMLParserLineStates::VALUE) {
             state = WSJCppYAMLParserLineStates::STRING;
-            m_sNameAndValue += c;
+            m_sValue += c;
         } else if (c == '\\' && state == WSJCppYAMLParserLineStates::STRING) {
             state = WSJCppYAMLParserLineStates::ESCAPING;
-            m_sNameAndValue += c;
+            m_sValue += c;
         } else if (state == WSJCppYAMLParserLineStates::ESCAPING) {
             state = WSJCppYAMLParserLineStates::STRING;
-            m_sNameAndValue += c;
+            m_sValue += c;
         } else if (c == '"' && state == WSJCppYAMLParserLineStates::STRING) {
-            state = WSJCppYAMLParserLineStates::NAME_AND_VALUE;
-            m_sNameAndValue += c;
+            state = WSJCppYAMLParserLineStates::VALUE;
+            m_sValue += c;
+        } else if (c == ':' && state == WSJCppYAMLParserLineStates::VALUE) {
+            if (m_sName.length() == 0) {
+                m_sName = m_sValue;
+                m_sValue = ""; // reset value it was param name
+            } else {
+                m_sValue += c;
+            }
         } else if (state == WSJCppYAMLParserLineStates::STRING) {
-            m_sNameAndValue += c;
-        } else if (state == WSJCppYAMLParserLineStates::NAME_AND_VALUE) {
-            m_sNameAndValue += c;
+            m_sValue += c;
+        } else if (state == WSJCppYAMLParserLineStates::VALUE) {
+            m_sValue += c;
         } else {
             // skip
         }
@@ -436,7 +513,7 @@ void WSJCppYAMLParsebleLine::parseLine(const std::string &sLine) {
     }
 
     // split name and value
-    for (int i = 0; i < m_sNameAndValue.size(); i++) {
+    /*for (int i = 0; i < m_sNameAndValue.size(); i++) {
         char c = m_sNameAndValue[i];
         if (c == ':' && m_sName.size() == 0) {
             m_sName = m_sValue;
@@ -444,17 +521,17 @@ void WSJCppYAMLParsebleLine::parseLine(const std::string &sLine) {
         } else {
             m_sValue += c;
         }
-    }
+    }*/
     
     WSJCppCore::trim(m_sName);
     if (m_sName.length() > 0 && m_sName[0] == '"') {
-        m_bNameWasWithQuotes = true;
+        m_bNameHasQuotes = true;
         m_sName = removeStringDoubleQuotes(m_sName);
     }
 
     WSJCppCore::trim(m_sValue);
     if (m_sValue.length() > 0 && m_sValue[0] == '"') {
-        m_bValueWasWithQuotes = true;
+        m_bValueHasQuotes = true;
         m_sValue = removeStringDoubleQuotes(m_sValue);
     }
 
@@ -516,13 +593,21 @@ WSJCppYAML::~WSJCppYAML() {
 // ---------------------------------------------------------------------
 
 bool WSJCppYAML::loadFromFile(const std::string &sFileName) {
-    return false;
+    std::string sTextContent;
+    if (!WSJCppCore::readTextFile(sFileName, sTextContent)) {
+        return false;    
+    }
+    return parse(sTextContent);
 }
 
 // ---------------------------------------------------------------------
 
 bool WSJCppYAML::saveToFile(const std::string &sFileName) {
-    return false;
+    std::string sBuffer = m_pRoot->toString();
+    if (!WSJCppCore::writeFile(sFileName, sBuffer)) {
+        return false;    
+    }
+    return true;
 }
 
 // ---------------------------------------------------------------------
@@ -638,7 +723,7 @@ bool WSJCppYAML::parse(const std::string &sBuffer) {
             st.logUnknownLine(TAG);
         }
     }
-    return false;
+    return true;
 }
 
 // ---------------------------------------------------------------------
@@ -656,7 +741,11 @@ void WSJCppYAML::process_sameIntent_hasName_emptyValue_noArrayItem(WSJCppYAMLPar
         st.sLine, 
         WSJCppYAMLItemType::WSJCPP_YAML_ITEM_UNDEFINED
     );
-    pItem->setName(st.line.getName());
+    if (st.line.hasValueDoubleQuotes()) {
+        pItem->doValue();
+        pItem->setValue(st.line.getValue(), st.line.hasValueDoubleQuotes());
+    }
+    pItem->setName(st.line.getName(), st.line.hasNameDoubleQuotes());
     pItem->setComment(st.line.getComment());
     st.pCurItem->setElement(st.line.getName(), pItem);
     st.pCurItem = pItem;
@@ -676,8 +765,8 @@ void WSJCppYAML::process_sameIntent_hasName_hasValue_arrayItem(WSJCppYAMLParserS
 
     WSJCppYAMLItem *pItem = new WSJCppYAMLItem(st.pCurItem, st.nLine, st.sLine, WSJCppYAMLItemType::WSJCPP_YAML_ITEM_VALUE);
     pItem->setComment(st.line.getComment());
-    pItem->setValue(st.line.getValue());
-    pItem->setName(st.line.getName());
+    pItem->setValue(st.line.getValue(), st.line.hasValueDoubleQuotes());
+    pItem->setName(st.line.getName(), st.line.hasNameDoubleQuotes());
     pMapItem->setElement(st.line.getName(), pItem);
     st.pCurItem = pItem;
     st.nIntent = st.nIntent + 2;
@@ -688,8 +777,8 @@ void WSJCppYAML::process_sameIntent_hasName_hasValue_arrayItem(WSJCppYAMLParserS
 void WSJCppYAML::process_sameIntent_hasName_hasValue_noArrayItem(WSJCppYAMLParserStatus &st) {
     WSJCppYAMLItem *pItem = new WSJCppYAMLItem(st.pCurItem, st.nLine, st.sLine, WSJCppYAMLItemType::WSJCPP_YAML_ITEM_VALUE);
     pItem->setComment(st.line.getComment());
-    pItem->setValue(st.line.getValue());
-    pItem->setName(st.line.getName());
+    pItem->setValue(st.line.getValue(), st.line.hasValueDoubleQuotes());
+    pItem->setName(st.line.getName(), st.line.hasNameDoubleQuotes());
     st.pCurItem->setElement(st.line.getName(), pItem);
     st.pCurItem = pItem;
     st.nIntent = st.nIntent + 2;
@@ -703,7 +792,7 @@ void WSJCppYAML::process_sameIntent_emptyName_hasValue_arrayItem(WSJCppYAMLParse
     }
     WSJCppYAMLItem *pItem = new WSJCppYAMLItem(st.pCurItem, st.nLine, st.sLine, WSJCppYAMLItemType::WSJCPP_YAML_ITEM_VALUE);
     pItem->setComment(st.line.getComment());
-    pItem->setValue(st.line.getValue());
+    pItem->setValue(st.line.getValue(), st.line.hasValueDoubleQuotes());
     st.pCurItem->appendElement(pItem);
     st.pCurItem = pItem;
     st.nIntent = st.nIntent + 2;
@@ -723,7 +812,7 @@ void WSJCppYAML::process_sameIntent_emptyName_emptyValue_arrayItem(WSJCppYAMLPar
     }
     WSJCppYAMLItem *pItem = new WSJCppYAMLItem(st.pCurItem, st.nLine, st.sLine, WSJCppYAMLItemType::WSJCPP_YAML_ITEM_VALUE);
     pItem->setComment(st.line.getComment());
-    pItem->setValue(st.line.getValue());
+    pItem->setValue(st.line.getValue(), st.line.hasValueDoubleQuotes());
     st.pCurItem->appendElement(pItem);
     st.pCurItem = pItem;
     st.nIntent = st.nIntent + 2;

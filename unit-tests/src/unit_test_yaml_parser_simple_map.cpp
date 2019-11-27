@@ -30,7 +30,7 @@ bool UnitTestYamlParserSimpleMap::run() {
     bool bTestSuccess = true;
     
     WSJCppYAML yaml;
-    if (yaml.loadFromString(g_sTestYaml)) {
+    if (!yaml.loadFromString(g_sTestYaml)) {
         WSJCppLog::err(TAG, "Error parsing");
         return false;
     }

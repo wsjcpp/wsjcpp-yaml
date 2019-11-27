@@ -35,9 +35,15 @@ list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_simple_map.h")
 list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_simple_map.cpp")
 list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_hierarchical_map.h")
 list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_hierarchical_map.cpp")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_array_included_map.h")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_array_included_map.cpp")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_comments.h")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_comments.cpp")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_quotes.h")
+list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_quotes.cpp")
 
-# list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser.h")
-# list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser.cpp")
+# list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_all.h")
+# list (APPEND WSJCPP_SOURCES "./src/unit_test_yaml_parser_all.cpp")
 
 list (APPEND WSJCPP_SOURCES "./src/main.cpp")
 

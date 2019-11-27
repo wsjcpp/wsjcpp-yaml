@@ -1,25 +1,25 @@
-#include "unit_test_yaml_parser.h"
+#include "unit_test_yaml_parser_all.h"
 #include <vector>
 #include <iostream>
-#include <fallen.h>
+#include <wsjcpp_core.h>
 #include <wsjcpp_yaml.h>
 
-REGISTRY_UNIT_TEST(UnitTestYamlParser)
+REGISTRY_UNIT_TEST(UnitTestYamlParserAll)
 
-UnitTestYamlParser::UnitTestYamlParser()
-    : UnitTestBase("UnitTestYamlParser") {
+UnitTestYamlParserAll::UnitTestYamlParserAll()
+    : UnitTestBase("UnitTestYamlParserAll") {
     //
 }
 
 // ---------------------------------------------------------------------
 
-void UnitTestYamlParser::init() {
+void UnitTestYamlParserAll::init() {
     // nothing
 }
 
 // ---------------------------------------------------------------------
 
-bool UnitTestYamlParser::run() {
+bool UnitTestYamlParserAll::run() {
 
     std::string g_sTestYaml = 
         "# Some comment 1\n"
@@ -27,7 +27,7 @@ bool UnitTestYamlParser::run() {
         "test20: two # some comment 2\n"
         "\n" // empty line
         "array30:\n"
-        "  - one31 # this field for test array30 \n"
+        "  - one31 # this field for test array30\n"
         "  - two32\n"
         "  - three33\n"
         "\n" // empty line
@@ -43,19 +43,19 @@ bool UnitTestYamlParser::run() {
         "\n" // empty line
         "map60: # some comment 4\n"
         "  test70: opa1\n"
-        "  test80: opa2\n"
+        "  test80: opa2"
     ;
 
     bool bTestSuccess = true;
     
     WSJCppYAML yaml;
     if (yaml.loadFromString(g_sTestYaml)) {
-        Log::throw_err(TAG, "Error parsing");
+        WSJCppLog::throw_err(TAG, "Error parsing");
         return -1;
     }
     std::string sSaved = "";
     if (yaml.saveToString(sSaved)) {
-        Log::info(TAG, "\n>>>>\n" + sSaved);
+        WSJCppLog::info(TAG, "\n>>>>\n" + sSaved);
     }
     
     WSJCppYAMLItem *pItem = nullptr;
@@ -88,7 +88,7 @@ bool UnitTestYamlParser::run() {
     if (yaml.saveToString(sSaved)) {
         compareS(bTestSuccess, "yaml_save", sSaved, g_sTestYaml);
     } else {
-        Log::err(TAG, "Could not save to string");
+        WSJCppLog::err(TAG, "Could not save to string");
         bTestSuccess = false;
     }
     return bTestSuccess;
