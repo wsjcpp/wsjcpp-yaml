@@ -47,8 +47,8 @@ bool UnitTestYamlParserArrayIncludedMap::run() {
     WSJCppYAMLItem *pItem = nullptr;
 
     compareS(bTestSuccess, "param1-value", yaml.getRoot()->getElement("param1")->getValue(), "none value1");
-    compareS(bTestSuccess, "param1-line", yaml.getRoot()->getElement("param1")->getOriginalLine(), "param1: none value1 # it's value for something # olala  ");
-    compareN(bTestSuccess, "param1-original-number-of-line", yaml.getRoot()->getElement("param1")->getOriginalNumberOfLine(), 1);
+    compareS(bTestSuccess, "param1-line", yaml.getRoot()->getElement("param1")->getPlaceInFile().getLine(), "param1: none value1 # it's value for something # olala  ");
+    compareN(bTestSuccess, "param1-original-number-of-line", yaml.getRoot()->getElement("param1")->getPlaceInFile().getNumberOfLine(), 1);
     compareS(bTestSuccess, "param1-comment", yaml.getRoot()->getElement("param1")->getComment(), "it's value for something # olala");
 
     compareN(bTestSuccess, "array-test2-length", yaml.getRoot()->getElement("array-test2")->getLength(), 3);

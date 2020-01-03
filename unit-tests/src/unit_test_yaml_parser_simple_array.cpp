@@ -46,8 +46,8 @@ bool UnitTestYamlParserSimpleArray::run() {
     WSJCppYAMLItem *pItem = nullptr;
 
     compareS(bTestSuccess, "param1-value", yaml.getRoot()->getElement("param1")->getValue(), "none value1");
-    compareS(bTestSuccess, "param1-line", yaml.getRoot()->getElement("param1")->getOriginalLine(), "param1: none value1 # it's value for something # olala  ");
-    compareN(bTestSuccess, "param1-original-number-of-line", yaml.getRoot()->getElement("param1")->getOriginalNumberOfLine(), 1);
+    compareS(bTestSuccess, "param1-line", yaml.getRoot()->getElement("param1")->getPlaceInFile().getLine(), "param1: none value1 # it's value for something # olala  ");
+    compareN(bTestSuccess, "param1-original-number-of-line", yaml.getRoot()->getElement("param1")->getPlaceInFile().getNumberOfLine(), 1);
     compareS(bTestSuccess, "param1-comment", yaml.getRoot()->getElement("param1")->getComment(), "it's value for something # olala");
 
     compareN(bTestSuccess, "array-test2-length", yaml.getRoot()->getElement("array-test2")->getLength(), 7);
@@ -62,33 +62,33 @@ bool UnitTestYamlParserSimpleArray::run() {
     compareS(bTestSuccess, "array-test2-element1-comment", pItem->getComment(), "comment v22");
 
     compareS(bTestSuccess, "array-test2-element2-value", yaml["array-test2"][2].getValue(), "true");
-    compareS(bTestSuccess, "array-test2-element2-line", yaml["array-test2"][2].getOriginalLine(), "  - true # comment true ");
-    compareN(bTestSuccess, "array-test2-element2-original-number-of-line", yaml["array-test2"][2].getOriginalNumberOfLine(), 5);
+    compareS(bTestSuccess, "array-test2-element2-line", yaml["array-test2"][2].getPlaceInFile().getLine(), "  - true # comment true ");
+    compareN(bTestSuccess, "array-test2-element2-original-number-of-line", yaml["array-test2"][2].getPlaceInFile().getNumberOfLine(), 5);
     compareS(bTestSuccess, "array-test2-element2-comment", yaml["array-test2"][2].getComment(), "comment true");
 
     compareS(bTestSuccess, "array-test2-element3-value", yaml["array-test2"][3].getValue(), "falsesome");
-    compareS(bTestSuccess, "array-test2-element3-line", yaml["array-test2"][3].getOriginalLine(), "  - falsesome   ");
-    compareN(bTestSuccess, "array-test2-element3-original-number-of-line", yaml["array-test2"][3].getOriginalNumberOfLine(), 7);
+    compareS(bTestSuccess, "array-test2-element3-line", yaml["array-test2"][3].getPlaceInFile().getLine(), "  - falsesome   ");
+    compareN(bTestSuccess, "array-test2-element3-original-number-of-line", yaml["array-test2"][3].getPlaceInFile().getNumberOfLine(), 7);
     compareS(bTestSuccess, "array-test2-element3-comment", yaml["array-test2"][3].getComment(), "");
     
     compareS(bTestSuccess, "array-test2-element4-value", yaml["array-test2"][4].getValue(), "free@free");
-    compareS(bTestSuccess, "array-test2-element4-line", yaml["array-test2"][4].getOriginalLine(), "  - free@free   ");
-    compareN(bTestSuccess, "array-test2-element4-original-number-of-line", yaml["array-test2"][4].getOriginalNumberOfLine(), 8);
+    compareS(bTestSuccess, "array-test2-element4-line", yaml["array-test2"][4].getPlaceInFile().getLine(), "  - free@free   ");
+    compareN(bTestSuccess, "array-test2-element4-original-number-of-line", yaml["array-test2"][4].getPlaceInFile().getNumberOfLine(), 8);
     compareS(bTestSuccess, "array-test2-element4-comment", yaml["array-test2"][4].getComment(), "");
 
     compareS(bTestSuccess, "array-test2-element5-value", yaml["array-test2"][5].getValue(), "");
-    compareS(bTestSuccess, "array-test2-element5-line", yaml["array-test2"][5].getOriginalLine(), "  - # empty ");
-    compareN(bTestSuccess, "array-test2-element5-original-number-of-line", yaml["array-test2"][5].getOriginalNumberOfLine(), 9);
+    compareS(bTestSuccess, "array-test2-element5-line", yaml["array-test2"][5].getPlaceInFile().getLine(), "  - # empty ");
+    compareN(bTestSuccess, "array-test2-element5-original-number-of-line", yaml["array-test2"][5].getPlaceInFile().getNumberOfLine(), 9);
     compareS(bTestSuccess, "array-test2-element5-comment", yaml["array-test2"][5].getComment(), "empty");
 
     compareS(bTestSuccess, "array-test2-element6-value", yaml["array-test2"][6].getValue(), "1");
-    compareS(bTestSuccess, "array-test2-element6-line", yaml["array-test2"][6].getOriginalLine(), "  - 1");
-    compareN(bTestSuccess, "array-test2-element6-original-number-of-line", yaml["array-test2"][6].getOriginalNumberOfLine(), 10);
+    compareS(bTestSuccess, "array-test2-element6-line", yaml["array-test2"][6].getPlaceInFile().getLine(), "  - 1");
+    compareN(bTestSuccess, "array-test2-element6-original-number-of-line", yaml["array-test2"][6].getPlaceInFile().getNumberOfLine(), 10);
     compareS(bTestSuccess, "array-test2-element6-comment", yaml["array-test2"][6].getComment(), "");
 
     compareS(bTestSuccess, "param2-value", yaml.getRoot()->getElement("param2")->getValue(), "val2");
-    compareS(bTestSuccess, "param2-line", yaml.getRoot()->getElement("param2")->getOriginalLine(), "param2: val2 #  value 2 ");
-    compareN(bTestSuccess, "param2-original-number-of-line", yaml.getRoot()->getElement("param2")->getOriginalNumberOfLine(), 11);
+    compareS(bTestSuccess, "param2-line", yaml.getRoot()->getElement("param2")->getPlaceInFile().getLine(), "param2: val2 #  value 2 ");
+    compareN(bTestSuccess, "param2-original-number-of-line", yaml.getRoot()->getElement("param2")->getPlaceInFile().getNumberOfLine(), 11);
     compareS(bTestSuccess, "param2-comment", yaml.getRoot()->getElement("param2")->getComment(), "value 2");
 
     std::string sSaved = "";
