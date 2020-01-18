@@ -10,6 +10,7 @@ set (WSJCPP_LIBRARIES "")
 set (WSJCPP_INCLUDE_DIRS "")
 set (WSJCPP_SOURCES "")
 
-list (APPEND WSJCPP_INCLUDE_DIRS "src.wsjcpp/wsjcpp-core/")
-list (APPEND WSJCPP_SOURCES "src.wsjcpp/wsjcpp-core/wsjcpp_core.h")
-list (APPEND WSJCPP_SOURCES "src.wsjcpp/wsjcpp-core/wsjcpp_core.cpp")
+# wsjcpp/wsjcpp-core
+list (APPEND WSJCPP_INCLUDE_DIRS "src.wsjcpp/wsjcpp_wsjcpp_core/")
+list (APPEND WSJCPP_SOURCES "src.wsjcpp/wsjcpp_wsjcpp_core/wsjcpp_core.h")
+list (APPEND WSJCPP_SOURCES "src.wsjcpp/wsjcpp_wsjcpp_core/wsjcpp_core.cpp")

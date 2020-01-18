@@ -11,10 +11,10 @@ set (WSJCPP_SOURCES "")
 
 # Sources
 
-# wsjcpp-core
-list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp-core/wsjcpp_core.cpp")
-list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp-core/wsjcpp_core.h")
-list (APPEND WSJCPP_INCLUDE_DIRS "../src.wsjcpp/wsjcpp-core/")
+# wsjcpp/wsjcpp-core
+list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_wsjcpp_core/wsjcpp_core.cpp")
+list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_wsjcpp_core/wsjcpp_core.h")
+list (APPEND WSJCPP_INCLUDE_DIRS "../src.wsjcpp/wsjcpp_wsjcpp_core/")
 
 # wsjcpp-yaml
 list (APPEND WSJCPP_SOURCES "../src/wsjcpp_yaml.h")

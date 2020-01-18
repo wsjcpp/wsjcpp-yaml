@@ -96,6 +96,34 @@ std::string WSJCppCore::doNormalizePath(const std::string & sPath) {
 
 // ---------------------------------------------------------------------
 
+std::string WSJCppCore::extractFilename(const std::string &sPath) {
+    // split path by /
+    std::vector<std::string> vNames;
+    std::string s = "";
+    int nStrLen = sPath.length();
+    for (int i = 0; i < sPath.length(); i++) {
+        if (sPath[i] == '/') {
+            vNames.push_back(s);
+            s = "";
+            if (i == nStrLen-1) {
+                vNames.push_back("");
+            }
+        } else {
+            s += sPath[i];
+        }
+    }
+    if (s != "") {
+         vNames.push_back(s);
+    }
+    std::string sRet;
+    if (vNames.size() > 0) {
+        sRet = vNames[vNames.size()-1];
+    }
+    return sRet;
+}
+
+// ---------------------------------------------------------------------
+
 std::string WSJCppCore::getCurrentDirectory() {
     char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) == NULL) {
@@ -275,7 +303,7 @@ bool WSJCppCore::makeDir(const std::string &sDirname) {
         std::cout << "FAILED create folder " << sDirname << std::endl;
         return false;
     }
-    std::cout << "nStatus: " << nStatus << std::endl;
+    // std::cout << "nStatus: " << nStatus << std::endl;
     return true;
 }
 
@@ -283,12 +311,12 @@ bool WSJCppCore::makeDir(const std::string &sDirname) {
 
 bool WSJCppCore::writeFile(const std::string &sFilename, const std::string &sContent) {
     
-    std::ofstream f(sFilename, std::ifstream::in);
+    // std::ofstream f(sFilename, std::ifstream::in);
+    std::ofstream f(sFilename, std::ios::out);
     if (!f) {
-        std::cout << "FAILED could not create file to wtite " << sFilename << std::endl;
+        WSJCppLog::err("WSJCppCore", "Could not create file to write '" + sFilename + "'");
         return false;
     }
-
     f << sContent << std::endl;
     f.close();
     return true;
@@ -380,21 +408,23 @@ std::string WSJCppCore::createUuid() {
 // WSJCppLog
 
 // Last log messages
-std::deque<std::string> *g_LAST_LOG_MESSAGES = NULL;
-std::mutex *g_LOG_MUTEX = NULL;
-std::string WSJCppLog::g_LOG_DIR = "./";
-std::string WSJCppLog::g_LOG_FILE = "";
-std::string WSJCppLog::g_PREFIX_LOG_FILE = "";
-long WSJCppLog::g_LOG_START_TIME = 0;
+std::deque<std::string> * WSJCppLog::g_WSJCPP_LOG_LAST_MESSAGES = nullptr;
+std::mutex * WSJCppLog::g_WSJCPP_LOG_MUTEX = nullptr;
+std::string WSJCppLog::g_WSJCPP_LOG_DIR = "./";
+std::string WSJCppLog::g_WSJCPP_LOG_FILE = "";
+std::string WSJCppLog::g_WSJCPP_LOG_PREFIX_FILE = "";
+long WSJCppLog::g_WSJCPP_LOG_START_TIME = 0;
 
 // ---------------------------------------------------------------------
 
 void WSJCppLog::doLogRotateUpdateFilename(bool bForce) {
     long t = WSJCppCore::currentTime_seconds();
     long nEverySeconds = 51000; // rotate log if started now or if time left more then 1 day
-    if (g_LOG_START_TIME == 0 || t - g_LOG_START_TIME > nEverySeconds || bForce) {
-        g_LOG_START_TIME = t;
-        g_LOG_FILE = g_LOG_DIR + "/" + WSJCppLog::g_PREFIX_LOG_FILE + "_" + WSJCppCore::formatTimeForFilename(g_LOG_START_TIME) + ".log";
+    if (g_WSJCPP_LOG_START_TIME == 0 || t - g_WSJCPP_LOG_START_TIME > nEverySeconds || bForce) {
+        g_WSJCPP_LOG_START_TIME = t;
+        g_WSJCPP_LOG_FILE = g_WSJCPP_LOG_DIR + "/"
+            + WSJCppLog::g_WSJCPP_LOG_PREFIX_FILE + "_"
+            + WSJCppCore::formatTimeForFilename(g_WSJCPP_LOG_START_TIME) + ".log";
     }
 }
 
@@ -437,14 +467,14 @@ void WSJCppLog::ok(const std::string &sTag, const std::string &sMessage) {
 // ---------------------------------------------------------------------
 
 void WSJCppLog::setLogDirectory(const std::string &sDirectoryPath) {
-    WSJCppLog::g_LOG_DIR = sDirectoryPath;
+    WSJCppLog::g_WSJCPP_LOG_DIR = sDirectoryPath;
     WSJCppLog::doLogRotateUpdateFilename(true);
 }
 
 // ---------------------------------------------------------------------
 
 void WSJCppLog::setPrefixLogFile(const std::string &sPrefixLogFile) {
-    WSJCppLog::g_PREFIX_LOG_FILE = sPrefixLogFile;
+    WSJCppLog::g_WSJCPP_LOG_PREFIX_FILE = sPrefixLogFile;
     WSJCppLog::doLogRotateUpdateFilename(true);
 }
 
@@ -452,13 +482,13 @@ void WSJCppLog::setPrefixLogFile(const std::string &sPrefixLogFile) {
 
 void WSJCppLog::initGlobalVariables() {
     // create deque if not created
-    if (g_LAST_LOG_MESSAGES == NULL) {
-        g_LAST_LOG_MESSAGES = new std::deque<std::string>();
+    if (WSJCppLog::g_WSJCPP_LOG_LAST_MESSAGES == nullptr) {
+        WSJCppLog::g_WSJCPP_LOG_LAST_MESSAGES = new std::deque<std::string>();
         // std::cout << WSJCppCore::currentTime_logformat() + ", " + WSJCppCore::threadId() + " Init last messages deque\r\n";
     }
     // create mutex if not created
-    if (g_LOG_MUTEX == NULL) {
-        g_LOG_MUTEX = new std::mutex();
+    if (WSJCppLog::g_WSJCPP_LOG_MUTEX == nullptr) {
+        WSJCppLog::g_WSJCPP_LOG_MUTEX = new std::mutex();
         // std::cout << WSJCppCore::currentTime_logformat() + ", " + WSJCppCore::threadId() + " Init mutex for log\r\n";
     }
 }
@@ -469,19 +499,19 @@ void WSJCppLog::add(WSJCppColorModifier &clr, const std::string &sType, const st
     WSJCppLog::initGlobalVariables();
     WSJCppLog::doLogRotateUpdateFilename();
 
-    std::lock_guard<std::mutex> lock(*g_LOG_MUTEX);
+    std::lock_guard<std::mutex> lock(*WSJCppLog::g_WSJCPP_LOG_MUTEX);
     WSJCppColorModifier def(WSJCppColorCode::FG_DEFAULT);
 
     std::string sLogMessage = WSJCppCore::currentTime_logformat() + ", " + WSJCppCore::threadId()
          + " [" + sType + "] " + sTag + ": " + sMessage;
     std::cout << clr << sLogMessage << def << std::endl;
 
-    g_LAST_LOG_MESSAGES->push_front(sLogMessage);
-    while (g_LAST_LOG_MESSAGES->size() > 50) {
-        g_LAST_LOG_MESSAGES->pop_back();
+    g_WSJCPP_LOG_LAST_MESSAGES->push_front(sLogMessage);
+    while (g_WSJCPP_LOG_LAST_MESSAGES->size() > 50) {
+        g_WSJCPP_LOG_LAST_MESSAGES->pop_back();
     }
     // TODO try create global variable
-    std::ofstream logFile(WSJCppLog::g_LOG_FILE, std::ios::app);
+    std::ofstream logFile(WSJCppLog::g_WSJCPP_LOG_FILE, std::ios::app);
     if (!logFile) {
         std::cout << "Error Opening File" << std::endl;
         return;
@@ -490,3 +520,5 @@ void WSJCppLog::add(WSJCppColorModifier &clr, const std::string &sType, const st
     logFile << sLogMessage << std::endl;
     logFile.close();
 }
+
+

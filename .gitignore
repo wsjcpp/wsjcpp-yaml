@@ -2,6 +2,9 @@ wsjcpp-yaml
 tmp/*
 .wsjcpp-yaml-logs/*
 .vscode
+.wsjcpp-cache/*
+.wsjcpp-logs/*
+.wsjcpp/*
 
 # Prerequisites
 *.d

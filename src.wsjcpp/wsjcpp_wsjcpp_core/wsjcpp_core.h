@@ -18,7 +18,8 @@ class WSJCppCore {
             const std::string &sLibraryNameForExports
         );
 
-        static std::string doNormalizePath(const std::string & sPath);
+        static std::string doNormalizePath(const std::string &sPath);
+        static std::string extractFilename(const std::string &sPath);
         static std::string getCurrentDirectory();
 
         static long currentTime_milliseconds();
@@ -80,10 +81,12 @@ class WSJCppColorModifier {
 
 class WSJCppLog {
     public:
-        static std::string g_LOG_DIR;
-        static std::string g_PREFIX_LOG_FILE;
-        static std::string g_LOG_FILE;
-        static long g_LOG_START_TIME;
+        static std::string g_WSJCPP_LOG_DIR;
+        static std::string g_WSJCPP_LOG_PREFIX_FILE;
+        static std::string g_WSJCPP_LOG_FILE;
+        static long g_WSJCPP_LOG_START_TIME;
+        static std::mutex * g_WSJCPP_LOG_MUTEX;
+        static std::deque<std::string> * g_WSJCPP_LOG_LAST_MESSAGES;
         static void doLogRotateUpdateFilename(bool bForce = false);
 
         static void info(const std::string &sTag, const std::string &sMessage);
@@ -93,7 +96,6 @@ class WSJCppLog {
         static void ok(const std::string &sTag, const std::string &sMessage);
         static void setLogDirectory(const std::string &sDirectoryPath);
         static void setPrefixLogFile(const std::string &sPrefixLogFile);
-        // static nlohmann::json getLastLogs();
         static void initGlobalVariables();
 
     private:
@@ -101,3 +103,5 @@ class WSJCppLog {
 };
 
 #endif // WSJCPP_CORE_H
+
+
