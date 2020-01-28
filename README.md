@@ -9,8 +9,8 @@ C++ Write/Reader yaml files
 
 include files:
 
-- src.wsjcpp/wsjcpp-core/wsjcpp_core.h
-- src.wsjcpp/wsjcpp-core/wsjcpp_core.cpp
+- src.wsjcpp/wsjcpp_core/wsjcpp_core.h
+- src.wsjcpp/wsjcpp_core/wsjcpp_core.cpp
 - src/wsjcpp_yaml.cpp
 - src/wsjcpp_yaml.h
 

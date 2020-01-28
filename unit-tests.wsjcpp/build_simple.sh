@@ -7,3 +7,4 @@ fi
 cd tmp
 cmake ..
 make
+
