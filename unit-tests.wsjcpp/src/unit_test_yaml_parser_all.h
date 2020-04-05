@@ -1,9 +1,9 @@
 #ifndef UNIT_TEST_YAML_PARSER_ALL_H
 #define UNIT_TEST_YAML_PARSER_ALL_H
 
-#include <unit_tests.h>
+#include <wsjcpp_unit_tests.h>
 
-class UnitTestYamlParserAll : public UnitTestBase {
+class UnitTestYamlParserAll : public WsjcppUnitTestBase {
     public:
         UnitTestYamlParserAll();
         virtual void init();

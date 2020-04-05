@@ -6,22 +6,22 @@
 
 int main(int argc, char* argv[]) {
     std::string TAG = "MAIN";
-    WSJCppCore::initRandom();
+    WsjcppCore::initRandom();
     std::string appName = std::string(WSJCPP_NAME);
     std::string appVersion = std::string(WSJCPP_VERSION);
     std::string appLogPath = ".wsjcpp-yaml-logs";
-    WSJCppLog::setLogDirectory(appLogPath);
-    if (!WSJCppCore::dirExists(appLogPath)) {
-        WSJCppCore::makeDir(appLogPath);
+    WsjcppLog::setLogDirectory(appLogPath);
+    if (!WsjcppCore::dirExists(appLogPath)) {
+        WsjcppCore::makeDir(appLogPath);
     }
-    WSJCppYAML yaml;
+    WsjcppYaml yaml;
     if (!yaml.loadFromFile("./wsjcpp.yml")) {
-        WSJCppLog::err(TAG, "Could not read data from file");
+        WsjcppLog::err(TAG, "Could not read data from file");
         return -1;
     }
     
     if (!yaml.saveToFile("./wsjcpp.yml")) {
-        WSJCppLog::err(TAG, "Could not save data to file");
+        WsjcppLog::err(TAG, "Could not save data to file");
         return -1;
     }
 

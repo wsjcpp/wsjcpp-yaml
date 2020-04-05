@@ -6,7 +6,7 @@
 REGISTRY_UNIT_TEST(UnitTestYamlParserQuotes)
 
 UnitTestYamlParserQuotes::UnitTestYamlParserQuotes()
-    : UnitTestBase("UnitTestYamlParserQuotes") {
+    : WsjcppUnitTestBase("UnitTestYamlParserQuotes") {
     //
 }
 
@@ -34,9 +34,9 @@ bool UnitTestYamlParserQuotes::run() {
 
     bool bTestSuccess = true;
     
-    WSJCppYAML yaml;
+    WsjcppYaml yaml;
     if (!yaml.loadFromString(g_sTestYaml)) {
-        WSJCppLog::err(TAG, "Error parsing");
+        WsjcppLog::err(TAG, "Error parsing");
         return false;
     }
 
@@ -71,7 +71,7 @@ bool UnitTestYamlParserQuotes::run() {
             "  - \"https://github.com/wsjcpp/wsjcpp-core:v0.0.1\""
         );
     } else {
-        WSJCppLog::err(TAG, "Could not save to string");
+        WsjcppLog::err(TAG, "Could not save to string");
         bTestSuccess = false;
     }
     return bTestSuccess;

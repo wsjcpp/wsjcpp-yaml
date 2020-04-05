@@ -7,7 +7,7 @@
 REGISTRY_UNIT_TEST(UnitTestYamlParserAll)
 
 UnitTestYamlParserAll::UnitTestYamlParserAll()
-    : UnitTestBase("UnitTestYamlParserAll") {
+    : WsjcppUnitTestBase("UnitTestYamlParserAll") {
     //
 }
 
@@ -48,17 +48,17 @@ bool UnitTestYamlParserAll::run() {
 
     bool bTestSuccess = true;
     
-    WSJCppYAML yaml;
+    WsjcppYaml yaml;
     if (yaml.loadFromString(g_sTestYaml)) {
-        WSJCppLog::throw_err(TAG, "Error parsing");
+        WsjcppLog::throw_err(TAG, "Error parsing");
         return -1;
     }
     std::string sSaved = "";
     if (yaml.saveToString(sSaved)) {
-        WSJCppLog::info(TAG, "\n>>>>\n" + sSaved);
+        WsjcppLog::info(TAG, "\n>>>>\n" + sSaved);
     }
     
-    WSJCppYAMLItem *pItem = nullptr;
+    WsjcppYamlItem *pItem = nullptr;
     compareS(bTestSuccess, "test10", yaml.getRoot()->getElement("test10")->getValue(), "two");
     compareS(bTestSuccess, "test20", yaml.getRoot()->getElement("test20")->getValue(), "two");
         
@@ -88,7 +88,7 @@ bool UnitTestYamlParserAll::run() {
     if (yaml.saveToString(sSaved)) {
         compareS(bTestSuccess, "yaml_save", sSaved, g_sTestYaml);
     } else {
-        WSJCppLog::err(TAG, "Could not save to string");
+        WsjcppLog::err(TAG, "Could not save to string");
         bTestSuccess = false;
     }
     return bTestSuccess;

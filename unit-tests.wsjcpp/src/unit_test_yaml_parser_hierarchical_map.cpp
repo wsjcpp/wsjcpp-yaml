@@ -6,7 +6,7 @@
 REGISTRY_UNIT_TEST(UnitTestYamlParserHierarchicalMap)
 
 UnitTestYamlParserHierarchicalMap::UnitTestYamlParserHierarchicalMap()
-    : UnitTestBase("UnitTestYamlParserHierarchicalMap") {
+    : WsjcppUnitTestBase("UnitTestYamlParserHierarchicalMap") {
     //
 }
 
@@ -45,13 +45,13 @@ bool UnitTestYamlParserHierarchicalMap::run() {
 
     bool bTestSuccess = true;
     
-    WSJCppYAML yaml;
+    WsjcppYaml yaml;
     if (!yaml.loadFromString(g_sTestYaml)) {
-        WSJCppLog::err(TAG, "Error parsing");
+        WsjcppLog::err(TAG, "Error parsing");
         return false;
     }
     
-    WSJCppYAMLItem *pItem = nullptr;
+    WsjcppYamlItem *pItem = nullptr;
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map111");
     compareS(bTestSuccess, "param1111", pItem->getElement("param1111")->getValue(), "v1111");
@@ -100,7 +100,7 @@ bool UnitTestYamlParserHierarchicalMap::run() {
             "param2: v2 # some comment 2"
         );
     } else {
-        WSJCppLog::err(TAG, "Could not save to string");
+        WsjcppLog::err(TAG, "Could not save to string");
         bTestSuccess = false;
     }
     return bTestSuccess;

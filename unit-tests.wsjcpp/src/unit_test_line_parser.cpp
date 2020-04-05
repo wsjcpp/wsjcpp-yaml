@@ -6,7 +6,7 @@
 REGISTRY_UNIT_TEST(UnitTestLineParser)
 
 UnitTestLineParser::UnitTestLineParser()
-    : UnitTestBase("UnitTestLineParser") {
+    : WsjcppUnitTestBase("UnitTestLineParser") {
     //
 }
 
@@ -68,7 +68,7 @@ bool UnitTestLineParser::run() {
     for (int i = 0; i < vTestLines.size(); i++) {
         LineTest test = vTestLines[i];
         
-        WSJCppYAMLParsebleLine line(test.nNumberOfTest);
+        WsjcppYamlParsebleLine line(test.nNumberOfTest);
         line.parseLine(test.sLine);
 
         std::string tagline = "{line:" + std::to_string(test.nNumberOfTest) + ": '" + test.sLine + "'}";

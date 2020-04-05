@@ -6,7 +6,7 @@
 REGISTRY_UNIT_TEST(UnitTestYamlParserArrayIncludedMap)
 
 UnitTestYamlParserArrayIncludedMap::UnitTestYamlParserArrayIncludedMap()
-    : UnitTestBase("UnitTestYamlParserArrayIncludedMap") {
+    : WsjcppUnitTestBase("UnitTestYamlParserArrayIncludedMap") {
     //
 }
 
@@ -38,13 +38,13 @@ bool UnitTestYamlParserArrayIncludedMap::run() {
 
     bool bTestSuccess = true;
     
-    WSJCppYAML yaml;
+    WsjcppYaml yaml;
     if (!yaml.loadFromString(g_sTestYaml)) {
-        WSJCppLog::err(TAG, "Error parsing");
+        WsjcppLog::err(TAG, "Error parsing");
         return false;
     }
     
-    WSJCppYAMLItem *pItem = nullptr;
+    WsjcppYamlItem *pItem = nullptr;
 
     compareS(bTestSuccess, "param1-value", yaml.getRoot()->getElement("param1")->getValue(), "none value1");
     compareS(bTestSuccess, "param1-line", yaml.getRoot()->getElement("param1")->getPlaceInFile().getLine(), "param1: none value1 # it's value for something # olala  ");
@@ -96,7 +96,7 @@ bool UnitTestYamlParserArrayIncludedMap::run() {
             "param2: v2"
         );
     } else {
-        WSJCppLog::err(TAG, "Could not save to string");
+        WsjcppLog::err(TAG, "Could not save to string");
         bTestSuccess = false;
     }
     return bTestSuccess;

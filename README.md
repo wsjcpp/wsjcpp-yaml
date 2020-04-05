@@ -1,6 +1,6 @@
 # wsjcpp-yaml
 
-[![Build Status](https://api.travis-ci.org/wsjcpp/wsjcpp-yaml.svg?branch=master)](https://travis-ci.org/wsjcpp/wsjcpp-yaml) [![Github Stars](https://img.shields.io/github/stars/wsjcpp/wsjcpp-yaml.svg?label=github%20%E2%98%85)](https://github.com/wsjcpp/wsjcpp-yaml) [![Github Stars](https://img.shields.io/github/contributors/wsjcpp/wsjcpp-yaml.svg)](https://github.com/wsjcpp/wsjcpp-yaml) [![Github Forks](https://img.shields.io/github/forks/wsjcpp/wsjcpp-yaml.svg?label=github%20forks)](https://github.com/wsjcpp/wsjcpp-yaml/network/members)
+[![Build Status](https://api.travis-ci.com/wsjcpp/wsjcpp-yaml.svg?branch=master)](https://travis-ci.com/wsjcpp/wsjcpp-yaml) [![Github Stars](https://img.shields.io/github/stars/wsjcpp/wsjcpp-yaml.svg?label=github%20%E2%98%85)](https://github.com/wsjcpp/wsjcpp-yaml) [![Github Stars](https://img.shields.io/github/contributors/wsjcpp/wsjcpp-yaml.svg)](https://github.com/wsjcpp/wsjcpp-yaml) [![Github Forks](https://img.shields.io/github/forks/wsjcpp/wsjcpp-yaml.svg?label=github%20forks)](https://github.com/wsjcpp/wsjcpp-yaml/network/members)
 
 C++ Write/Reader yaml files
 
@@ -27,14 +27,14 @@ In you main file configure logger:
 int main(int argc, char* argv[]) {
     std::string TAG = "MAIN";
     std::string appLogPath = ".logs";
-    WSJCppLog::setLogDirectory(appLogPath);
-    if (!WSJCppCore::dirExists(appLogPath)) {
-        WSJCppCore::makeDir(appLogPath);
+    WsjcppLog::setLogDirectory(appLogPath);
+    if (!WsjcppCore::dirExists(appLogPath)) {
+        WsjcppCore::makeDir(appLogPath);
     }
-    WSJCppLog::info(TAG, "Hello!");
+    WsjcppLog::info(TAG, "Hello!");
 
-    // now you can use WSJCppYAML
-    WSJCppYAML yaml;
+    // now you can use WsjcppYaml
+    WsjcppYaml yaml;
     if (yaml.loadFromString(
         "# yaml content\n"
         "yaml1: nice format\n"
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
         "    p2: v4 \n"
         "param2: 111\n"
     )) {
-        WSJCppLog::throw_err(TAG, "Error parsing");
+        WsjcppLog::throw_err(TAG, "Error parsing");
         return -1;
     }
 

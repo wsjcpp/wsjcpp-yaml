@@ -6,7 +6,7 @@
 REGISTRY_UNIT_TEST(UnitTestYamlParserComments)
 
 UnitTestYamlParserComments::UnitTestYamlParserComments()
-    : UnitTestBase("UnitTestYamlParserComments") {
+    : WsjcppUnitTestBase("UnitTestYamlParserComments") {
     //
 }
 
@@ -38,9 +38,9 @@ bool UnitTestYamlParserComments::run() {
 
     bool bTestSuccess = true;
     
-    WSJCppYAML yaml;
+    WsjcppYaml yaml;
     if (!yaml.loadFromString(g_sTestYaml)) {
-        WSJCppLog::err(TAG, "Error parsing");
+        WsjcppLog::err(TAG, "Error parsing");
         return false;
     }
 
@@ -89,7 +89,7 @@ bool UnitTestYamlParserComments::run() {
             "  p2: val 2 # comment 12"
         );
     } else {
-        WSJCppLog::err(TAG, "Could not save to string");
+        WsjcppLog::err(TAG, "Could not save to string");
         bTestSuccess = false;
     }
     return bTestSuccess;

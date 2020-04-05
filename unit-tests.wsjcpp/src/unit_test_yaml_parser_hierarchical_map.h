@@ -1,9 +1,9 @@
 #ifndef UNIT_TEST_YAML_PARSER_HIERARCHICAL_MAP_H
 #define UNIT_TEST_YAML_PARSER_HIERARCHICAL_MAP_H
 
-#include <unit_tests.h>
+#include <wsjcpp_unit_tests.h>
 
-class UnitTestYamlParserHierarchicalMap : public UnitTestBase {
+class UnitTestYamlParserHierarchicalMap : public WsjcppUnitTestBase {
     public:
         UnitTestYamlParserHierarchicalMap();
         virtual void init();

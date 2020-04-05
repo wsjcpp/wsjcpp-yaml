@@ -1,9 +1,9 @@
 #ifndef UNIT_TEST_YAML_PARSER_SIMPLE_MAP_H
 #define UNIT_TEST_YAML_PARSER_SIMPLE_MAP_H
 
-#include <unit_tests.h>
+#include <wsjcpp_unit_tests.h>
 
-class UnitTestYamlParserSimpleMap : public UnitTestBase {
+class UnitTestYamlParserSimpleMap : public WsjcppUnitTestBase {
     public:
         UnitTestYamlParserSimpleMap();
         virtual void init();

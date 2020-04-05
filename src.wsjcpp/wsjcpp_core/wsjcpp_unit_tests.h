@@ -1,13 +1,13 @@
-#ifndef UNIT_TESTS_H
-#define UNIT_TESTS_H
+#ifndef WSJCPP_UNIT_TESTS_H
+#define WSJCPP_UNIT_TESTS_H
 
 #include <map>
 #include <vector>
 #include <wsjcpp_core.h>
 
-class UnitTestBase {
+class WsjcppUnitTestBase {
     public:
-        UnitTestBase(const std::string &sTestName);
+        WsjcppUnitTestBase(const std::string &sTestName);
         std::string name();
         virtual void init() = 0;
         virtual bool run() = 0;
@@ -23,18 +23,17 @@ class UnitTestBase {
         std::string m_sTestName;
 };
 
-extern std::vector<UnitTestBase*> *g_pUnitTests;
+extern std::vector<WsjcppUnitTestBase*> *g_pWsjcppUnitTests;
 
-class UnitTests {
+class WsjcppUnitTests {
     public:
         static void initGlobalVariables();
-        static void addUnitTest(const std::string &sTestName, UnitTestBase* pCmdHandler);
-        static bool runUnitTests();
+        static void addUnitTest(const std::string &sTestName, WsjcppUnitTestBase* pUnitTest);
 };
 
 // RegistryCmdHandler
 #define REGISTRY_UNIT_TEST( classname ) \
-    static classname * pRegistryUnitTest ## classname = new classname(); \
+    static classname * pRegistryWsjcppUnitTest ## classname = new classname(); \
 
 
-#endif // UNIT_TESTS_H
+#endif // WSJCPP_UNIT_TESTS_H

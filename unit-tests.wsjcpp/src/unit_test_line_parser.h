@@ -1,9 +1,9 @@
 #ifndef UNIT_TEST_LINE_PARSER_H
 #define UNIT_TEST_LINE_PARSER_H
 
-#include <unit_tests.h>
+#include <wsjcpp_unit_tests.h>
 
-class UnitTestLineParser : public UnitTestBase {
+class UnitTestLineParser : public WsjcppUnitTestBase {
     public:
         UnitTestLineParser();
         virtual void init();

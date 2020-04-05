@@ -1,9 +1,9 @@
 #ifndef UNIT_TEST_YAML_PARSER_COMMENTS_H
 #define UNIT_TEST_YAML_PARSER_COMMENTS_H
 
-#include <unit_tests.h>
+#include <wsjcpp_unit_tests.h>
 
-class UnitTestYamlParserComments : public UnitTestBase {
+class UnitTestYamlParserComments : public WsjcppUnitTestBase {
     public:
         UnitTestYamlParserComments();
         virtual void init();
