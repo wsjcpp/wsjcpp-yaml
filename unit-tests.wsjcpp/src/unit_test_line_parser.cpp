@@ -3,7 +3,7 @@
 #include <iostream>
 #include <wsjcpp_yaml.h>
 
-REGISTRY_UNIT_TEST(UnitTestLineParser)
+REGISTRY_WSJCPP_UNIT_TEST(UnitTestLineParser)
 
 UnitTestLineParser::UnitTestLineParser()
     : WsjcppUnitTestBase("UnitTestLineParser") {

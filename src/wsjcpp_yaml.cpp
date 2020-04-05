@@ -398,6 +398,18 @@ bool WsjcppYamlItem::appendElement(WsjcppYamlItem *pItem) {
 
 // ---------------------------------------------------------------------
 
+bool WsjcppYamlItem::appendElementValue(const std::string &sValue, bool bHasValueQuotes) {
+    if (m_nItemType != WSJCPP_YAML_ITEM_ARRAY) {
+        WsjcppLog::throw_err(TAG, "appendElementValue, Element must be array for " + this->getForLogFormat());
+    }
+    WsjcppYamlPlaceInFile pl;
+    WsjcppYamlItem *pNewItem = new WsjcppYamlItem(this, pl, WsjcppYamlItemType::WSJCPP_YAML_ITEM_VALUE);
+    pNewItem->setValue(sValue, bHasValueQuotes);
+    return this->appendElement(pNewItem);
+}
+
+// ---------------------------------------------------------------------
+
 bool WsjcppYamlItem::removeElement(int i) {
     if (m_nItemType != WSJCPP_YAML_ITEM_ARRAY) {
         WsjcppLog::throw_err(TAG, "appendElement, Element must be array for " + this->getForLogFormat());

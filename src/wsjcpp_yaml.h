@@ -93,6 +93,7 @@ class WsjcppYamlItem { // TODO: rename to node
         int getLength();
         WsjcppYamlItem *getElement(int i);
         bool appendElement(WsjcppYamlItem *pItem);
+        bool appendElementValue(const std::string &sValue, bool bHasValueQuotes);
         bool removeElement(int i);
 
         bool isValue();

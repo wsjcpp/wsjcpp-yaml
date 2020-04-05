@@ -4,7 +4,7 @@
 #include <wsjcpp_core.h>
 #include <wsjcpp_yaml.h>
 
-REGISTRY_UNIT_TEST(UnitTestYamlParserAll)
+REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserAll)
 
 UnitTestYamlParserAll::UnitTestYamlParserAll()
     : WsjcppUnitTestBase("UnitTestYamlParserAll") {

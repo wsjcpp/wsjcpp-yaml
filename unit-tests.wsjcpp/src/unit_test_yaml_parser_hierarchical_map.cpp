@@ -3,7 +3,7 @@
 #include <iostream>
 #include <wsjcpp_yaml.h>
 
-REGISTRY_UNIT_TEST(UnitTestYamlParserHierarchicalMap)
+REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserHierarchicalMap)
 
 UnitTestYamlParserHierarchicalMap::UnitTestYamlParserHierarchicalMap()
     : WsjcppUnitTestBase("UnitTestYamlParserHierarchicalMap") {

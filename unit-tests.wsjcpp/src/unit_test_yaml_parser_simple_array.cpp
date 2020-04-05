@@ -3,7 +3,7 @@
 #include <iostream>
 #include <wsjcpp_yaml.h>
 
-REGISTRY_UNIT_TEST(UnitTestYamlParserSimpleArray)
+REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserSimpleArray)
 
 UnitTestYamlParserSimpleArray::UnitTestYamlParserSimpleArray()
     : WsjcppUnitTestBase("UnitTestYamlParserSimpleArray") {
