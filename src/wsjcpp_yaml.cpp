@@ -58,7 +58,7 @@ void WsjcppYamlPlaceInFile::setLine(const std::string &sLine) {
 // ---------------------------------------------------------------------
 
 std::string WsjcppYamlPlaceInFile::getForLogFormat() {
-    return "(" + m_sFilename + ":" + std::to_string(m_nNumberOfLine) + "): " + m_sLine;
+    return "(" + m_sFilename + ":" + std::to_string(m_nNumberOfLine + 1) + "): " + m_sLine;
 }
 
 // ---------------------------------------------------------------------
