@@ -13,13 +13,14 @@ UnitTestYamlParserAll::UnitTestYamlParserAll()
 
 // ---------------------------------------------------------------------
 
-void UnitTestYamlParserAll::init() {
+bool UnitTestYamlParserAll::doBeforeTest() {
     // nothing
+    return true;
 }
 
 // ---------------------------------------------------------------------
 
-bool UnitTestYamlParserAll::run() {
+void UnitTestYamlParserAll::executeTest() {
 
     std::string g_sTestYaml = 
         "# Some comment 1\n"
@@ -46,50 +47,51 @@ bool UnitTestYamlParserAll::run() {
         "  test80: opa2"
     ;
 
-    bool bTestSuccess = true;
-    
     WsjcppYaml yaml;
-    if (yaml.loadFromString(g_sTestYaml)) {
-        WsjcppLog::throw_err(TAG, "Error parsing");
-        return -1;
+    if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+        return;
     }
+
     std::string sSaved = "";
     if (yaml.saveToString(sSaved)) {
         WsjcppLog::info(TAG, "\n>>>>\n" + sSaved);
     }
     
     WsjcppYamlItem *pItem = nullptr;
-    compareS(bTestSuccess, "test10", yaml.getRoot()->getElement("test10")->getValue(), "two");
-    compareS(bTestSuccess, "test20", yaml.getRoot()->getElement("test20")->getValue(), "two");
+    compare("test10", yaml.getRoot()->getElement("test10")->getValue(), "one");
+    compare("test20", yaml.getRoot()->getElement("test20")->getValue(), "two");
         
     pItem = yaml.getRoot()->getElement("array30");
-    compareN(bTestSuccess, "array30_length", pItem->getLength(), 3);
+    compare("array30_length", pItem->getLength(), 3);
 
     pItem = yaml.getRoot()->getElement("array30")->getElement(0);
-    compareS(bTestSuccess, "test30_value", pItem->getValue(), "one31");
-    compareS(bTestSuccess, "test30_comment", pItem->getComment(), "this field for test array30");
+    compare("test30_value", pItem->getValue(), "one31");
+    compare("test30_comment", pItem->getComment(), "this field for test array30");
     pItem = yaml.getRoot()->getElement("array30")->getElement(1);
-    compareS(bTestSuccess, "test40_value", pItem->getValue(), "two32");
-    compareS(bTestSuccess, "test40_comment", pItem->getComment(), "");
+    compare("test40_value", pItem->getValue(), "two32");
+    compare("test40_comment", pItem->getComment(), "");
 
     pItem = yaml.getRoot()->getElement("array40");
-    compareN(bTestSuccess, "array40_length", pItem->getLength(), 2);
+    compare("array40_length", pItem->getLength(), 2);
 
     pItem = yaml.getRoot()->getElement("array50");
-    compareN(bTestSuccess, "array50_length", pItem->getLength(), 1);
+    compare("array50_length", pItem->getLength(), 2);
     
     pItem = yaml.getRoot()->getElement("map60")->getElement("test70");
-    compareS(bTestSuccess, "test70_value", pItem->getValue(), "opa1");
+    compare("test70_value", pItem->getValue(), "opa1");
 
     pItem = yaml.getRoot()->getElement("map60")->getElement("test80");
-    compareS(bTestSuccess, "test80_comment", pItem->getValue(), "opa2");
+    compare("test80_comment", pItem->getValue(), "opa2");
 
     sSaved = "";
-    if (yaml.saveToString(sSaved)) {
-        compareS(bTestSuccess, "yaml_save", sSaved, g_sTestYaml);
-    } else {
-        WsjcppLog::err(TAG, "Could not save to string");
-        bTestSuccess = false;
+    if (compare("save yaml", yaml.saveToString(sSaved), true)) {
+        compare("yaml_save", sSaved, g_sTestYaml);
     }
-    return bTestSuccess;
+}
+
+// ---------------------------------------------------------------------
+
+bool UnitTestYamlParserAll::doAfterTest() {
+    // nothing
+    return true;
 }

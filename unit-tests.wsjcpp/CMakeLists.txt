@@ -19,7 +19,7 @@ set (WSJCPP_SOURCES "")
 find_package(Threads REQUIRED)
 list (APPEND WSJCPP_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
 
-# wsjcpp-core:v0.1.1
+# wsjcpp-core:v0.2.1
 list (APPEND WSJCPP_INCLUDE_DIRS "../src.wsjcpp/wsjcpp_core/")
 list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_core.cpp")
 list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_core.h")
@@ -42,6 +42,14 @@ list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_simp
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_simple_map.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_hierarchical_map.h")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_hierarchical_map.cpp")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_quotes.h")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_quotes.cpp")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_comments.h")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_comments.cpp")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_all.h")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_all.cpp")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_array_included_map.h")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_array_included_map.cpp")
 
 # required-libraries
 list (APPEND WSJCPP_LIBRARIES "-lpthread")

@@ -12,13 +12,14 @@ UnitTestYamlParserHierarchicalMap::UnitTestYamlParserHierarchicalMap()
 
 // ---------------------------------------------------------------------
 
-void UnitTestYamlParserHierarchicalMap::init() {
+bool UnitTestYamlParserHierarchicalMap::doBeforeTest() {
     // nothing
+    return true;
 }
 
 // ---------------------------------------------------------------------
 
-bool UnitTestYamlParserHierarchicalMap::run() {
+void UnitTestYamlParserHierarchicalMap::executeTest() {
 
     std::string g_sTestYaml = 
         "# Some comment 1\n"
@@ -42,43 +43,41 @@ bool UnitTestYamlParserHierarchicalMap::run() {
         "param2: v2 # some comment 2\n"
         "\n" // empty line
     ;
-
-    bool bTestSuccess = true;
     
     WsjcppYaml yaml;
-    if (!yaml.loadFromString(g_sTestYaml)) {
-        WsjcppLog::err(TAG, "Error parsing");
-        return false;
+    if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+        return;
     }
     
     WsjcppYamlItem *pItem = nullptr;
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map111");
-    compareS(bTestSuccess, "param1111", pItem->getElement("param1111")->getValue(), "v1111");
-    compareS(bTestSuccess, "param1112", pItem->getElement("param1112")->getValue(), "v1112");
+    compare("param1111", pItem->getElement("param1111")->getValue(), "v1111");
+    compare("param1112", pItem->getElement("param1112")->getValue(), "v1112");
     
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map112");
-    compareS(bTestSuccess, "param1121", pItem->getElement("param1121")->getValue(), "v1121");
-    compareS(bTestSuccess, "param1122", pItem->getElement("param1122")->getValue(), "v1122");
+    compare("param1121", pItem->getElement("param1121")->getValue(), "v1121");
+    compare("param1122", pItem->getElement("param1122")->getValue(), "v1122");
     
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map113");
-    compareS(bTestSuccess, "param1131", pItem->getElement("param1131")->getValue(), "v1131");
-    compareS(bTestSuccess, "param1132", pItem->getElement("param1132")->getValue(), "v1132");
+    compare("param1131", pItem->getElement("param1131")->getValue(), "v1131");
+    compare("param1132", pItem->getElement("param1132")->getValue(), "v1132");
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map12");
-    compareS(bTestSuccess, "param121", pItem->getElement("param121")->getValue(), "v121");
-    compareS(bTestSuccess, "param122", pItem->getElement("param122")->getValue(), "v122");
+    compare("param121", pItem->getElement("param121")->getValue(), "v121");
+    compare("param122", pItem->getElement("param122")->getValue(), "v122");
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map12")->getElement("map123");
-    compareS(bTestSuccess, "param1231", pItem->getElement("param1231")->getValue(), "v1231");
-    compareS(bTestSuccess, "param1232", pItem->getElement("param1232")->getValue(), "v1232");
+    compare("param1231", pItem->getElement("param1231")->getValue(), "v1231");
+    compare("param1232", pItem->getElement("param1232")->getValue(), "v1232");
 
-    compareS(bTestSuccess, "param2", yaml.getRoot()->getElement("param2")->getValue(), "v2");
-    compareS(bTestSuccess, "param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
+    compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "v2");
+    compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
     std::string sSaved = "";
-    if (yaml.saveToString(sSaved)) {
-        compareS(bTestSuccess, "yaml_save", sSaved,
+    bool bResult = yaml.saveToString(sSaved);
+    if (compare("save yaml", bResult, true)) {
+        compare("yaml_save", sSaved,
             "# Some comment 1\n"
             "map1:\n"
             "  map11:\n"
@@ -99,9 +98,12 @@ bool UnitTestYamlParserHierarchicalMap::run() {
             "      param1232: v1232\n"
             "param2: v2 # some comment 2"
         );
-    } else {
-        WsjcppLog::err(TAG, "Could not save to string");
-        bTestSuccess = false;
     }
-    return bTestSuccess;
+}
+
+// ---------------------------------------------------------------------
+
+bool UnitTestYamlParserHierarchicalMap::doAfterTest() {
+    // nothing
+    return true;
 }

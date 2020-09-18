@@ -7,8 +7,8 @@
 int main(int argc, char* argv[]) {
     std::string TAG = "MAIN";
     WsjcppCore::initRandom();
-    std::string appName = std::string(WSJCPP_NAME);
-    std::string appVersion = std::string(WSJCPP_VERSION);
+    std::string appName = std::string(WSJCPP_APP_NAME);
+    std::string appVersion = std::string(WSJCPP_APP_VERSION);
     std::string appLogPath = ".wsjcpp-yaml-logs";
     WsjcppLog::setLogDirectory(appLogPath);
     if (!WsjcppCore::dirExists(appLogPath)) {

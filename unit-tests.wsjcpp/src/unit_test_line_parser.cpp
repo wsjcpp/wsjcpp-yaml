@@ -12,13 +12,14 @@ UnitTestLineParser::UnitTestLineParser()
 
 // ---------------------------------------------------------------------
 
-void UnitTestLineParser::init() {
+bool UnitTestLineParser::doBeforeTest() {
     // nothing
+    return true;
 }
 
 // ---------------------------------------------------------------------
 
-bool UnitTestLineParser::run() {
+void UnitTestLineParser::executeTest() {
     struct LineTest {
         LineTest(
             int nNumberOfTest,
@@ -63,8 +64,6 @@ bool UnitTestLineParser::run() {
     vTestLines.push_back(LineTest(6, "  - \"test4:111\"", "  ", true, "", false,  "test4:111", true, ""));
     vTestLines.push_back(LineTest(7, "issues: https://github.com/wsjcpp/wsjcpp-yaml/issues", "", false, "issues", false,  "https://github.com/wsjcpp/wsjcpp-yaml/issues", false, ""));
 
-    bool bTestSuccess = true;
-
     for (int i = 0; i < vTestLines.size(); i++) {
         LineTest test = vTestLines[i];
         
@@ -72,14 +71,19 @@ bool UnitTestLineParser::run() {
         line.parseLine(test.sLine);
 
         std::string tagline = "{line:" + std::to_string(test.nNumberOfTest) + ": '" + test.sLine + "'}";
-        compareS(bTestSuccess, tagline + ", prefix", line.getPrefix(), test.sPrefix);
-        compareB(bTestSuccess, tagline + ", arrayitem", line.isArrayItem(), test.isArrayItem);
-        compareS(bTestSuccess, tagline + ", name", line.getName(), test.sName);
-        compareB(bTestSuccess, tagline + ", name-has-quotes", line.hasNameDoubleQuotes(), test.bNameHasQuotes);
-        compareS(bTestSuccess, tagline + ", value", line.getValue(), test.sValue);
-        compareB(bTestSuccess, tagline + ", value-has-quotes", line.hasValueDoubleQuotes(), test.bValueHasQuotes);
-        compareS(bTestSuccess, tagline + ", comment", line.getComment(), test.sComment);
+        compare(tagline + ", prefix", line.getPrefix(), test.sPrefix);
+        compare(tagline + ", arrayitem", line.isArrayItem(), test.isArrayItem);
+        compare(tagline + ", name", line.getName(), test.sName);
+        compare(tagline + ", name-has-quotes", line.hasNameDoubleQuotes(), test.bNameHasQuotes);
+        compare(tagline + ", value", line.getValue(), test.sValue);
+        compare(tagline + ", value-has-quotes", line.hasValueDoubleQuotes(), test.bValueHasQuotes);
+        compare(tagline + ", comment", line.getComment(), test.sComment);
     }
+}
 
-    return bTestSuccess;
+// ---------------------------------------------------------------------
+
+bool UnitTestLineParser::doAfterTest() {
+    // nothing
+    return true;
 }
