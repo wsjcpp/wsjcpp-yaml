@@ -12,13 +12,14 @@ UnitTestYamlParserSimpleMap::UnitTestYamlParserSimpleMap()
 
 // ---------------------------------------------------------------------
 
-void UnitTestYamlParserSimpleMap::init() {
+bool UnitTestYamlParserSimpleMap::doBeforeTest() {
     // nothing
+    return true;
 }
 
 // ---------------------------------------------------------------------
 
-bool UnitTestYamlParserSimpleMap::run() {
+void UnitTestYamlParserSimpleMap::executeTest() {
 
     std::string g_sTestYaml = 
         "# Some comment 1\n"
@@ -26,30 +27,31 @@ bool UnitTestYamlParserSimpleMap::run() {
         "param2: value2 # some comment 2\n"
         "\n" // empty line
     ;
-
-    bool bTestSuccess = true;
     
     WsjcppYaml yaml;
-    if (!yaml.loadFromString(g_sTestYaml)) {
-        WsjcppLog::err(TAG, "Error parsing");
-        return false;
+     if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+        return;
     }
     
     WsjcppYamlItem *pItem = nullptr;
-    compareS(bTestSuccess, "param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
-    compareS(bTestSuccess, "param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
-    compareS(bTestSuccess, "param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
+    compare("param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
+    compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
+    compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
     std::string sSaved = "";
-    if (yaml.saveToString(sSaved)) {
-        compareS(bTestSuccess, "yaml_save", sSaved,
+    bool bResult = yaml.saveToString(sSaved);
+    if (compare("save yaml", bResult, true)) {
+        compare("yaml_save", sSaved,
             "# Some comment 1\n"
             "param1: value1\n"
             "param2: value2 # some comment 2"
         );
-    } else {
-        WsjcppLog::err(TAG, "Could not save to string");
-        bTestSuccess = false;
     }
-    return bTestSuccess;
+}
+
+// ---------------------------------------------------------------------
+
+bool UnitTestYamlParserSimpleMap::doAfterTest() {
+    // nothing
+    return true;
 }

@@ -6,8 +6,9 @@
 class UnitTestYamlParserArrayIncludedMap : public WsjcppUnitTestBase {
     public:
         UnitTestYamlParserArrayIncludedMap();
-        virtual void init();
-        virtual bool run();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
 };
 
 #endif // UNIT_TEST_YAML_PARSER_ARRAY_INCLUDED_MAP_H

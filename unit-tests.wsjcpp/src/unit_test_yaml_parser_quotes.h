@@ -6,8 +6,9 @@
 class UnitTestYamlParserQuotes : public WsjcppUnitTestBase {
     public:
         UnitTestYamlParserQuotes();
-        virtual void init();
-        virtual bool run();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
 };
 
 #endif // UNIT_TEST_YAML_PARSER_QUOTES_H
