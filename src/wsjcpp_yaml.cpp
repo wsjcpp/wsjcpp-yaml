@@ -82,6 +82,9 @@ WsjcppYamlItem::WsjcppYamlItem(
 // ---------------------------------------------------------------------
 
 WsjcppYamlItem::~WsjcppYamlItem() {
+    for (int i = 0; i < m_vObjects.size(); i++) {
+        delete m_vObjects[i];
+    }
     m_vObjects.clear();
 }
 
@@ -249,7 +252,15 @@ bool WsjcppYamlItem::removeElement(const std::string &sName) {
     if (m_nItemType != WSJCPP_YAML_ITEM_MAP) {
         WsjcppLog::throw_err(TAG, "removeElement: Element must be map");
     }
-    // TODO erase
+    std::vector<WsjcppYamlItem *>::iterator it;
+    for (it = m_vObjects.begin(); it != m_vObjects.end(); ++it) {
+        WsjcppYamlItem *pItem = *it;
+        if (pItem->getName() == sName) {
+            m_vObjects.erase(it);
+            delete pItem;
+            return true;
+        }
+    }
     return false;
 }
 
@@ -431,6 +442,7 @@ bool WsjcppYamlItem::removeElement(int i) {
     std::vector<WsjcppYamlItem *>::iterator it;
     for (it = m_vObjects.begin(); it != m_vObjects.end(); ++it) {
         if (*it == pItem) {
+            delete pItem;
             m_vObjects.erase(it);
             return true;
         }

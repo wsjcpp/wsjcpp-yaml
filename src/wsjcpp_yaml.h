@@ -213,5 +213,24 @@ class WsjcppYaml {
         WsjcppYamlItem *m_pRoot;
 };
 
+// ---------------------------------------------------------------------
+
+/*
+class WsjcppYamlCursor {
+    public:
+        WsjcppYamlCursor(WsjcppYaml *pYaml);
+        ~WsjcppYamlCursor();
+        WsjcppYamlCursor(WsjcppYaml *pYaml, WsjcppYamlItem *pCurrentNode);
+        WsjcppYamlCursor &operator[](int idx) { 
+            return WsjcppYamlCursor(pYaml, pYaml->getRoot()->getElement(idx)); // will be call destructor ?
+        }
+        WsjcppYamlCursor &operator[](const std::string &sName) { return *(getRoot()->getElement(sName)); }
+
+    private:
+        WsjcppYaml *m_pYaml;
+        WsjcppYamlItem *m_pCurrentNode;
+};
+*/
+
 #endif // WSJCPP_YAML_H
 

@@ -1,7 +1,18 @@
-#include "unit_test_line_parser.h"
+#include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
+
+// ---------------------------------------------------------------------
+// UnitTestLineParser
+
+class UnitTestLineParser : public WsjcppUnitTestBase {
+    public:
+        UnitTestLineParser();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
+};
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestLineParser)
 
@@ -13,7 +24,7 @@ UnitTestLineParser::UnitTestLineParser()
 // ---------------------------------------------------------------------
 
 bool UnitTestLineParser::doBeforeTest() {
-    // nothing
+    // do something before test
     return true;
 }
 
@@ -84,6 +95,6 @@ void UnitTestLineParser::executeTest() {
 // ---------------------------------------------------------------------
 
 bool UnitTestLineParser::doAfterTest() {
-    // nothing
+    // do somethig after test
     return true;
 }
