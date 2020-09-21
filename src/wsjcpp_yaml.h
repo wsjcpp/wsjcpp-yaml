@@ -43,6 +43,15 @@ class WsjcppYamlPlaceInFile {
 };
 
 // ---------------------------------------------------------------------
+// WsjcppYamlQuotes
+
+enum WsjcppYamlQuotes {
+    WSJCPP_YAML_QUOTES_NONE,
+    WSJCPP_YAML_QUOTES_DOUBLE,
+    WSJCPP_YAML_QUOTES_SINGLE
+};
+
+// ---------------------------------------------------------------------
 /*!
 	\brief Class for keep data of yaml node
 
@@ -65,9 +74,9 @@ class WsjcppYamlItem { // TODO: rename to node
         void setComment(const std::string &sComment);
         std::string getComment();
 
-        void setName(const std::string &sName, bool bHasQuotes);
+        void setName(const std::string &sName, WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE);
         std::string getName();
-        bool hasNameDoubleQuotes();
+        WsjcppYamlQuotes getNameQuotes();
 
         bool isEmpty();
         void doEmpty();
@@ -84,22 +93,27 @@ class WsjcppYamlItem { // TODO: rename to node
         bool removeElement(const std::string &sName);
         std::vector<std::string> getKeys();
 
-        bool setElementValue(const std::string &sName, bool bHasNameQuotes, const std::string &sValue, bool bHasValueQuotes);
-        bool createElementMap(const std::string &sName, bool bHasNameQuotes);
+        bool setElementValue(
+            const std::string &sName,
+            const std::string &sValue,
+            WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE,
+            WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
+        );
+        bool createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
         WsjcppYamlItem *createElementMap();
-        bool createElementArray(const std::string &sName, bool bHasNameQuotes);
+        bool createElementArray(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
 
         bool isArray();
         int getLength();
         WsjcppYamlItem *getElement(int i);
         bool appendElement(WsjcppYamlItem *pItem);
-        bool appendElementValue(const std::string &sValue, bool bHasValueQuotes);
+        bool appendElementValue(const std::string &sValue, WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE);
         bool removeElement(int i);
 
         bool isValue();
         std::string getValue();
-        void setValue(const std::string &sValue, bool bHasQuotes);
-        bool hasValueDoubleQuotes();
+        void setValue(const std::string &sValue, WsjcppYamlQuotes nQuotes = WSJCPP_YAML_QUOTES_NONE);
+        WsjcppYamlQuotes getValueQuotes();
 
         std::string toString(std::string sIntent = "");
         std::string getItemTypeAsString();
@@ -116,9 +130,10 @@ class WsjcppYamlItem { // TODO: rename to node
         WsjcppYamlItemType m_nItemType;
         std::vector<WsjcppYamlItem *> m_vObjects;
         std::string m_sValue; // if it is not array or map
-        bool m_bValueHasDoubleQuotes;
+        WsjcppYamlQuotes m_nValueQuotes;
         std::string m_sName;
-        bool m_bNameHasDoubleQuotes;
+        WsjcppYamlQuotes m_nNameQuotes;
+        
         std::string m_sComment;
 };
 
@@ -136,10 +151,10 @@ class WsjcppYamlParsebleLine {
         std::string getComment();
         bool hasComment();
         std::string getName();
-        bool hasNameDoubleQuotes();
+        WsjcppYamlQuotes getNameQuotes();
         bool isEmptyName();
         std::string getValue();
-        bool hasValueDoubleQuotes();
+        WsjcppYamlQuotes getValueQuotes();
         bool isEmptyValue();
         bool isEmptyLine();
 
@@ -154,12 +169,13 @@ class WsjcppYamlParsebleLine {
         std::string m_sComment;
         std::string m_sName;
         std::string m_sValue;
-        bool m_bNameHasQuotes;
-        bool m_bValueHasQuotes;
+        WsjcppYamlQuotes m_nNameQuotes;
+        WsjcppYamlQuotes m_nValueQuotes;
         bool m_bHasComment;
         bool m_bEmptyLine;
 
         std::string removeStringDoubleQuotes(const std::string &sValue);
+        std::string removeStringSingleQuotes(const std::string &sValue);
 };
 
 // ---------------------------------------------------------------------

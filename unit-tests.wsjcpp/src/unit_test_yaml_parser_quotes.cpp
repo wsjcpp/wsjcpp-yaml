@@ -37,6 +37,8 @@ void UnitTestYamlParserQuotes::executeTest() {
         "param1: \"value1\" # v1\n"
         "param2: \" #$!!!value2\" # val 2\n"
         "\" param3 olala\" : val 3 # val 3*** \n"
+        "param4: ' #$!!!value4' # val 4\n"
+        "'param5 aha': ' #$!!!value5' # val 5\n"
         "url: \"https://github.com/wsjcpp/wsjcpp-yaml\"\n"
         "issues: https://github.com/wsjcpp/wsjcpp-yaml/issues\n"
         "empty: \"\"\n"
@@ -64,6 +66,9 @@ void UnitTestYamlParserQuotes::executeTest() {
     compare(" param3 olala", yaml[" param3 olala"].getValue(), "val 3");
     compare(" param3 olala", yaml[" param3 olala"].getComment(), "val 3***");
 
+    compare("param4 val", yaml["param4"].getValue(), " #$!!!value4");
+    compare("param4 comment", yaml["param4"].getValue(), " #$!!!value4");
+
     compare("url-value", yaml["url"].getValue(), "https://github.com/wsjcpp/wsjcpp-yaml");
     compare("issues-value", yaml["issues"].getValue(), "https://github.com/wsjcpp/wsjcpp-yaml/issues");
     compare("empty-value", yaml["empty"].getValue(), "");
@@ -77,12 +82,14 @@ void UnitTestYamlParserQuotes::executeTest() {
         "param1: \"value1\" # v1\n"
         "param2: \" #$!!!value2\" # val 2\n"
         "\" param3 olala\": val 3 # val 3***\n"
+        "param4: ' #$!!!value4' # val 4\n"
+        "'param5 aha': ' #$!!!value5' # val 5\n"
         "url: \"https://github.com/wsjcpp/wsjcpp-yaml\"\n"
         "issues: https://github.com/wsjcpp/wsjcpp-yaml/issues\n"
         "empty: \"\"\n"
         "array:\n"
         "  - \"https://github.com/wsjcpp/wsjcpp-core:v0.0.1\""
-    );    
+    );
 }
 
 // ---------------------------------------------------------------------
