@@ -43,6 +43,7 @@ list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_comm
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_all.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_array_included_map.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_remove_element_for_map.cpp")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_remove_element_in_array.cpp")
 
 # required-libraries
 list (APPEND WSJCPP_LIBRARIES "-lpthread")

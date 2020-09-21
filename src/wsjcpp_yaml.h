@@ -144,18 +144,20 @@ class WsjcppYamlParsebleLine {
         int getIntent(); // prefix length
         bool isArrayItem();
         std::string getComment();
+        bool hasComment();
         std::string getName();
         bool hasNameDoubleQuotes();
         bool isEmptyName();
         std::string getValue();
         bool hasValueDoubleQuotes();
         bool isEmptyValue();
+        bool isEmptyLine();
 
-        void parseLine(const std::string &sLine);
+        bool parseLine(const std::string &sLine, std::string &sError);
 
     private:
         std::string TAG;
-        int m_nLine;
+        int m_nLineNumber;
 
         std::string m_sPrefix;
         bool m_bArrayItem;
@@ -164,6 +166,8 @@ class WsjcppYamlParsebleLine {
         std::string m_sValue;
         bool m_bNameHasQuotes;
         bool m_bValueHasQuotes;
+        bool m_bHasComment;
+        bool m_bEmptyLine;
 
         std::string removeStringDoubleQuotes(const std::string &sValue);
 };
@@ -185,10 +189,9 @@ class WsjcppYaml {
     public:
         WsjcppYaml();
         ~WsjcppYaml();
-        bool loadFromFile(const std::string &sFileName);
+        bool loadFromFile(const std::string &sFileName, std::string &sError);
         bool saveToFile(const std::string &sFileName);
-        bool loadFromString(const std::string &sBuffer);
-        bool loadFromString(std::string &sBuffer);
+        bool loadFromString(const std::string &sBufferName, const std::string &sBuffer, std::string &sError);
         bool saveToString(std::string &sBuffer);
 
         WsjcppYamlItem *getRoot();
@@ -198,8 +201,9 @@ class WsjcppYaml {
     private:
         std::string TAG;
         
+        // TODO replace to WsjcppCore::split()
         std::vector<std::string> splitToLines(const std::string &sBuffer);
-        bool parse(const std::string &sFileName, const std::string &sBuffer);
+        bool parse(const std::string &sFileName, const std::string &sBuffer, std::string &sError);
         void process_sameIntent_hasName_emptyValue_arrayItem(WsjcppYamlParserStatus &st);
         void process_sameIntent_hasName_emptyValue_noArrayItem(WsjcppYamlParserStatus &st);
         void process_sameIntent_hasName_hasValue_arrayItem(WsjcppYamlParserStatus &st);

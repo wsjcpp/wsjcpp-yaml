@@ -1,7 +1,18 @@
-#include "unit_test_yaml_parser_hierarchical_map.h"
+#include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
+
+// ---------------------------------------------------------------------
+// UnitTestYamlParserHierarchicalMap
+
+class UnitTestYamlParserHierarchicalMap : public WsjcppUnitTestBase {
+    public:
+        UnitTestYamlParserHierarchicalMap();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
+};
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserHierarchicalMap)
 
@@ -21,7 +32,7 @@ bool UnitTestYamlParserHierarchicalMap::doBeforeTest() {
 
 void UnitTestYamlParserHierarchicalMap::executeTest() {
 
-    std::string g_sTestYaml = 
+    std::string sTestYaml = 
         "# Some comment 1\n"
         "map1: \n"
         "  map11: \n"
@@ -45,7 +56,9 @@ void UnitTestYamlParserHierarchicalMap::executeTest() {
     ;
     
     WsjcppYaml yaml;
-    if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+    std::string sError;
+    if (!compare("Error parsing", yaml.loadFromString("hard_map", sTestYaml, sError), true)) {
+        WsjcppLog::err(TAG, sError);
         return;
     }
     

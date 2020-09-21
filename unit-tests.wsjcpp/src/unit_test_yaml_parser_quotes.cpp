@@ -1,7 +1,18 @@
-#include "unit_test_yaml_parser_quotes.h"
+#include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
+
+// ---------------------------------------------------------------------
+// UnitTestYamlParserQuotes
+
+class UnitTestYamlParserQuotes : public WsjcppUnitTestBase {
+    public:
+        UnitTestYamlParserQuotes();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
+};
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserQuotes)
 
@@ -21,7 +32,7 @@ bool UnitTestYamlParserQuotes::doBeforeTest() {
 
 void UnitTestYamlParserQuotes::executeTest() {
 
-    std::string g_sTestYaml = 
+    std::string sTestYaml = 
         "# Some comment 1\n"
         "param1: \"value1\" # v1\n"
         "param2: \" #$!!!value2\" # val 2\n"
@@ -36,7 +47,9 @@ void UnitTestYamlParserQuotes::executeTest() {
 
     
     WsjcppYaml yaml;
-    if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+    std::string sError;
+    if (!compare("Error parsing", yaml.loadFromString("parse_quotes", sTestYaml, sError), true)) {
+        WsjcppLog::err(TAG, sError);
         return;
     }
 

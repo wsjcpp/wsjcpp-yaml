@@ -1,7 +1,18 @@
-#include "unit_test_yaml_parser_array_included_map.h"
+#include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
+
+// ---------------------------------------------------------------------
+// UnitTestYamlParserArrayIncludedMap
+
+class UnitTestYamlParserArrayIncludedMap : public WsjcppUnitTestBase {
+    public:
+        UnitTestYamlParserArrayIncludedMap();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
+};
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserArrayIncludedMap)
 
@@ -21,7 +32,7 @@ bool UnitTestYamlParserArrayIncludedMap::doBeforeTest() {
 
 void UnitTestYamlParserArrayIncludedMap::executeTest() {
 
-    std::string g_sTestYaml = 
+    std::string sTestYaml = 
         "#test array included map\n"
         "param1: none value1 # it's value for something # olala  \n"
         "array-test2 : #    some comment 2   \n"
@@ -38,7 +49,9 @@ void UnitTestYamlParserArrayIncludedMap::executeTest() {
     ;
     
     WsjcppYaml yaml;
-     if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+    std::string sError;
+    if (!compare("Error parsing", yaml.loadFromString("map_in_array", sTestYaml, sError), true)) {
+        WsjcppLog::err(TAG, sError);
         return;
     }
     

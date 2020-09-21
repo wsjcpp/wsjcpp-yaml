@@ -1,7 +1,18 @@
-#include "unit_test_yaml_parser_simple_array.h"
+#include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
+
+// ---------------------------------------------------------------------
+// UnitTestYamlParserSimpleArray
+
+class UnitTestYamlParserSimpleArray : public WsjcppUnitTestBase {
+    public:
+        UnitTestYamlParserSimpleArray();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
+};
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserSimpleArray)
 
@@ -21,7 +32,7 @@ bool UnitTestYamlParserSimpleArray::doBeforeTest() {
 
 void UnitTestYamlParserSimpleArray::executeTest() {
 
-    std::string g_sTestYaml = 
+    std::string sTestYaml = 
         "# simple array test\n"
         "param1: none value1 # it's value for something # olala  \n"
         "array-test2 : #    some comment 2   \n"
@@ -37,7 +48,9 @@ void UnitTestYamlParserSimpleArray::executeTest() {
     ;
     
     WsjcppYaml yaml;
-    if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+    std::string sError;
+    if (!compare("Error parsing", yaml.loadFromString("parse_array", sTestYaml, sError), true)) {
+        WsjcppLog::err(TAG, sError);
         return;
     }
     

@@ -77,11 +77,15 @@ void UnitTestLineParser::executeTest() {
 
     for (int i = 0; i < vTestLines.size(); i++) {
         LineTest test = vTestLines[i];
-        
-        WsjcppYamlParsebleLine line(test.nNumberOfTest);
-        line.parseLine(test.sLine);
-
         std::string tagline = "{line:" + std::to_string(test.nNumberOfTest) + ": '" + test.sLine + "'}";
+
+        WsjcppYamlParsebleLine line(test.nNumberOfTest);
+        std::string sError;
+        if (!compare(tagline + ", parseLine", line.parseLine(test.sLine, sError), true)) {
+            WsjcppLog::err(tagline + ", parseLine", sError);
+            return;
+        }
+
         compare(tagline + ", prefix", line.getPrefix(), test.sPrefix);
         compare(tagline + ", arrayitem", line.isArrayItem(), test.isArrayItem);
         compare(tagline + ", name", line.getName(), test.sName);

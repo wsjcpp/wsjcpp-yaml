@@ -15,8 +15,9 @@ int main(int argc, char* argv[]) {
         WsjcppCore::makeDir(appLogPath);
     }
     WsjcppYaml yaml;
-    if (!yaml.loadFromFile("./wsjcpp.yml")) {
-        WsjcppLog::err(TAG, "Could not read data from file");
+    std::string sError; 
+    if (!yaml.loadFromFile("./wsjcpp.yml", sError)) {
+        WsjcppLog::err(TAG, "Could not read data from file: " + sError);
         return -1;
     }
     

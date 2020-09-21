@@ -55,7 +55,9 @@ void UnitTestRemoveElementForMap::executeTest() {
     ;
     
     WsjcppYaml yaml;
-    if (!compare("Error parsing", yaml.loadFromString(sTestYaml), true)) {
+    std::string sError;
+    if (!compare("Error parsing", yaml.loadFromString("rm_elem_in_map", sTestYaml, sError), true)) {
+        WsjcppLog::err(TAG, sError);
         return;
     }
     

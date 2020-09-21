@@ -59,7 +59,9 @@ void UnitTestYamlParserAll::executeTest() {
     ;
 
     WsjcppYaml yaml;
-    if (!compare("Error parsing", yaml.loadFromString(sTestYaml), true)) {
+    std::string sError;
+    if (!compare("Error parsing", yaml.loadFromString("parse_all", sTestYaml, sError), true)) {
+        WsjcppLog::err(TAG, sError);
         return;
     }
 

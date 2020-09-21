@@ -1,7 +1,18 @@
-#include "unit_test_yaml_parser_simple_map.h"
+#include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
+
+// ---------------------------------------------------------------------
+// UnitTestYamlParserSimpleMap
+
+class UnitTestYamlParserSimpleMap : public WsjcppUnitTestBase {
+    public:
+        UnitTestYamlParserSimpleMap();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
+};
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserSimpleMap)
 
@@ -21,7 +32,7 @@ bool UnitTestYamlParserSimpleMap::doBeforeTest() {
 
 void UnitTestYamlParserSimpleMap::executeTest() {
 
-    std::string g_sTestYaml = 
+    std::string sTestYaml = 
         "# Some comment 1\n"
         "param1: value1\n"
         "param2: value2 # some comment 2\n"
@@ -29,7 +40,9 @@ void UnitTestYamlParserSimpleMap::executeTest() {
     ;
     
     WsjcppYaml yaml;
-     if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+    std::string sError;
+    if (!compare("Error parsing", yaml.loadFromString("simple_map", sTestYaml, sError), true)) {
+        WsjcppLog::err(TAG, sError);
         return;
     }
     

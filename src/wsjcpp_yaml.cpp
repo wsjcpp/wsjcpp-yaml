@@ -575,7 +575,7 @@ std::string WsjcppYamlItem::getForLogFormat() {
 
 WsjcppYamlParsebleLine::WsjcppYamlParsebleLine(int nLine) {
     TAG = "WsjcppYamlParsebleLine(line:" + std::to_string(nLine) + ")";
-    m_nLine = nLine;
+    m_nLineNumber = nLine;
 }
 
 // ---------------------------------------------------------------------
@@ -588,7 +588,7 @@ WsjcppYamlParsebleLine::WsjcppYamlParsebleLine()
 // ---------------------------------------------------------------------
 
 int WsjcppYamlParsebleLine::getLineNumber() {
-    return m_nLine;
+    return m_nLineNumber;
 }
 
 // ---------------------------------------------------------------------
@@ -613,6 +613,12 @@ bool WsjcppYamlParsebleLine::isArrayItem() {
 
 std::string WsjcppYamlParsebleLine::getComment() {
     return m_sComment;
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlParsebleLine::hasComment() {
+    return m_bHasComment;
 }
 
 // ---------------------------------------------------------------------
@@ -653,15 +659,29 @@ bool WsjcppYamlParsebleLine::isEmptyValue() {
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlParsebleLine::parseLine(const std::string &sLine) {
+bool WsjcppYamlParsebleLine::isEmptyLine() {
+    return m_bEmptyLine;
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sError) {
     // reset variables
     m_bArrayItem = false;
     m_sPrefix = "";
     m_sComment = "";
     m_sName = "";
     m_sValue = "";
+    m_bHasComment = false;
     m_bNameHasQuotes = false;
     m_bValueHasQuotes = false;
+    m_bEmptyLine = false;
+    std::string sLineTrim = sLine;
+    sLineTrim = WsjcppCore::trim(sLineTrim);
+    if (sLineTrim.length() == 0) {
+        m_bEmptyLine = true;
+        return true;
+    }
 
     WsjcppYamlParserLineStates state = WsjcppYamlParserLineStates::NO;
     for (int i = 0; i < sLine.length(); i++) {
@@ -670,6 +690,7 @@ void WsjcppYamlParsebleLine::parseLine(const std::string &sLine) {
             m_sPrefix += c;
         } else if (c == '#' && (state == WsjcppYamlParserLineStates::NO || state == WsjcppYamlParserLineStates::VALUE)) {
             state = WsjcppYamlParserLineStates::COMMENT;
+            m_bHasComment = true;
         } else if (state == WsjcppYamlParserLineStates::COMMENT) {
             if (c != '\r') {
                 m_sComment += c;
@@ -714,7 +735,8 @@ void WsjcppYamlParsebleLine::parseLine(const std::string &sLine) {
     if (state == WsjcppYamlParserLineStates::STRING 
       || state == WsjcppYamlParserLineStates::ESCAPING
     ) {
-        WsjcppLog::throw_err(TAG, "wrong format");
+        sError = "Line has wrong format.";
+        return false;
     }
 
     // split name and value
@@ -728,7 +750,7 @@ void WsjcppYamlParsebleLine::parseLine(const std::string &sLine) {
         }
     }*/
     
-    WsjcppCore::trim(m_sName);
+    m_sName = WsjcppCore::trim(m_sName);
     if (m_sName.length() > 0 && m_sName[0] == '"') {
         m_bNameHasQuotes = true;
         m_sName = removeStringDoubleQuotes(m_sName);
@@ -740,7 +762,8 @@ void WsjcppYamlParsebleLine::parseLine(const std::string &sLine) {
         m_sValue = removeStringDoubleQuotes(m_sValue);
     }
 
-    WsjcppCore::trim(m_sComment);
+    m_sComment = WsjcppCore::trim(m_sComment);
+    return true;
 }
 
 // ---------------------------------------------------------------------
@@ -776,10 +799,13 @@ std::string WsjcppYamlParsebleLine::removeStringDoubleQuotes(const std::string &
 // WsjcppYamlParserStatus
 
 void WsjcppYamlParserStatus::logUnknownLine(const std::string &sPrefix) {
-    WsjcppLog::warn(sPrefix, "Unknown line (" + std::to_string(placeInFile.getNumberOfLine()) + "): '" + placeInFile.getLine() + "' \n"
-        + "Current Intent: " + std::to_string(nIntent) +  "\n"
-        + "Current Item(line: " + std::to_string(pCurItem->getPlaceInFile().getNumberOfLine()) + "): '" + pCurItem->getPlaceInFile().getLine() + "'"
-        + "Current Item(filename: " + pCurItem->getPlaceInFile().getFilename() + "'"
+    WsjcppLog::warn(sPrefix, "\n"
+        "  error:\n"
+        "    desc: \"unknown_line\"\n"
+        "    line_number: " + std::to_string(pCurItem->getPlaceInFile().getNumberOfLine()) + "\n"
+        "    line: \"" + placeInFile.getLine() + "\"\n"
+        "    intent: " + std::to_string(nIntent) +  "\n"
+        "    filename: \"" + pCurItem->getPlaceInFile().getFilename() + "\""
     );
 }
 
@@ -788,6 +814,7 @@ void WsjcppYamlParserStatus::logUnknownLine(const std::string &sPrefix) {
 
 WsjcppYaml::WsjcppYaml() {
     m_pRoot = new WsjcppYamlItem(nullptr, WsjcppYamlPlaceInFile(), WSJCPP_YAML_ITEM_MAP);
+    TAG = "WsjcppYaml";
 }
 
 // ---------------------------------------------------------------------
@@ -798,12 +825,12 @@ WsjcppYaml::~WsjcppYaml() {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYaml::loadFromFile(const std::string &sFileName) {
+bool WsjcppYaml::loadFromFile(const std::string &sFileName, std::string &sError) {
     std::string sTextContent;
     if (!WsjcppCore::readTextFile(sFileName, sTextContent)) {
         return false;    
     }
-    return parse(sFileName, sTextContent);
+    return parse(sFileName, sTextContent, sError);
 }
 
 // ---------------------------------------------------------------------
@@ -818,14 +845,8 @@ bool WsjcppYaml::saveToFile(const std::string &sFileName) {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYaml::loadFromString(const std::string &sBuffer) {
-    return false;
-}
-
-// ---------------------------------------------------------------------
-
-bool WsjcppYaml::loadFromString(std::string &sBuffer) {
-    return parse("", sBuffer);
+bool WsjcppYaml::loadFromString(const std::string &sBufferName, const std::string &sBuffer, std::string &sError) {
+    return parse(sBufferName, sBuffer, sError);
 }
 
 // ---------------------------------------------------------------------
@@ -864,7 +885,7 @@ std::vector<std::string> WsjcppYaml::splitToLines(const std::string &sBuffer) {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer) {
+bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer, std::string &sError) {
     std::vector<std::string> vLines = this->splitToLines(sBuffer);
     WsjcppYamlParserStatus st;
     st.pCurItem = m_pRoot; // TODO recreate again new root element
@@ -877,25 +898,32 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer)
         // WsjcppLog::info(TAG, "Line(" + std::to_string(nLine) + ") '" + st.sLine + "'");
         st.placeInFile.setNumberOfLine(nLine);
         st.line = WsjcppYamlParsebleLine(nLine);
-        st.line.parseLine(st.placeInFile.getLine());
+        if (!st.line.parseLine(st.placeInFile.getLine(), sError)) {
+            return false;
+        }
         
         bool isEmptyName = st.line.isEmptyName();
         bool isEmptyValue = st.line.isEmptyValue();
         bool isArrayItem = st.line.isArrayItem();
         int nLineIntent = st.line.getIntent();
         int nDiffIntent = nLineIntent - st.nIntent;
-
-        // TODO check comment
-        /*if (isEmptyName && isEmptyValue && isArrayItem) {
+        
+        if (st.line.isEmptyLine()) {
+            WsjcppYamlItem *pItem = new WsjcppYamlItem(
+                st.pCurItem, st.placeInFile,
+                WsjcppYamlItemType::WSJCPP_YAML_ITEM_EMPTY
+            );
+            st.pCurItem->appendElement(pItem);
             continue;
-        }*/
+        }
 
         while (nDiffIntent < 0) {
             st.pCurItem = st.pCurItem->getParent();
             st.nIntent = st.nIntent - 2;
             nDiffIntent = nLineIntent - st.nIntent;
             if (st.pCurItem == nullptr) {
-                WsjcppLog::throw_err(TAG, "cur item is nullptr");
+                sError = "Current item is nullptr";
+                return false;
             }
         }
 
