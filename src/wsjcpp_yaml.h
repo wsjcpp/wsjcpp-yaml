@@ -124,16 +124,6 @@ class WsjcppYamlItem { // TODO: rename to node
 
 // ---------------------------------------------------------------------
 
-enum WsjcppYamlParserLineStates {
-    NO,
-    VALUE,
-    COMMENT,
-    STRING,
-    ESCAPING
-};
-
-// ---------------------------------------------------------------------
-
 class WsjcppYamlParsebleLine {
     public:
         WsjcppYamlParsebleLine(int nLine);

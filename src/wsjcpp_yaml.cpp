@@ -665,6 +665,16 @@ bool WsjcppYamlParsebleLine::isEmptyLine() {
 
 // ---------------------------------------------------------------------
 
+enum WsjcppYamlParserLineStates {
+    WSJCPP_YAML_PARSER_LINE_STATE_NO,
+    WSJCPP_YAML_PARSER_LINE_STATE_VALUE,
+    WSJCPP_YAML_PARSER_LINE_STATE_COMMENT,
+    WSJCPP_YAML_PARSER_LINE_STATE_STRING,
+    WSJCPP_YAML_PARSER_LINE_STATE_STRING_DOUBLE_QUOTES,
+    WSJCPP_YAML_PARSER_LINE_STATE_STRING_SINGLE_QUOTES,
+    WSJCPP_YAML_PARSER_LINE_STATE_ESCAPING
+};
+
 bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sError) {
     // reset variables
     m_bArrayItem = false;
@@ -683,57 +693,57 @@ bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sE
         return true;
     }
 
-    WsjcppYamlParserLineStates state = WsjcppYamlParserLineStates::NO;
+    WsjcppYamlParserLineStates state = WSJCPP_YAML_PARSER_LINE_STATE_NO;
     for (int i = 0; i < sLine.length(); i++) {
         char c = sLine[i];
-        if ((c == ' ' || c == '\t') && state == WsjcppYamlParserLineStates::NO) {
+        if ((c == ' ' || c == '\t') && state == WSJCPP_YAML_PARSER_LINE_STATE_NO) {
             m_sPrefix += c;
-        } else if (c == '#' && (state == WsjcppYamlParserLineStates::NO || state == WsjcppYamlParserLineStates::VALUE)) {
-            state = WsjcppYamlParserLineStates::COMMENT;
+        } else if (c == '#' && (state == WSJCPP_YAML_PARSER_LINE_STATE_NO || state == WSJCPP_YAML_PARSER_LINE_STATE_VALUE)) {
+            state = WSJCPP_YAML_PARSER_LINE_STATE_COMMENT;
             m_bHasComment = true;
-        } else if (state == WsjcppYamlParserLineStates::COMMENT) {
+        } else if (state == WSJCPP_YAML_PARSER_LINE_STATE_COMMENT) {
             if (c != '\r') {
                 m_sComment += c;
             }
-        } else if (c == '-' && state == WsjcppYamlParserLineStates::NO) {
+        } else if (c == '-' && state == WSJCPP_YAML_PARSER_LINE_STATE_NO) {
             m_bArrayItem = true;
-            state = WsjcppYamlParserLineStates::VALUE;
-        } else if ((c != ' ' && c != '\t') && state == WsjcppYamlParserLineStates::NO) {
-            state = WsjcppYamlParserLineStates::VALUE;
+            state = WSJCPP_YAML_PARSER_LINE_STATE_VALUE;
+        } else if ((c != ' ' && c != '\t') && state == WSJCPP_YAML_PARSER_LINE_STATE_NO) {
+            state = WSJCPP_YAML_PARSER_LINE_STATE_VALUE;
             m_sValue += c;
             if (c == '"') {
-                state = WsjcppYamlParserLineStates::STRING;
+                state = WSJCPP_YAML_PARSER_LINE_STATE_STRING;
             }
-        } else if (c == '"' && state == WsjcppYamlParserLineStates::VALUE) {
-            state = WsjcppYamlParserLineStates::STRING;
+        } else if (c == '"' && state == WSJCPP_YAML_PARSER_LINE_STATE_VALUE) {
+            state = WSJCPP_YAML_PARSER_LINE_STATE_STRING;
             m_sValue += c;
-        } else if (c == '\\' && state == WsjcppYamlParserLineStates::STRING) {
-            state = WsjcppYamlParserLineStates::ESCAPING;
+        } else if (c == '\\' && state == WSJCPP_YAML_PARSER_LINE_STATE_STRING) {
+            state = WSJCPP_YAML_PARSER_LINE_STATE_ESCAPING;
             m_sValue += c;
-        } else if (state == WsjcppYamlParserLineStates::ESCAPING) {
-            state = WsjcppYamlParserLineStates::STRING;
+        } else if (state == WSJCPP_YAML_PARSER_LINE_STATE_ESCAPING) {
+            state = WSJCPP_YAML_PARSER_LINE_STATE_STRING;
             m_sValue += c;
-        } else if (c == '"' && state == WsjcppYamlParserLineStates::STRING) {
-            state = WsjcppYamlParserLineStates::VALUE;
+        } else if (c == '"' && state == WSJCPP_YAML_PARSER_LINE_STATE_STRING) {
+            state = WSJCPP_YAML_PARSER_LINE_STATE_VALUE;
             m_sValue += c;
-        } else if (c == ':' && state == WsjcppYamlParserLineStates::VALUE) {
+        } else if (c == ':' && state == WSJCPP_YAML_PARSER_LINE_STATE_VALUE) {
             if (m_sName.length() == 0) {
                 m_sName = m_sValue;
                 m_sValue = ""; // reset value it was param name
             } else {
                 m_sValue += c;
             }
-        } else if (state == WsjcppYamlParserLineStates::STRING) {
+        } else if (state == WSJCPP_YAML_PARSER_LINE_STATE_STRING) {
             m_sValue += c;
-        } else if (state == WsjcppYamlParserLineStates::VALUE) {
+        } else if (state == WSJCPP_YAML_PARSER_LINE_STATE_VALUE) {
             m_sValue += c;
         } else {
             // skip
         }
     }
 
-    if (state == WsjcppYamlParserLineStates::STRING 
-      || state == WsjcppYamlParserLineStates::ESCAPING
+    if (state == WSJCPP_YAML_PARSER_LINE_STATE_STRING 
+      || state == WSJCPP_YAML_PARSER_LINE_STATE_ESCAPING
     ) {
         sError = "Line has wrong format.";
         return false;
