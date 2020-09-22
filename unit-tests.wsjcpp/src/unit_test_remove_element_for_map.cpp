@@ -30,7 +30,6 @@ bool UnitTestRemoveElementForMap::doBeforeTest() {
 // ---------------------------------------------------------------------
 
 void UnitTestRemoveElementForMap::executeTest() {
-
     std::string sTestYaml = 
         "# Some comment 1\n"
         "map1: \n"
