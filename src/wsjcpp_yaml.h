@@ -142,9 +142,6 @@ class WsjcppYamlItem { // TODO: rename to node
         std::string toString(std::string sIntent = "");
         std::string getItemTypeAsString();
 
-        WsjcppYamlItem &operator[](int idx) { return *(this->getElement(idx)); }
-        WsjcppYamlItem &operator[](const std::string &sName) { return *(this->getElement(sName)); }
-
         std::string getForLogFormat();
 
     private:
@@ -225,8 +222,6 @@ class WsjcppYaml {
         bool saveToString(std::string &sBuffer);
 
         WsjcppYamlItem *getRoot();
-        WsjcppYamlItem &operator[](int idx) { return *(getRoot()->getElement(idx)); }
-        WsjcppYamlItem &operator[](const std::string &sName) { return *(getRoot()->getElement(sName)); }
 
     private:
         std::string TAG;
@@ -259,6 +254,9 @@ class WsjcppYamlCursor {
             return WsjcppYamlCursor(pYaml, pYaml->getRoot()->getElement(idx)); // will be call destructor ?
         }
         WsjcppYamlCursor &operator[](const std::string &sName) { return *(getRoot()->getElement(sName)); }
+        
+        WsjcppYamlItem &operator[](int idx) { return *(getRoot()->getElement(idx)); }
+        WsjcppYamlItem &operator[](const std::string &sName) { return *(getRoot()->getElement(sName)); }
 
     private:
         WsjcppYaml *m_pYaml;

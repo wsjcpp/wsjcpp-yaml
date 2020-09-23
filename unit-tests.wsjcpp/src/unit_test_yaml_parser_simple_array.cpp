@@ -72,30 +72,30 @@ void UnitTestYamlParserSimpleArray::executeTest() {
     compare("array-test2-element1-value", pItem->getStringValue(), "value22");
     compare("array-test2-element1-comment", pItem->getComment(), "comment v22");
 
-    compare("array-test2-element2-value", yaml["array-test2"][2].getStringValue(), "true");
-    compare("array-test2-element2-line", yaml["array-test2"][2].getPlaceInFile().getLine(), "  - true # comment true ");
-    compare("array-test2-element2-original-number-of-line", yaml["array-test2"][2].getPlaceInFile().getNumberOfLine(), 5);
-    compare("array-test2-element2-comment", yaml["array-test2"][2].getComment(), "comment true");
+    compare("array-test2-element2-value", yaml.getRoot()->getElement("array-test2")->getElement(2)->getStringValue(), "true");
+    compare("array-test2-element2-line", yaml.getRoot()->getElement("array-test2")->getElement(2)->getPlaceInFile().getLine(), "  - true # comment true ");
+    compare("array-test2-element2-original-number-of-line", yaml.getRoot()->getElement("array-test2")->getElement(2)->getPlaceInFile().getNumberOfLine(), 5);
+    compare("array-test2-element2-comment", yaml.getRoot()->getElement("array-test2")->getElement(2)->getComment(), "comment true");
 
-    compare("array-test2-element3-value", yaml["array-test2"][3].getStringValue(), "falsesome");
-    compare("array-test2-element3-line", yaml["array-test2"][3].getPlaceInFile().getLine(), "  - falsesome   ");
-    compare("array-test2-element3-original-number-of-line", yaml["array-test2"][3].getPlaceInFile().getNumberOfLine(), 7);
-    compare("array-test2-element3-comment", yaml["array-test2"][3].getComment(), "");
+    compare("array-test2-element3-value", yaml.getRoot()->getElement("array-test2")->getElement(3)->getStringValue(), "falsesome");
+    compare("array-test2-element3-line", yaml.getRoot()->getElement("array-test2")->getElement(3)->getPlaceInFile().getLine(), "  - falsesome   ");
+    compare("array-test2-element3-original-number-of-line", yaml.getRoot()->getElement("array-test2")->getElement(3)->getPlaceInFile().getNumberOfLine(), 7);
+    compare("array-test2-element3-comment", yaml.getRoot()->getElement("array-test2")->getElement(3)->getComment(), "");
     
-    compare("array-test2-element4-value", yaml["array-test2"][4].getStringValue(), "free@free");
-    compare("array-test2-element4-line", yaml["array-test2"][4].getPlaceInFile().getLine(), "  - free@free   ");
-    compare("array-test2-element4-original-number-of-line", yaml["array-test2"][4].getPlaceInFile().getNumberOfLine(), 8);
-    compare("array-test2-element4-comment", yaml["array-test2"][4].getComment(), "");
+    compare("array-test2-element4-value", yaml.getRoot()->getElement("array-test2")->getElement(4)->getStringValue(), "free@free");
+    compare("array-test2-element4-line", yaml.getRoot()->getElement("array-test2")->getElement(4)->getPlaceInFile().getLine(), "  - free@free   ");
+    compare("array-test2-element4-original-number-of-line", yaml.getRoot()->getElement("array-test2")->getElement(4)->getPlaceInFile().getNumberOfLine(), 8);
+    compare("array-test2-element4-comment", yaml.getRoot()->getElement("array-test2")->getElement(4)->getComment(), "");
 
-    compare("array-test2-element5-value", yaml["array-test2"][5].getStringValue(), "");
-    compare("array-test2-element5-line", yaml["array-test2"][5].getPlaceInFile().getLine(), "  - # empty ");
-    compare("array-test2-element5-original-number-of-line", yaml["array-test2"][5].getPlaceInFile().getNumberOfLine(), 9);
-    compare("array-test2-element5-comment", yaml["array-test2"][5].getComment(), "empty");
+    compare("array-test2-element5-value", yaml.getRoot()->getElement("array-test2")->getElement(5)->getStringValue(), "");
+    compare("array-test2-element5-line", yaml.getRoot()->getElement("array-test2")->getElement(5)->getPlaceInFile().getLine(), "  - # empty ");
+    compare("array-test2-element5-original-number-of-line", yaml.getRoot()->getElement("array-test2")->getElement(5)->getPlaceInFile().getNumberOfLine(), 9);
+    compare("array-test2-element5-comment", yaml.getRoot()->getElement("array-test2")->getElement(5)->getComment(), "empty");
 
-    compare("array-test2-element6-value", yaml["array-test2"][6].getStringValue(), "1");
-    compare("array-test2-element6-line", yaml["array-test2"][6].getPlaceInFile().getLine(), "  - 1");
-    compare("array-test2-element6-original-number-of-line", yaml["array-test2"][6].getPlaceInFile().getNumberOfLine(), 10);
-    compare("array-test2-element6-comment", yaml["array-test2"][6].getComment(), "");
+    compare("array-test2-element6-value", yaml.getRoot()->getElement("array-test2")->getElement(6)->getStringValue(), "1");
+    compare("array-test2-element6-line", yaml.getRoot()->getElement("array-test2")->getElement(6)->getPlaceInFile().getLine(), "  - 1");
+    compare("array-test2-element6-original-number-of-line", yaml.getRoot()->getElement("array-test2")->getElement(6)->getPlaceInFile().getNumberOfLine(), 10);
+    compare("array-test2-element6-comment", yaml.getRoot()->getElement("array-test2")->getElement(6)->getComment(), "");
 
     compare("param2-value", yaml.getRoot()->getElement("param2")->getStringValue(), "val2");
     compare("param2-line", yaml.getRoot()->getElement("param2")->getPlaceInFile().getLine(), "param2: val2 #  value 2 ");

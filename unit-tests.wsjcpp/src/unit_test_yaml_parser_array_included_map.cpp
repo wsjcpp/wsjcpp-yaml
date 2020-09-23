@@ -70,14 +70,14 @@ void UnitTestYamlParserArrayIncludedMap::executeTest() {
     compare("array-test2-element0-comment", pItem->getComment(), "comment v21");
 
     pItem = yaml.getRoot()->getElement("array-test2")->getElement(1);
-    compare("array-test2-element1-value", yaml["array-test2"][1].getStringValue(), "value22");
-    compare("array-test2-element1-comment", yaml["array-test2"][1].getComment(), "comment v22");
+    compare("array-test2-element1-value", yaml.getRoot()->getElement("array-test2")->getElement(1)->getStringValue(), "value22");
+    compare("array-test2-element1-comment", yaml.getRoot()->getElement("array-test2")->getElement(1)->getComment(), "comment v22");
 
     pItem = yaml.getRoot()->getElement("array-test2")->getElement(2);
     compare("array-test2-element2-value", pItem->getStringValue(), "true");
     compare("array-test2-element2-comment", pItem->getComment(), "comment true");
 
-    compare("array-and-map-length", yaml["array-and-map"].getLength(), 2);
+    compare("array-and-map-length", yaml.getRoot()->getElement("array-and-map")->getLength(), 2);
     
     pItem = yaml.getRoot()->getElement("array-and-map")->getElement(0);
     compare("array-and-map-element0-value", pItem->getElement("submap-param1")->getStringValue(), "v01");
