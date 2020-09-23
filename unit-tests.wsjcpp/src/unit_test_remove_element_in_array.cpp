@@ -52,15 +52,15 @@ void UnitTestRemoveElementInArray::executeTest() {
     
     WsjcppYamlItem *pArr1 = yaml.getRoot()->getElement("arr1");
     compare("arr1 len", pArr1->getLength(), 3);
-    compare("arr1 name0 ", pArr1->getElement(0)->getElement("name")->getValue(), "i1");
-    compare("arr1 name1 ", pArr1->getElement(1)->getElement("name")->getValue(), "i2");
-    compare("arr1 name2 ", pArr1->getElement(2)->getElement("name")->getValue(), "i3");
+    compare("arr1 name0 ", pArr1->getElement(0)->getElement("name")->getStringValue(), "i1");
+    compare("arr1 name1 ", pArr1->getElement(1)->getElement("name")->getStringValue(), "i2");
+    compare("arr1 name2 ", pArr1->getElement(2)->getElement("name")->getStringValue(), "i3");
 
     pArr1->removeElement(1);
 
     compare("arr1 len", pArr1->getLength(), 2);
-    compare("arr1 name0 ", pArr1->getElement(0)->getElement("name")->getValue(), "i1");
-    compare("arr1 name1 ", pArr1->getElement(1)->getElement("name")->getValue(), "i3");
+    compare("arr1 name0 ", pArr1->getElement(0)->getElement("name")->getStringValue(), "i1");
+    compare("arr1 name1 ", pArr1->getElement(1)->getElement("name")->getStringValue(), "i3");
 }
 
 // ---------------------------------------------------------------------

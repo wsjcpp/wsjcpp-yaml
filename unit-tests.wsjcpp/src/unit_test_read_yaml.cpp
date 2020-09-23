@@ -43,7 +43,8 @@ void UnitTestReadYaml::executeTest() {
     compare("has networks", yaml.getRoot()->hasElement("networks"), true);
     compare("has services", yaml.getRoot()->hasElement("services"), true);
 
-    compare("version-value", yaml.getRoot()->getElement("version")->getValue(), "3");
+    compare("version-value", yaml.getRoot()->getElement("version")->getStringValue(), "3");
+    compare("version-value", yaml.getRoot()->getElement("version")->getIntValue(), 3); // wrong or not ?
 
     // TODO unit test source code here
 }

@@ -129,7 +129,13 @@ class WsjcppYamlItem { // TODO: rename to node
         bool removeElement(int i);
 
         bool isValue();
-        std::string getValue();
+        
+        std::string getValue(); // deprecated
+        std::string getStringValue(); // simular 'getValue'
+        bool getBoolValue();
+        long getLongValue();
+        int getIntValue();
+
         void setValue(const std::string &sValue, WsjcppYamlQuotes nQuotes = WSJCPP_YAML_QUOTES_NONE);
         WsjcppYamlQuotes getValueQuotes();
 

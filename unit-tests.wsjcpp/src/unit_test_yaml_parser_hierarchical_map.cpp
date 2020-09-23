@@ -65,26 +65,26 @@ void UnitTestYamlParserHierarchicalMap::executeTest() {
     WsjcppYamlItem *pItem = nullptr;
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map111");
-    compare("param1111", pItem->getElement("param1111")->getValue(), "v1111");
-    compare("param1112", pItem->getElement("param1112")->getValue(), "v1112");
+    compare("param1111", pItem->getElement("param1111")->getStringValue(), "v1111");
+    compare("param1112", pItem->getElement("param1112")->getStringValue(), "v1112");
     
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map112");
-    compare("param1121", pItem->getElement("param1121")->getValue(), "v1121");
-    compare("param1122", pItem->getElement("param1122")->getValue(), "v1122");
+    compare("param1121", pItem->getElement("param1121")->getStringValue(), "v1121");
+    compare("param1122", pItem->getElement("param1122")->getStringValue(), "v1122");
     
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map113");
-    compare("param1131", pItem->getElement("param1131")->getValue(), "v1131");
-    compare("param1132", pItem->getElement("param1132")->getValue(), "v1132");
+    compare("param1131", pItem->getElement("param1131")->getStringValue(), "v1131");
+    compare("param1132", pItem->getElement("param1132")->getStringValue(), "v1132");
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map12");
-    compare("param121", pItem->getElement("param121")->getValue(), "v121");
-    compare("param122", pItem->getElement("param122")->getValue(), "v122");
+    compare("param121", pItem->getElement("param121")->getStringValue(), "v121");
+    compare("param122", pItem->getElement("param122")->getStringValue(), "v122");
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map12")->getElement("map123");
-    compare("param1231", pItem->getElement("param1231")->getValue(), "v1231");
-    compare("param1232", pItem->getElement("param1232")->getValue(), "v1232");
+    compare("param1231", pItem->getElement("param1231")->getStringValue(), "v1231");
+    compare("param1232", pItem->getElement("param1232")->getStringValue(), "v1232");
 
-    compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "v2");
+    compare("param2", yaml.getRoot()->getElement("param2")->getStringValue(), "v2");
     compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
     std::string sSaved = "";

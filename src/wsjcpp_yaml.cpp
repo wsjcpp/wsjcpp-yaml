@@ -1,6 +1,7 @@
 
 #include "wsjcpp_yaml.h"
 #include <wsjcpp_core.h>
+#include <cstdlib>
 
 // ---------------------------------------------------------------------
 // WsjcppYamlPlaceInFile
@@ -497,10 +498,60 @@ bool WsjcppYamlItem::isValue() {
 // ---------------------------------------------------------------------
 
 std::string  WsjcppYamlItem::getValue() {
+    WsjcppLog::warn(TAG, "getValue is deprecated try getStringValue, getBoolValue, getLongValue, getIntValue...");
     if (m_nItemType != WSJCPP_YAML_ITEM_VALUE) {
         WsjcppLog::throw_err(TAG, "getValue, Element must be value for " + this->getForLogFormat());
     }
     return m_sValue;
+}
+
+// ---------------------------------------------------------------------
+
+std::string WsjcppYamlItem::getStringValue() {
+    if (m_nItemType != WSJCPP_YAML_ITEM_VALUE) {
+        WsjcppLog::throw_err(TAG, "getStringValue, Element must be value for " + this->getForLogFormat());
+    }
+    return m_sValue;
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlItem::getBoolValue() {
+    std::string sValue = getStringValue();
+    sValue = WsjcppCore::toLower(sValue);
+    if (sValue == "yes" || sValue == "true") {
+        return true;
+    } else if (sValue == "no" || sValue == "false") {
+        return false;
+    } else {
+        WsjcppLog::throw_err(TAG, "getBoolValue, Element must be bool expected with ignore case like"
+            "['yes','no','true','false']  for " + this->getForLogFormat());
+    }
+    return false;
+}
+
+// ---------------------------------------------------------------------
+
+long WsjcppYamlItem::getLongValue() {
+    std::string sValue = getStringValue();
+    sValue = WsjcppCore::toLower(sValue);
+    long nValue = std::atol(sValue.c_str());
+    if (std::to_string(nValue) != sValue) {
+        WsjcppLog::throw_err(TAG, "getLongValue, Element must be long or int but have a string" + this->getForLogFormat());
+    }
+    return nValue;
+}
+
+// ---------------------------------------------------------------------
+
+int WsjcppYamlItem::getIntValue() {
+    std::string sValue = getStringValue();
+    sValue = WsjcppCore::toLower(sValue);
+    int nValue = std::atoi(sValue.c_str());
+    if (std::to_string(nValue) != sValue) {
+        WsjcppLog::throw_err(TAG, "getLongValue, Element must be int but have a string" + this->getForLogFormat());
+    }
+    return nValue;
 }
 
 // ---------------------------------------------------------------------

@@ -16,12 +16,13 @@ int main(int argc, char* argv[]) {
     }
     WsjcppYaml yaml;
     std::string sError; 
-    if (!yaml.loadFromFile("./wsjcpp.yml", sError)) {
+    std::string sFilePath = "./unit-tests.wsjcpp/data-tests/read-file/example-voiting-app/docker-compose.yml";
+    if (!yaml.loadFromFile(sFilePath, sError)) {
         WsjcppLog::err(TAG, "Could not read data from file: " + sError);
         return -1;
     }
     
-    if (!yaml.saveToFile("./wsjcpp.yml")) {
+    if (!yaml.saveToFile(sFilePath)) {
         WsjcppLog::err(TAG, "Could not save data to file");
         return -1;
     }

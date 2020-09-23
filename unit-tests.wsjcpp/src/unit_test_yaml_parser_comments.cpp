@@ -59,21 +59,21 @@ void UnitTestYamlParserComments::executeTest() {
 
     // TODO: .findLine(0)
 
-    compare("param1", yaml["param1"].getValue(), "value1");
+    compare("param1", yaml["param1"].getStringValue(), "value1");
     compare("param1", yaml["param1"].getComment(), "comment 2 # comment");
     
-    compare("param2", yaml["param2"].getValue(), "value2");
+    compare("param2", yaml["param2"].getStringValue(), "value2");
     compare("param2", yaml["param2"].getComment(), "some \"comment 3\"");
 
 
     compare("array1-comment", yaml["array1"].getComment(), "comment 5");
     compare("array1-length", yaml["array1"].getLength(), 2);
-    compare("array1-element0-value", yaml["array1"][0].getValue(), "val1");
+    compare("array1-element0-value", yaml["array1"][0].getStringValue(), "val1");
     compare("array1-element0-comment", yaml["array1"][0].getComment(), "comment 6");
 
     // TODO: .findLine(7)
 
-    compare("array1-element1-value", yaml["array1"][1].getValue(), "val2");
+    compare("array1-element1-value", yaml["array1"][1].getStringValue(), "val2");
     compare("array1-element1-comment", yaml["array1"][1].getComment(), "comment 8");
 
     compare("map1-comment", yaml["map1"].getComment(), "comment 9");
@@ -81,7 +81,7 @@ void UnitTestYamlParserComments::executeTest() {
     compare("map1-p2-comment", yaml["map1"]["p2"].getComment(), "comment 12");
 
     
-    // compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
+    // compare("param2", yaml.getRoot()->getElement("param2")->getStringValue(), "value2");
     // compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
     std::string sSaved = "";
