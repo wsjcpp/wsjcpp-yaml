@@ -210,6 +210,55 @@ class WsjcppYamlParserStatus {
         void logUnknownLine(const std::string &sPrefix);
 };
 
+
+// ---------------------------------------------------------------------
+
+class WsjcppYamlCursor {
+    public:
+        WsjcppYamlCursor(WsjcppYamlItem *pCurrentNode);
+        WsjcppYamlCursor();
+        ~WsjcppYamlCursor();
+
+        // null or undefined
+        bool isNull() const;
+        
+        // array
+        bool isArray() const;
+        size_t size() const;
+        WsjcppYamlCursor &push(const std::string &sVal);
+        WsjcppYamlCursor &push(int nVal);
+        WsjcppYamlCursor &push(bool bVal);
+        WsjcppYamlCursor &remove(int nIdx);
+
+        // map
+        bool isMap() const;
+        std::vector<std::string> keys();
+        WsjcppYamlCursor &set(const std::string &sName, const std::string &sValue);
+        WsjcppYamlCursor &set(const std::string &sName, int nValue);
+        WsjcppYamlCursor &set(const std::string &sName, bool bValue);
+        WsjcppYamlCursor &remove(const std::string &sKey);
+
+        // comment 
+        std::string comment();
+        WsjcppYamlCursor &comment(const std::string& sComment);
+        
+        // val
+        std::string valStr();
+        WsjcppYamlCursor &val(const std::string &sValue);
+        bool valInt();
+        WsjcppYamlCursor &val(int nValue);
+        bool valBool();
+        WsjcppYamlCursor &val(bool bValue);
+       
+
+        WsjcppYamlCursor operator[](int idx) const;
+        WsjcppYamlCursor operator[](const std::string &sName) const;
+
+    private:
+        WsjcppYamlItem *m_pCurrentNode;
+};
+
+
 // ---------------------------------------------------------------------
 
 class WsjcppYaml {
@@ -220,8 +269,11 @@ class WsjcppYaml {
         bool saveToFile(const std::string &sFileName);
         bool loadFromString(const std::string &sBufferName, const std::string &sBuffer, std::string &sError);
         bool saveToString(std::string &sBuffer);
-
         WsjcppYamlItem *getRoot();
+
+        WsjcppYamlCursor getCursor() const;
+        WsjcppYamlCursor operator[](int idx) const;
+        WsjcppYamlCursor operator[](const std::string &sName) const;
 
     private:
         std::string TAG;
@@ -241,28 +293,6 @@ class WsjcppYaml {
         std::vector<std::string> m_sLines;
         WsjcppYamlItem *m_pRoot;
 };
-
-// ---------------------------------------------------------------------
-
-/*
-class WsjcppYamlCursor {
-    public:
-        WsjcppYamlCursor(WsjcppYaml *pYaml);
-        ~WsjcppYamlCursor();
-        WsjcppYamlCursor(WsjcppYaml *pYaml, WsjcppYamlItem *pCurrentNode);
-        WsjcppYamlCursor &operator[](int idx) { 
-            return WsjcppYamlCursor(pYaml, pYaml->getRoot()->getElement(idx)); // will be call destructor ?
-        }
-        WsjcppYamlCursor &operator[](const std::string &sName) { return *(getRoot()->getElement(sName)); }
-        
-        WsjcppYamlItem &operator[](int idx) { return *(getRoot()->getElement(idx)); }
-        WsjcppYamlItem &operator[](const std::string &sName) { return *(getRoot()->getElement(sName)); }
-
-    private:
-        WsjcppYaml *m_pYaml;
-        WsjcppYamlItem *m_pCurrentNode;
-};
-*/
 
 #endif // WSJCPP_YAML_H
 

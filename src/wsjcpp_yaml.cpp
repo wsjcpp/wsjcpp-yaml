@@ -983,6 +983,67 @@ void WsjcppYamlParserStatus::logUnknownLine(const std::string &sPrefix) {
 }
 
 // ---------------------------------------------------------------------
+// WsjcppYamlCursor
+
+WsjcppYamlCursor::WsjcppYamlCursor(WsjcppYamlItem *pCurrentNode) {
+    m_pCurrentNode = pCurrentNode;
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor::WsjcppYamlCursor() {
+    m_pCurrentNode = nullptr;
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor::~WsjcppYamlCursor() {
+    // do nothing
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlCursor::isNull() const {
+    return m_pCurrentNode == nullptr;
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlCursor::isArray() const {
+    return m_pCurrentNode != nullptr && m_pCurrentNode->isArray();
+}
+
+// ---------------------------------------------------------------------
+
+size_t WsjcppYamlCursor::size() const {
+    return m_pCurrentNode != nullptr && m_pCurrentNode->isArray() ? m_pCurrentNode->getLength() : -1;
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlCursor::isMap() const {
+    return m_pCurrentNode != nullptr && m_pCurrentNode->isMap();
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor WsjcppYamlCursor::operator[](int idx) const {
+    if (m_pCurrentNode != nullptr && m_pCurrentNode->isArray() && idx < m_pCurrentNode->getLength() && idx >= 0) {
+        return WsjcppYamlCursor(m_pCurrentNode->getElement(idx));
+    }
+    return WsjcppYamlCursor();
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor WsjcppYamlCursor::operator[](const std::string &sName) const {
+    if (m_pCurrentNode != nullptr && m_pCurrentNode->isMap() && m_pCurrentNode->hasElement(sName)) {
+        return WsjcppYamlCursor(m_pCurrentNode->getElement(sName));
+    }
+    return WsjcppYamlCursor();
+}
+
+// ---------------------------------------------------------------------
 // WsjcppYaml
 
 WsjcppYaml::WsjcppYaml() {
@@ -1033,6 +1094,24 @@ bool WsjcppYaml::saveToString(std::string &sBuffer) { // TODO move to WsjcppCore
 
 WsjcppYamlItem *WsjcppYaml::getRoot() {
     return m_pRoot;
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor WsjcppYaml::getCursor() const {
+    return WsjcppYamlCursor(m_pRoot);
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor WsjcppYaml::operator[](int idx) const {
+     return this->getCursor()[idx];
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor WsjcppYaml::operator[](const std::string &sName) const {
+    return this->getCursor()[sName];
 }
 
 // ---------------------------------------------------------------------
