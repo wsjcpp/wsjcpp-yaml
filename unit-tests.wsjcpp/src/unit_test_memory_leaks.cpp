@@ -7,6 +7,8 @@
 #include <fstream>
 #include <string>
 #include <wsjcpp_yaml.h>
+#include <chrono>
+#include <thread>
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -81,6 +83,10 @@ bool UnitTestMemoryLeaks::doBeforeTest() {
 
 void UnitTestMemoryLeaks::executeTest() {
     double nBeforeVm, nBeforeRss;
+    double nAfterVm, nAfterRss;
+    std::string sFilepath = "./data-tests/for-memory-leak/some.yml";
+    std::string sError;
+
     process_mem_usage(nBeforeVm, nBeforeRss);
     // std::cout << "nBeforeVm: " << nBeforeVm << std::endl;
     // std::cout << "nBeforeRss: " << nBeforeRss << std::endl;
@@ -88,16 +94,13 @@ void UnitTestMemoryLeaks::executeTest() {
     compare("memory vm not null", (int)nBeforeRss > 0, true);
 
     for (int i = 0; i < 1000; i++) {
-        WsjcppYaml *pYaml = new WsjcppYaml();
-        std::string sError;
-        if (!compare("Error parsing", pYaml->loadFromFile("./data-tests/for-memory-leak/some.yml", sError), true)) {
+        WsjcppYaml yaml;
+        if (!compare("Error parsing", yaml.loadFromFile(sFilepath, sError), true)) {
             WsjcppLog::err(TAG, sError);
             return;
         }
-        delete pYaml;
     }
-    
-    double nAfterVm, nAfterRss;
+    // std::this_thread::sleep_for(std::chrono::seconds(1));
     process_mem_usage(nAfterVm, nAfterRss);
     // std::cout << "nAfterVm: " << nAfterVm << std::endl;
     // std::cout << "nAfterRss: " << nAfterRss << std::endl;
