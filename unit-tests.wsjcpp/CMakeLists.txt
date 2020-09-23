@@ -46,6 +46,7 @@ list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_remove_element_f
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_remove_element_in_array.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_memory_leaks.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_read_yaml.cpp")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_read_write_file.cpp")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.user-custom.txt)
 
