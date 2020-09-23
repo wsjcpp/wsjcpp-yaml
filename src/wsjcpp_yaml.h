@@ -94,11 +94,29 @@ class WsjcppYamlItem { // TODO: rename to node
         std::vector<std::string> getKeys();
 
         bool setElementValue(
-            const std::string &sName,
-            const std::string &sValue,
+            const std::string &sName, const std::string &sValue,
             WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE,
             WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
         );
+
+        bool setElementValue(
+            const std::string &sName, int nValue,
+            WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE,
+            WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
+        );
+
+        bool setElementValue(
+            const std::string &sName, long nValue,
+            WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE,
+            WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
+        );
+
+        bool setElementValue(
+            const std::string &sName, bool bValue,
+            WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE,
+            WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
+        );
+
         bool createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
         WsjcppYamlItem *createElementMap();
         bool createElementArray(const std::string &sName, WsjcppYamlQuotes nNameQuotes);

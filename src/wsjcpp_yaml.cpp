@@ -312,6 +312,39 @@ bool WsjcppYamlItem::setElementValue(
 
 // ---------------------------------------------------------------------
 
+bool WsjcppYamlItem::setElementValue(
+    const std::string &sName,
+    long nValue,
+    WsjcppYamlQuotes nNameQuotes,
+    WsjcppYamlQuotes nValueQuotes
+) {
+    return setElementValue(sName, std::to_string(nValue), nNameQuotes, nValueQuotes);
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlItem::setElementValue(
+    const std::string &sName,
+    int nValue,
+    WsjcppYamlQuotes nNameQuotes,
+    WsjcppYamlQuotes nValueQuotes
+) {
+    return setElementValue(sName, std::to_string(nValue), nNameQuotes, nValueQuotes);
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlItem::setElementValue(
+    const std::string &sName,
+    bool bValue,
+    WsjcppYamlQuotes nNameQuotes,
+    WsjcppYamlQuotes nValueQuotes
+) {
+    return setElementValue(sName, (bValue ? "yes" : "no"), nNameQuotes, nValueQuotes);
+}
+
+// ---------------------------------------------------------------------
+
 bool WsjcppYamlItem::createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
     if (m_nItemType != WSJCPP_YAML_ITEM_MAP ) {
         WsjcppLog::throw_err(TAG, "createElementMap, Element must be 'map' for " + this->getPlaceInFile().getForLogFormat());
