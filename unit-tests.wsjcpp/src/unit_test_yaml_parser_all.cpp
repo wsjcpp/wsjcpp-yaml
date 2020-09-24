@@ -72,17 +72,17 @@ void UnitTestYamlParserAll::executeTest() {
     }
     
     WsjcppYamlItem *pItem = nullptr;
-    compare("test10", yaml.getRoot()->getElement("test10")->getStringValue(), "one");
-    compare("test20", yaml.getRoot()->getElement("test20")->getStringValue(), "two");
+    compare("test10", yaml.getRoot()->getElement("test10")->getValue(), "one");
+    compare("test20", yaml.getRoot()->getElement("test20")->getValue(), "two");
         
     pItem = yaml.getRoot()->getElement("array30");
     compare("array30_length", pItem->getLength(), 3);
 
     pItem = yaml.getRoot()->getElement("array30")->getElement(0);
-    compare("test30_value", pItem->getStringValue(), "one31");
+    compare("test30_value", pItem->getValue(), "one31");
     compare("test30_comment", pItem->getComment(), "this field for test array30");
     pItem = yaml.getRoot()->getElement("array30")->getElement(1);
-    compare("test40_value", pItem->getStringValue(), "two32");
+    compare("test40_value", pItem->getValue(), "two32");
     compare("test40_comment", pItem->getComment(), "");
 
     pItem = yaml.getRoot()->getElement("array40");
@@ -92,10 +92,10 @@ void UnitTestYamlParserAll::executeTest() {
     compare("array50_length", pItem->getLength(), 2);
     
     pItem = yaml.getRoot()->getElement("map60")->getElement("test70");
-    compare("test70_value", pItem->getStringValue(), "opa1");
+    compare("test70_value", pItem->getValue(), "opa1");
 
     pItem = yaml.getRoot()->getElement("map60")->getElement("test80");
-    compare("test80_comment", pItem->getStringValue(), "opa2");
+    compare("test80_comment", pItem->getValue(), "opa2");
 
     std::string sSaved2 = "";
     if (compare("saving yaml", yaml.saveToString(sSaved2), true)) {

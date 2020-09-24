@@ -47,8 +47,8 @@ void UnitTestYamlParserSimpleMap::executeTest() {
     }
     
     WsjcppYamlItem *pItem = nullptr;
-    compare("param1", yaml.getRoot()->getElement("param1")->getStringValue(), "value1");
-    compare("param2", yaml.getRoot()->getElement("param2")->getStringValue(), "value2");
+    compare("param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
+    compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
     compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
     std::string sSaved = "";

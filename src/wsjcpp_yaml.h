@@ -99,24 +99,6 @@ class WsjcppYamlItem { // TODO: rename to node
             WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
         );
 
-        bool setElementValue(
-            const std::string &sName, int nValue,
-            WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE,
-            WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
-        );
-
-        bool setElementValue(
-            const std::string &sName, long nValue,
-            WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE,
-            WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
-        );
-
-        bool setElementValue(
-            const std::string &sName, bool bValue,
-            WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE,
-            WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
-        );
-
         bool createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
         WsjcppYamlItem *createElementMap();
         bool createElementArray(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
@@ -130,11 +112,7 @@ class WsjcppYamlItem { // TODO: rename to node
 
         bool isValue();
         
-        std::string getValue(); // deprecated
-        std::string getStringValue(); // simular 'getValue'
-        bool getBoolValue();
-        long getLongValue();
-        int getIntValue();
+        std::string getValue(); // contains only strings
 
         void setValue(const std::string &sValue, WsjcppYamlQuotes nQuotes = WSJCPP_YAML_QUOTES_NONE);
         WsjcppYamlQuotes getValueQuotes();
@@ -222,21 +200,28 @@ class WsjcppYamlCursor {
         // null or undefined
         bool isNull() const;
         
+        // isUndefined
+        bool isUndefined() const;
+
+        // value
+        bool isValue() const;
+        
         // array
         bool isArray() const;
         size_t size() const;
-        WsjcppYamlCursor &push(const std::string &sVal);
-        WsjcppYamlCursor &push(int nVal);
-        WsjcppYamlCursor &push(bool bVal);
-        WsjcppYamlCursor &remove(int nIdx);
+        // WsjcppYamlCursor &push(const std::string &sVal);
+        // WsjcppYamlCursor &push(int nVal);
+        // WsjcppYamlCursor &push(bool bVal);
+        // WsjcppYamlCursor &remove(int nIdx);
 
         // map
         bool isMap() const;
-        std::vector<std::string> keys();
-        WsjcppYamlCursor &set(const std::string &sName, const std::string &sValue);
-        WsjcppYamlCursor &set(const std::string &sName, int nValue);
-        WsjcppYamlCursor &set(const std::string &sName, bool bValue);
-        WsjcppYamlCursor &remove(const std::string &sKey);
+        std::vector<std::string> keys() const;
+        bool hasKey(const std::string &sKey) const;
+        // WsjcppYamlCursor &set(const std::string &sName, const std::string &sValue);
+        // WsjcppYamlCursor &set(const std::string &sName, int nValue);
+        // WsjcppYamlCursor &set(const std::string &sName, bool bValue);
+        // WsjcppYamlCursor &remove(const std::string &sKey);
 
         // comment 
         std::string comment();
@@ -245,7 +230,8 @@ class WsjcppYamlCursor {
         // val
         std::string valStr();
         WsjcppYamlCursor &val(const std::string &sValue);
-        bool valInt();
+        WsjcppYamlCursor &val(const char *sValue);
+        int valInt();
         WsjcppYamlCursor &val(int nValue);
         bool valBool();
         WsjcppYamlCursor &val(bool bValue);
@@ -255,6 +241,7 @@ class WsjcppYamlCursor {
         WsjcppYamlCursor operator[](const std::string &sName) const;
 
     private:
+        std::string TAG;
         WsjcppYamlItem *m_pCurrentNode;
 };
 

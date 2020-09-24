@@ -57,23 +57,23 @@ void UnitTestYamlParserQuotes::executeTest() {
 
     // TODO: .findLine(0)
 
-    compare("param1", yaml.getRoot()->getElement("param1")->getStringValue(), "value1");
+    compare("param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
     compare("param1", yaml.getRoot()->getElement("param1")->getComment(), "v1");
     
-    compare("param2", yaml.getRoot()->getElement("param2")->getStringValue(), " #$!!!value2");
+    compare("param2", yaml.getRoot()->getElement("param2")->getValue(), " #$!!!value2");
     compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "val 2");
 
-    compare(" param3 olala", yaml.getRoot()->getElement(" param3 olala")->getStringValue(), "val 3");
+    compare(" param3 olala", yaml.getRoot()->getElement(" param3 olala")->getValue(), "val 3");
     compare(" param3 olala", yaml.getRoot()->getElement(" param3 olala")->getComment(), "val 3***");
 
-    compare("param4 val", yaml.getRoot()->getElement("param4")->getStringValue(), " #$!!!value4");
-    compare("param4 comment", yaml.getRoot()->getElement("param4")->getStringValue(), " #$!!!value4");
+    compare("param4 val", yaml.getRoot()->getElement("param4")->getValue(), " #$!!!value4");
+    compare("param4 comment", yaml.getRoot()->getElement("param4")->getValue(), " #$!!!value4");
 
-    compare("url-value", yaml.getRoot()->getElement("url")->getStringValue(), "https://github.com/wsjcpp/wsjcpp-yaml");
-    compare("issues-value", yaml.getRoot()->getElement("issues")->getStringValue(), "https://github.com/wsjcpp/wsjcpp-yaml/issues");
-    compare("empty-value", yaml.getRoot()->getElement("empty")->getStringValue(), "");
+    compare("url-value", yaml.getRoot()->getElement("url")->getValue(), "https://github.com/wsjcpp/wsjcpp-yaml");
+    compare("issues-value", yaml.getRoot()->getElement("issues")->getValue(), "https://github.com/wsjcpp/wsjcpp-yaml/issues");
+    compare("empty-value", yaml.getRoot()->getElement("empty")->getValue(), "");
 
-    compare("array-element0-value", yaml.getRoot()->getElement("array")->getElement(0)->getStringValue(), "https://github.com/wsjcpp/wsjcpp-core:v0.0.1");
+    compare("array-element0-value", yaml.getRoot()->getElement("array")->getElement(0)->getValue(), "https://github.com/wsjcpp/wsjcpp-core:v0.0.1");
 
     std::string sSaved = "";
     compare("save yaml", yaml.saveToString(sSaved), true);

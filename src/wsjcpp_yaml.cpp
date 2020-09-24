@@ -313,39 +313,6 @@ bool WsjcppYamlItem::setElementValue(
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::setElementValue(
-    const std::string &sName,
-    long nValue,
-    WsjcppYamlQuotes nNameQuotes,
-    WsjcppYamlQuotes nValueQuotes
-) {
-    return setElementValue(sName, std::to_string(nValue), nNameQuotes, nValueQuotes);
-}
-
-// ---------------------------------------------------------------------
-
-bool WsjcppYamlItem::setElementValue(
-    const std::string &sName,
-    int nValue,
-    WsjcppYamlQuotes nNameQuotes,
-    WsjcppYamlQuotes nValueQuotes
-) {
-    return setElementValue(sName, std::to_string(nValue), nNameQuotes, nValueQuotes);
-}
-
-// ---------------------------------------------------------------------
-
-bool WsjcppYamlItem::setElementValue(
-    const std::string &sName,
-    bool bValue,
-    WsjcppYamlQuotes nNameQuotes,
-    WsjcppYamlQuotes nValueQuotes
-) {
-    return setElementValue(sName, (bValue ? "yes" : "no"), nNameQuotes, nValueQuotes);
-}
-
-// ---------------------------------------------------------------------
-
 bool WsjcppYamlItem::createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
     if (m_nItemType != WSJCPP_YAML_ITEM_MAP ) {
         WsjcppLog::throw_err(TAG, "createElementMap, Element must be 'map' for " + this->getPlaceInFile().getForLogFormat());
@@ -498,60 +465,10 @@ bool WsjcppYamlItem::isValue() {
 // ---------------------------------------------------------------------
 
 std::string  WsjcppYamlItem::getValue() {
-    WsjcppLog::warn(TAG, "getValue is deprecated try getStringValue, getBoolValue, getLongValue, getIntValue...");
     if (m_nItemType != WSJCPP_YAML_ITEM_VALUE) {
         WsjcppLog::throw_err(TAG, "getValue, Element must be value for " + this->getForLogFormat());
     }
     return m_sValue;
-}
-
-// ---------------------------------------------------------------------
-
-std::string WsjcppYamlItem::getStringValue() {
-    if (m_nItemType != WSJCPP_YAML_ITEM_VALUE) {
-        WsjcppLog::throw_err(TAG, "getStringValue, Element must be value for " + this->getForLogFormat());
-    }
-    return m_sValue;
-}
-
-// ---------------------------------------------------------------------
-
-bool WsjcppYamlItem::getBoolValue() {
-    std::string sValue = getStringValue();
-    sValue = WsjcppCore::toLower(sValue);
-    if (sValue == "yes" || sValue == "true") {
-        return true;
-    } else if (sValue == "no" || sValue == "false") {
-        return false;
-    } else {
-        WsjcppLog::throw_err(TAG, "getBoolValue, Element must be bool expected with ignore case like"
-            "['yes','no','true','false']  for " + this->getForLogFormat());
-    }
-    return false;
-}
-
-// ---------------------------------------------------------------------
-
-long WsjcppYamlItem::getLongValue() {
-    std::string sValue = getStringValue();
-    sValue = WsjcppCore::toLower(sValue);
-    long nValue = std::atol(sValue.c_str());
-    if (std::to_string(nValue) != sValue) {
-        WsjcppLog::throw_err(TAG, "getLongValue, Element must be long or int but have a string" + this->getForLogFormat());
-    }
-    return nValue;
-}
-
-// ---------------------------------------------------------------------
-
-int WsjcppYamlItem::getIntValue() {
-    std::string sValue = getStringValue();
-    sValue = WsjcppCore::toLower(sValue);
-    int nValue = std::atoi(sValue.c_str());
-    if (std::to_string(nValue) != sValue) {
-        WsjcppLog::throw_err(TAG, "getLongValue, Element must be int but have a string" + this->getForLogFormat());
-    }
-    return nValue;
 }
 
 // ---------------------------------------------------------------------
@@ -987,12 +904,14 @@ void WsjcppYamlParserStatus::logUnknownLine(const std::string &sPrefix) {
 
 WsjcppYamlCursor::WsjcppYamlCursor(WsjcppYamlItem *pCurrentNode) {
     m_pCurrentNode = pCurrentNode;
+    TAG = "WsjcppYamlCursor";
 }
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlCursor::WsjcppYamlCursor() {
-    m_pCurrentNode = nullptr;
+WsjcppYamlCursor::WsjcppYamlCursor() 
+: WsjcppYamlCursor(nullptr) {
+    // nothing
 }
 
 // ---------------------------------------------------------------------
@@ -1005,6 +924,18 @@ WsjcppYamlCursor::~WsjcppYamlCursor() {
 
 bool WsjcppYamlCursor::isNull() const {
     return m_pCurrentNode == nullptr;
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlCursor::isUndefined() const {
+    return m_pCurrentNode != nullptr && m_pCurrentNode->isUndefined();
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlCursor::isValue() const {
+    return m_pCurrentNode != nullptr && m_pCurrentNode->isValue();
 }
 
 // ---------------------------------------------------------------------
@@ -1023,6 +954,130 @@ size_t WsjcppYamlCursor::size() const {
 
 bool WsjcppYamlCursor::isMap() const {
     return m_pCurrentNode != nullptr && m_pCurrentNode->isMap();
+}
+
+// ---------------------------------------------------------------------
+
+std::vector<std::string> WsjcppYamlCursor::keys() const {
+    return m_pCurrentNode != nullptr && m_pCurrentNode->isMap() ? m_pCurrentNode->getKeys() : std::vector<std::string>();
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlCursor::hasKey(const std::string &sKey) const {
+    return m_pCurrentNode != nullptr && m_pCurrentNode->isMap() && m_pCurrentNode->hasElement(sKey);
+}
+
+// ---------------------------------------------------------------------
+
+// WsjcppYamlCursor &WsjcppYamlCursor::set(const std::string &sName, const std::string &sValue) {
+//     return *this;
+// }
+// 
+// // ---------------------------------------------------------------------
+// 
+// WsjcppYamlCursor &WsjcppYamlCursor::set(const std::string &sName, int nValue) {
+//     return *this;
+// }
+// 
+// // ---------------------------------------------------------------------
+// 
+// WsjcppYamlCursor &WsjcppYamlCursor::set(const std::string &sName, bool bValue) {
+//     return *this;
+// }
+// 
+// // ---------------------------------------------------------------------
+// 
+// WsjcppYamlCursor &WsjcppYamlCursor::remove(const std::string &sKey) {
+//     return *this;
+// }
+
+// ---------------------------------------------------------------------
+
+std::string WsjcppYamlCursor::comment() {
+    return m_pCurrentNode != nullptr ? m_pCurrentNode->getComment() : "";
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor &WsjcppYamlCursor::comment(const std::string& sComment) {
+    if (m_pCurrentNode != nullptr) {
+        m_pCurrentNode->setComment(sComment);
+    }
+    return *this;
+}
+
+// ---------------------------------------------------------------------
+
+std::string WsjcppYamlCursor::valStr() {
+    return m_pCurrentNode != nullptr ? m_pCurrentNode->getValue() : "";
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor &WsjcppYamlCursor::val(const std::string &sValue) {
+    if (m_pCurrentNode != nullptr) {
+        m_pCurrentNode->setValue(sValue); // TODO reserch need or not add quotes
+    }
+    return *this;
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor &WsjcppYamlCursor::val(const char *sValue) {
+    this->val(std::string(sValue));
+    return *this;
+}
+
+// ---------------------------------------------------------------------
+
+int WsjcppYamlCursor::valInt() {
+    if (m_pCurrentNode != nullptr) {
+        std::string sValue = m_pCurrentNode->getValue();
+        sValue = WsjcppCore::toLower(sValue);
+        int nValue = std::atoi(sValue.c_str());
+        if (std::to_string(nValue) != sValue) {
+            WsjcppLog::throw_err(TAG, "valInt, Element must be int but have a string" + m_pCurrentNode->getForLogFormat());
+        }
+        return nValue;
+    }
+    return 0;
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor &WsjcppYamlCursor::val(int nValue) {
+    if (m_pCurrentNode != nullptr) {
+        m_pCurrentNode->setValue(std::to_string(nValue));
+    }
+    return *this;
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlCursor::valBool() {
+    if (m_pCurrentNode != nullptr) {
+        std::string sValue = m_pCurrentNode->getValue();
+        sValue = WsjcppCore::toLower(sValue);
+        if (sValue == "yes" || sValue == "true") {
+            return true;
+        } else if (sValue == "no" || sValue == "false") {
+            return false;
+        } else {
+            WsjcppLog::throw_err(TAG, "valBool, Element must be bool expected with ignore case like"
+                "['yes','no','true','false']  for " + m_pCurrentNode->getForLogFormat());
+        }
+    }
+    return false;
+}
+
+// ---------------------------------------------------------------------
+
+WsjcppYamlCursor &WsjcppYamlCursor::val(bool bValue) {
+    if (m_pCurrentNode != nullptr) {
+        m_pCurrentNode->setValue((bValue ? "yes" : "no"));
+    }
+    return *this;
 }
 
 // ---------------------------------------------------------------------

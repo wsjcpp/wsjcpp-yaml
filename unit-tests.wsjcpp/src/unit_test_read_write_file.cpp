@@ -44,8 +44,7 @@ void UnitTestReadWriteFile::executeTest() {
     compare("has networks", yaml.getRoot()->hasElement("networks"), true);
     compare("has services", yaml.getRoot()->hasElement("services"), true);
 
-    compare("version-value", yaml.getRoot()->getElement("version")->getStringValue(), "3");
-    compare("version-value", yaml.getRoot()->getElement("version")->getIntValue(), 3); // wrong or not ?
+    compare("version-value", yaml.getRoot()->getElement("version")->getValue(), "3");
 
     if (!compare("Error parsing", yaml.saveToFile(sFilepathOutput), true)) {
         WsjcppLog::err(TAG, sError);
