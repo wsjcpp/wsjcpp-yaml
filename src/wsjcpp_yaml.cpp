@@ -554,7 +554,7 @@ std::string WsjcppYamlItem::toString(std::string sIntent) {
             }
         }
     } else {
-        sRet = "TODO: undefined";
+        sRet = ""; // undefined element must be empty
     }
     if (sIntent == "") {
         WsjcppCore::trim(sRet);
