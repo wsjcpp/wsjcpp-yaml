@@ -121,6 +121,8 @@ class WsjcppYamlNode {
         std::string getItemTypeAsString();
 
         std::string getForLogFormat();
+        void setNodeDiffIntent(int nDiffIntent);
+        int getNodeDiffIntent();
 
     private:
         std::string TAG;
@@ -132,7 +134,7 @@ class WsjcppYamlNode {
         WsjcppYamlQuotes m_nValueQuotes;
         std::string m_sName;
         WsjcppYamlQuotes m_nNameQuotes;
-        
+        int m_nDiffIntent;
         std::string m_sComment;
 };
 
@@ -178,18 +180,6 @@ class WsjcppYamlParsebleLine {
         std::string removeStringDoubleQuotes(const std::string &sValue);
         std::string removeStringSingleQuotes(const std::string &sValue);
 };
-
-// ---------------------------------------------------------------------
-
-class WsjcppYamlParserStatus {
-    public:
-        int nIntent;
-        WsjcppYamlNode *pCurItem;
-        WsjcppYamlParsebleLine line;
-        WsjcppYamlPlaceInFile placeInFile;
-        void logUnknownLine(const std::string &sPrefix);
-};
-
 
 // ---------------------------------------------------------------------
 
@@ -271,17 +261,27 @@ class WsjcppYaml {
         // TODO replace to WsjcppCore::split()
         std::vector<std::string> splitToLines(const std::string &sBuffer);
         bool parse(const std::string &sFileName, const std::string &sBuffer, std::string &sError);
-        void process_sameIntent_hasName_emptyValue_arrayItem(WsjcppYamlParserStatus &st);
-        void process_sameIntent_hasName_emptyValue_noArrayItem(WsjcppYamlParserStatus &st);
-        void process_sameIntent_hasName_hasValue_arrayItem(WsjcppYamlParserStatus &st);
-        void process_sameIntent_hasName_hasValue_noArrayItem(WsjcppYamlParserStatus &st);
-        void process_sameIntent_emptyName_hasValue_arrayItem(WsjcppYamlParserStatus &st);
-        void process_sameIntent_emptyName_hasValue_noArrayItem(WsjcppYamlParserStatus &st);
-        void process_sameIntent_emptyName_emptyValue_arrayItem(WsjcppYamlParserStatus &st);
-        void process_sameIntent_emptyName_emptyValue_noArrayItem(WsjcppYamlParserStatus &st);
+        void process_sameIntent_hasName_emptyValue_arrayItem();
+        void process_sameIntent_hasName_emptyValue_noArrayItem();
+        void process_sameIntent_hasName_hasValue_arrayItem();
+        void process_sameIntent_hasName_hasValue_noArrayItem();
+        void process_sameIntent_emptyName_hasValue_arrayItem();
+        void process_sameIntent_emptyName_hasValue_noArrayItem();
+        void process_sameIntent_emptyName_emptyValue_arrayItem();
+        void process_sameIntent_emptyName_emptyValue_noArrayItem();
+
+
 
         std::vector<std::string> m_sLines;
         WsjcppYamlNode *m_pRoot;
+
+        // prsing line status
+        void logUnknownParseLine();
+        WsjcppYamlNode *m_pParseCurrentItem;
+        int m_nParseCurrentIntent;
+        WsjcppYamlPlaceInFile m_parsePlaceInFile;
+        WsjcppYamlParsebleLine m_parseLine;
+        
 };
 
 #endif // WSJCPP_YAML_H

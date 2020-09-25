@@ -48,19 +48,6 @@ void UnitTestReadYaml::executeTest() {
 
     WsjcppYamlNode *pServices = yaml.getRoot()->getElement("services");
 
-    
-   
-
-    /*
-    
-services:
-  vote:
-    build: ./vote
-    command: python app.py
-    volumes:
-     - ./vote:/app
-
-    */
     // services.vote
     {
         compare("has services.vote", pServices->hasElement("vote"), true);
