@@ -15,6 +15,9 @@ class UnitTestMemoryLeaks : public WsjcppUnitTestBase {
         virtual bool doBeforeTest() override;
         virtual void executeTest() override;
         virtual bool doAfterTest() override;
+
+    private:
+        void createManyTimesObjects();
 };
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestMemoryLeaks)
@@ -32,50 +35,38 @@ bool UnitTestMemoryLeaks::doBeforeTest() {
 
 // ---------------------------------------------------------------------
 
+void UnitTestMemoryLeaks::createManyTimesObjects() {
+    std::string sFilepath = "./data-tests/for-memory-leak/some.yml";
+    std::string sError;
+    for (int i = 0; i < 10000; i++) {
+        WsjcppYaml yaml;
+        if (!compare("Error parsing", yaml.loadFromFile(sFilepath, sError), true)) {
+            WsjcppLog::err(TAG, sError);
+            return;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------
+
 void UnitTestMemoryLeaks::executeTest() {
     double nBeforeVm, nBeforeRss;
     double nAfterVm, nAfterRss;
     std::string sFilepath = "./data-tests/for-memory-leak/some.yml";
-    std::string sError;
-
-    // std::cout << "currentSize "<< getCurrentRSS() << std::endl;
-    // std::cout << "peakSize "<< getPeakRSS() << std::endl;
    
-    // first use for memory alloc some
-    for (int i = 0; i < 1000; i++) {
-        WsjcppYaml yaml;
-        if (!compare("Error parsing", yaml.loadFromFile(sFilepath, sError), true)) {
-            WsjcppLog::err(TAG, sError);
-            return;
-        }
-    }
-    
+    // first use for memory alloc memory for work
+    createManyTimesObjects();
+
     process_mem_usage(nBeforeVm, nBeforeRss);
-    // std::cout << "nBeforeVm: " << nBeforeVm << std::endl;
-    // std::cout << "nBeforeRss: " << nBeforeRss << std::endl;
     compare("memory vm not null", (int)nBeforeVm > 0, true);
     compare("memory vm not null", (int)nBeforeRss > 0, true);
 
-    // std::cout << "currentSize "<< getCurrentRSS() << std::endl;
-    // std::cout << "peakSize "<< getPeakRSS() << std::endl;
-
     // code again check the memoty leak
-
-    for (int i = 0; i < 1000; i++) {
-        WsjcppYaml yaml;
-        if (!compare("Error parsing", yaml.loadFromFile(sFilepath, sError), true)) {
-            WsjcppLog::err(TAG, sError);
-            return;
-        }
-    }
+    createManyTimesObjects();
 
     process_mem_usage(nAfterVm, nAfterRss);
-    // std::cout << "nAfterVm: " << nAfterVm << std::endl;
-    // std::cout << "nAfterRss: " << nAfterRss << std::endl;
     compare("memory vm", (int)nAfterVm, (int)nBeforeVm);
     compare("memory rss", (int)nAfterRss, (int)nBeforeRss);
-    // std::cout << "currentSize "<< getCurrentRSS() << std::endl;
-    // std::cout << "peakSize "<< getPeakRSS() << std::endl;
 }
 
 // ---------------------------------------------------------------------
