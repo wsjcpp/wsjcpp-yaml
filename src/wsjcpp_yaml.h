@@ -261,16 +261,14 @@ class WsjcppYaml {
         // TODO replace to WsjcppCore::split()
         std::vector<std::string> splitToLines(const std::string &sBuffer);
         bool parse(const std::string &sFileName, const std::string &sBuffer, std::string &sError);
-        void process_sameIntent_hasName_emptyValue_arrayItem();
-        void process_sameIntent_hasName_emptyValue_noArrayItem();
-        void process_sameIntent_hasName_hasValue_arrayItem();
-        void process_sameIntent_hasName_hasValue_noArrayItem();
-        void process_sameIntent_emptyName_hasValue_arrayItem();
-        void process_sameIntent_emptyName_hasValue_noArrayItem();
-        void process_sameIntent_emptyName_emptyValue_arrayItem();
-        void process_sameIntent_emptyName_emptyValue_noArrayItem();
-
-
+        void process_hasName_emptyValue_arrayItem();
+        void process_hasName_emptyValue_noArrayItem();
+        void process_hasName_hasValue_arrayItem();
+        void process_hasName_hasValue_noArrayItem();
+        void process_emptyName_hasValue_arrayItem();
+        void process_emptyName_hasValue_noArrayItem();
+        void process_emptyName_emptyValue_arrayItem();
+        void process_emptyName_emptyValue_noArrayItem();
 
         std::vector<std::string> m_sLines;
         WsjcppYamlNode *m_pRoot;

@@ -1280,7 +1280,12 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
         bool isArrayItem = m_parseLine.isArrayItem();
         int nLineIntent = m_parseLine.getIntent();
         int nDiffIntent = nLineIntent - m_nParseCurrentIntent;
-        
+        std::cout << nLine << ": " << m_nParseCurrentIntent << ", " << nLineIntent << "  ; line:[" << m_parsePlaceInFile.getLine() << "]" << std::endl;
+
+        /*if (nLine > 6) {
+            return false;
+        }*/
+
         if (m_parseLine.isEmptyLine()) {
             if (m_pParseCurrentItem != nullptr) {
                 if (m_pParseCurrentItem->isArray() || m_pParseCurrentItem->isMap() || m_pParseCurrentItem->isUndefined()) {
@@ -1303,6 +1308,9 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
         }
 
         while (nDiffIntent < 0) {
+            std::cout << nLine << ": nDiffIntent = " << nDiffIntent << std::endl;
+            std::cout << nLine << ": m_pParseCurrentItem = " << m_pParseCurrentItem->getNodeDiffIntent() << std::endl;
+            std::cout << nLine << ": m_pParseCurrentItem = " << m_pParseCurrentItem->getName() << std::endl;
             int nNodeDiffIntent = m_pParseCurrentItem->getNodeDiffIntent();
             if (nNodeDiffIntent == 0) {
                 sError = "Node diff intent cann't be 0 ";
@@ -1317,31 +1325,27 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
             }
         }
 
-        if (nDiffIntent == 0) {
-            if (m_parseLine.isEmptyName()) {
-                if ( ! isEmptyValue && isArrayItem) {
-                    process_sameIntent_emptyName_hasValue_arrayItem();
-                } else if (! isEmptyValue && ! isArrayItem) {
-                    process_sameIntent_emptyName_hasValue_noArrayItem();
-                } else if (isEmptyValue && isArrayItem) {
-                    process_sameIntent_emptyName_emptyValue_arrayItem();
-                } else if (isEmptyValue && ! isArrayItem) {
-                    process_sameIntent_emptyName_emptyValue_noArrayItem();
-                } else {
-                    logUnknownParseLine();
-                }
-            } else if ( ! m_parseLine.isEmptyName()) {
-                if ( ! isEmptyValue && isArrayItem) {
-                    process_sameIntent_hasName_hasValue_arrayItem();
-                } else if ( ! isEmptyValue && ! isArrayItem) {
-                    process_sameIntent_hasName_hasValue_noArrayItem();
-                } else if (isEmptyValue && isArrayItem) {
-                    process_sameIntent_hasName_emptyValue_arrayItem();
-                } else if (isEmptyValue && ! isArrayItem) {
-                    process_sameIntent_hasName_emptyValue_noArrayItem();
-                } else {
-                    logUnknownParseLine();
-                }
+        if (m_parseLine.isEmptyName()) {
+            if ( ! isEmptyValue && isArrayItem) {
+                process_emptyName_hasValue_arrayItem();
+            } else if (! isEmptyValue && ! isArrayItem) {
+                process_emptyName_hasValue_noArrayItem();
+            } else if (isEmptyValue && isArrayItem) {
+                process_emptyName_emptyValue_arrayItem();
+            } else if (isEmptyValue && ! isArrayItem) {
+                process_emptyName_emptyValue_noArrayItem();
+            } else {
+                logUnknownParseLine();
+            }
+        } else if ( ! m_parseLine.isEmptyName()) {
+            if ( ! isEmptyValue && isArrayItem) {
+                process_hasName_hasValue_arrayItem();
+            } else if ( ! isEmptyValue && ! isArrayItem) {
+                process_hasName_hasValue_noArrayItem();
+            } else if (isEmptyValue && isArrayItem) {
+                process_hasName_emptyValue_arrayItem();
+            } else if (isEmptyValue && ! isArrayItem) {
+                process_hasName_emptyValue_noArrayItem();
             } else {
                 logUnknownParseLine();
             }
@@ -1354,33 +1358,36 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
 
 // ---------------------------------------------------------------------
 
-void WsjcppYaml::process_sameIntent_hasName_emptyValue_arrayItem() {
-    WsjcppLog::warn(TAG, "process_sameIntent_hasName_emptyValue_arrayItem");
+void WsjcppYaml::process_hasName_emptyValue_arrayItem() {
+    WsjcppLog::warn(TAG, "process_hasName_emptyValue_arrayItem");
     this->logUnknownParseLine();
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYaml::process_sameIntent_hasName_emptyValue_noArrayItem() {
-    WsjcppYamlNode *pItem = new WsjcppYamlNode(
+void WsjcppYaml::process_hasName_emptyValue_noArrayItem() {
+    WsjcppYamlNode *pNode = new WsjcppYamlNode(
         m_pParseCurrentItem, m_parsePlaceInFile, 
         WSJCPP_YAML_NODE_UNDEFINED
     );
     if (m_parseLine.getValueQuotes() != WSJCPP_YAML_QUOTES_NONE) {
-        pItem->doValue();
-        pItem->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
+        pNode->doValue();
+        pNode->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
     }
-    pItem->setName(m_parseLine.getName(), m_parseLine.getNameQuotes());
-    pItem->setComment(m_parseLine.getComment());
-    m_pParseCurrentItem->setElement(m_parseLine.getName(), pItem);
-    m_pParseCurrentItem = pItem;
     int nDiffIntent = m_parseLine.getIntent() - m_nParseCurrentIntent;
+    pNode->setName(m_parseLine.getName(), m_parseLine.getNameQuotes());
+    pNode->setComment(m_parseLine.getComment());
+    pNode->setNodeDiffIntent(nDiffIntent);
+    // m_pParseCurrentItem->getParent()
+    std::cout << "process_hasName_emptyValue_noArrayItem " << m_parseLine.getName() << "  " << nDiffIntent << std::endl;
+    m_pParseCurrentItem->setElement(m_parseLine.getName(), pNode);
+    m_pParseCurrentItem = pNode;
     m_nParseCurrentIntent = m_nParseCurrentIntent + nDiffIntent;
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYaml::process_sameIntent_hasName_hasValue_arrayItem() {
+void WsjcppYaml::process_hasName_hasValue_arrayItem() {
     if (m_pParseCurrentItem->isUndefined()) {
         m_pParseCurrentItem->doArray();
     }
@@ -1393,38 +1400,40 @@ void WsjcppYaml::process_sameIntent_hasName_hasValue_arrayItem() {
     int nDiffIntent = m_parseLine.getIntent() - m_nParseCurrentIntent;
     m_nParseCurrentIntent = m_nParseCurrentIntent + nDiffIntent;
 
-    WsjcppYamlNode *pItem = new WsjcppYamlNode(
+    WsjcppYamlNode *pNode = new WsjcppYamlNode(
         m_pParseCurrentItem, m_parsePlaceInFile, 
         WSJCPP_YAML_NODE_VALUE
     );
-    pItem->setComment(m_parseLine.getComment());
-    pItem->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
-    pItem->setName(m_parseLine.getName(), m_parseLine.getNameQuotes());
-    pMapItem->setElement(m_parseLine.getName(), pItem);
-    m_pParseCurrentItem = pItem;
+    pNode->setComment(m_parseLine.getComment());
+    pNode->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
+    pNode->setName(m_parseLine.getName(), m_parseLine.getNameQuotes());
+    pMapItem->setElement(m_parseLine.getName(), pNode);
+    m_pParseCurrentItem = pNode;
     nDiffIntent = m_parseLine.getIntent() - m_nParseCurrentIntent;
+    pNode->setNodeDiffIntent(nDiffIntent);
     m_nParseCurrentIntent = m_nParseCurrentIntent + nDiffIntent;
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYaml::process_sameIntent_hasName_hasValue_noArrayItem() {
+void WsjcppYaml::process_hasName_hasValue_noArrayItem() {
     WsjcppYamlNode *pItem = new WsjcppYamlNode(
         m_pParseCurrentItem, m_parsePlaceInFile, 
         WSJCPP_YAML_NODE_VALUE
     );
+    std::cout << m_parseLine.getName() << std::endl;
     pItem->setComment(m_parseLine.getComment());
     pItem->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
     pItem->setName(m_parseLine.getName(), m_parseLine.getNameQuotes());
     m_pParseCurrentItem->setElement(m_parseLine.getName(), pItem);
-    m_pParseCurrentItem = pItem;
+    // m_pParseCurrentItem = pItem;
     int nDiffIntent = m_parseLine.getIntent() - m_nParseCurrentIntent;
     m_nParseCurrentIntent = m_nParseCurrentIntent + nDiffIntent;
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYaml::process_sameIntent_emptyName_hasValue_arrayItem() {
+void WsjcppYaml::process_emptyName_hasValue_arrayItem() {
     if (m_pParseCurrentItem->isUndefined()) {
         m_pParseCurrentItem->doArray();
     }
@@ -1442,38 +1451,41 @@ void WsjcppYaml::process_sameIntent_emptyName_hasValue_arrayItem() {
 
 // ---------------------------------------------------------------------
 
-void WsjcppYaml::process_sameIntent_emptyName_hasValue_noArrayItem() {
-    WsjcppLog::warn(TAG, "TODO process_sameIntent_emptyName_hasValue_noArrayItem");
+void WsjcppYaml::process_emptyName_hasValue_noArrayItem() {
+    WsjcppLog::warn(TAG, "TODO process_emptyName_hasValue_noArrayItem");
     this->logUnknownParseLine();
     
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYaml::process_sameIntent_emptyName_emptyValue_arrayItem() {
+void WsjcppYaml::process_emptyName_emptyValue_arrayItem() {
     if (m_pParseCurrentItem->isUndefined()) {
         m_pParseCurrentItem->doArray();
     }
-    WsjcppYamlNode *pItem = new WsjcppYamlNode(
+    WsjcppYamlNode *pNode = new WsjcppYamlNode(
         m_pParseCurrentItem, m_parsePlaceInFile, 
         WSJCPP_YAML_NODE_VALUE
     );
-    pItem->setComment(m_parseLine.getComment());
-    pItem->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
-    m_pParseCurrentItem->appendElement(pItem);
-    m_pParseCurrentItem = pItem;
+    pNode->setComment(m_parseLine.getComment());
+    pNode->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
+    m_pParseCurrentItem->appendElement(pNode);
+    m_pParseCurrentItem = pNode;
     int nDiffIntent = m_parseLine.getIntent() - m_nParseCurrentIntent;
+    pNode->setNodeDiffIntent(nDiffIntent);
     m_nParseCurrentIntent = m_nParseCurrentIntent + nDiffIntent;
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYaml::process_sameIntent_emptyName_emptyValue_noArrayItem() {
+void WsjcppYaml::process_emptyName_emptyValue_noArrayItem() {
     WsjcppYamlNode *pNode = new WsjcppYamlNode(
         m_pParseCurrentItem, m_parsePlaceInFile,
         WSJCPP_YAML_NODE_EMPTY
     );
     pNode->setComment(m_parseLine.getComment());
+    int nDiffIntent = m_parseLine.getIntent() - m_nParseCurrentIntent;
+    pNode->setNodeDiffIntent(nDiffIntent);
     m_pParseCurrentItem->appendElement(pNode);
 }
 
