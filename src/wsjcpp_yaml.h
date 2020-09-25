@@ -11,12 +11,12 @@
 
 // ---------------------------------------------------------------------
 
-enum WsjcppYamlItemType {
-    WSJCPP_YAML_ITEM_UNDEFINED,
-    WSJCPP_YAML_ITEM_EMPTY,
-    WSJCPP_YAML_ITEM_ARRAY,
-    WSJCPP_YAML_ITEM_MAP,
-    WSJCPP_YAML_ITEM_VALUE
+enum WsjcppYamlNodeType {
+    WSJCPP_YAML_NODE_UNDEFINED,
+    WSJCPP_YAML_NODE_EMPTY,
+    WSJCPP_YAML_NODE_ARRAY,
+    WSJCPP_YAML_NODE_MAP,
+    WSJCPP_YAML_NODE_VALUE
 };
 
 // ---------------------------------------------------------------------
@@ -63,7 +63,7 @@ class WsjcppYamlItem { // TODO: rename to node
         WsjcppYamlItem(
             WsjcppYamlItem *pParent,
             const WsjcppYamlPlaceInFile &placeInFile,
-            WsjcppYamlItemType nItemType
+            WsjcppYamlNodeType nItemType
         );
         ~WsjcppYamlItem();
         WsjcppYamlItem *getParent();
@@ -126,7 +126,7 @@ class WsjcppYamlItem { // TODO: rename to node
         std::string TAG;
         WsjcppYamlItem *m_pParent;
         WsjcppYamlPlaceInFile m_placeInFile;
-        WsjcppYamlItemType m_nItemType;
+        WsjcppYamlNodeType m_nItemType;
         std::vector<WsjcppYamlItem *> m_vObjects;
         std::string m_sValue; // if it is not array or map
         WsjcppYamlQuotes m_nValueQuotes;
