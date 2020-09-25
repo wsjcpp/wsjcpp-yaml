@@ -58,15 +58,15 @@ enum WsjcppYamlQuotes {
 	Basic class for yaml tree
 */
 
-class WsjcppYamlItem { // TODO: rename to node
+class WsjcppYamlNode {
     public:
-        WsjcppYamlItem(
-            WsjcppYamlItem *pParent,
+        WsjcppYamlNode(
+            WsjcppYamlNode *pParent,
             const WsjcppYamlPlaceInFile &placeInFile,
             WsjcppYamlNodeType nItemType
         );
-        ~WsjcppYamlItem();
-        WsjcppYamlItem *getParent();
+        ~WsjcppYamlNode();
+        WsjcppYamlNode *getParent();
 
         WsjcppYamlPlaceInFile getPlaceInFile();
         void setPlaceInFile(const WsjcppYamlPlaceInFile &placeInFile);
@@ -88,8 +88,8 @@ class WsjcppYamlItem { // TODO: rename to node
 
         bool isMap();
         bool hasElement(const std::string &sName);
-        WsjcppYamlItem *getElement(const std::string &sName);
-        bool setElement(const std::string &sName, WsjcppYamlItem *pItem);
+        WsjcppYamlNode *getElement(const std::string &sName);
+        bool setElement(const std::string &sName, WsjcppYamlNode *pItem);
         bool removeElement(const std::string &sName);
         std::vector<std::string> getKeys();
 
@@ -100,13 +100,13 @@ class WsjcppYamlItem { // TODO: rename to node
         );
 
         bool createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
-        WsjcppYamlItem *createElementMap();
+        WsjcppYamlNode *createElementMap();
         bool createElementArray(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
 
         bool isArray();
         int getLength();
-        WsjcppYamlItem *getElement(int i);
-        bool appendElement(WsjcppYamlItem *pItem);
+        WsjcppYamlNode *getElement(int i);
+        bool appendElement(WsjcppYamlNode *pItem);
         bool appendElementValue(const std::string &sValue, WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE);
         bool removeElement(int i);
 
@@ -124,10 +124,10 @@ class WsjcppYamlItem { // TODO: rename to node
 
     private:
         std::string TAG;
-        WsjcppYamlItem *m_pParent;
+        WsjcppYamlNode *m_pParent;
         WsjcppYamlPlaceInFile m_placeInFile;
         WsjcppYamlNodeType m_nItemType;
-        std::vector<WsjcppYamlItem *> m_vObjects;
+        std::vector<WsjcppYamlNode *> m_vObjects;
         std::string m_sValue; // if it is not array or map
         WsjcppYamlQuotes m_nValueQuotes;
         std::string m_sName;
@@ -184,7 +184,7 @@ class WsjcppYamlParsebleLine {
 class WsjcppYamlParserStatus {
     public:
         int nIntent;
-        WsjcppYamlItem *pCurItem;
+        WsjcppYamlNode *pCurItem;
         WsjcppYamlParsebleLine line;
         WsjcppYamlPlaceInFile placeInFile;
         void logUnknownLine(const std::string &sPrefix);
@@ -195,7 +195,7 @@ class WsjcppYamlParserStatus {
 
 class WsjcppYamlCursor {
     public:
-        WsjcppYamlCursor(WsjcppYamlItem *pCurrentNode);
+        WsjcppYamlCursor(WsjcppYamlNode *pCurrentNode);
         WsjcppYamlCursor();
         ~WsjcppYamlCursor();
 
@@ -244,7 +244,7 @@ class WsjcppYamlCursor {
 
     private:
         std::string TAG;
-        WsjcppYamlItem *m_pCurrentNode;
+        WsjcppYamlNode *m_pCurrentNode;
 };
 
 
@@ -259,7 +259,7 @@ class WsjcppYaml {
         bool saveToFile(const std::string &sFileName);
         bool loadFromString(const std::string &sBufferName, const std::string &sBuffer, std::string &sError);
         bool saveToString(std::string &sBuffer);
-        WsjcppYamlItem *getRoot();
+        WsjcppYamlNode *getRoot();
 
         WsjcppYamlCursor getCursor() const;
         WsjcppYamlCursor operator[](int idx) const;
@@ -281,7 +281,7 @@ class WsjcppYaml {
         void process_sameIntent_emptyName_emptyValue_noArrayItem(WsjcppYamlParserStatus &st);
 
         std::vector<std::string> m_sLines;
-        WsjcppYamlItem *m_pRoot;
+        WsjcppYamlNode *m_pRoot;
 };
 
 #endif // WSJCPP_YAML_H

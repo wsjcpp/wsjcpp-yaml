@@ -55,7 +55,7 @@ void UnitTestYamlParserArrayIncludedMap::executeTest() {
         return;
     }
     
-    WsjcppYamlItem *pItem = nullptr;
+    WsjcppYamlNode *pItem = nullptr;
 
     compare("param1-value", yaml.getRoot()->getElement("param1")->getValue(), "none value1");
     compare("param1-line", yaml.getRoot()->getElement("param1")->getPlaceInFile().getLine(), "param1: none value1 # it's value for something # olala  ");

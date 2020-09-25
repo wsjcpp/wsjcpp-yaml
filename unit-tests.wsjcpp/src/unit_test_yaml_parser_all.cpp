@@ -71,7 +71,7 @@ void UnitTestYamlParserAll::executeTest() {
         return;
     }
     
-    WsjcppYamlItem *pItem = nullptr;
+    WsjcppYamlNode *pItem = nullptr;
     compare("test10", yaml.getRoot()->getElement("test10")->getValue(), "one");
     compare("test20", yaml.getRoot()->getElement("test20")->getValue(), "two");
         

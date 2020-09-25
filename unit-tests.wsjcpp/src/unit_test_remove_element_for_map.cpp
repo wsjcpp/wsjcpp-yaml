@@ -60,8 +60,8 @@ void UnitTestRemoveElementForMap::executeTest() {
         return;
     }
     
-    WsjcppYamlItem *pMap1 = yaml.getRoot()->getElement("map1");
-    WsjcppYamlItem *pMap11 = pMap1->getElement("map11");
+    WsjcppYamlNode *pMap1 = yaml.getRoot()->getElement("map1");
+    WsjcppYamlNode *pMap11 = pMap1->getElement("map11");
 
     compare("has map111", pMap11->hasElement("map111"), true);
     compare("has map112", pMap11->hasElement("map112"), true);

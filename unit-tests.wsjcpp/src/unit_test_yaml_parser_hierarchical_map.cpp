@@ -62,7 +62,7 @@ void UnitTestYamlParserHierarchicalMap::executeTest() {
         return;
     }
     
-    WsjcppYamlItem *pItem = nullptr;
+    WsjcppYamlNode *pItem = nullptr;
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map111");
     compare("param1111", pItem->getElement("param1111")->getValue(), "v1111");

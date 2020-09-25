@@ -50,7 +50,7 @@ void UnitTestRemoveElementInArray::executeTest() {
     }
 
     
-    WsjcppYamlItem *pArr1 = yaml.getRoot()->getElement("arr1");
+    WsjcppYamlNode *pArr1 = yaml.getRoot()->getElement("arr1");
     compare("arr1 len", pArr1->getLength(), 3);
     compare("arr1 name0 ", pArr1->getElement(0)->getElement("name")->getValue(), "i1");
     compare("arr1 name1 ", pArr1->getElement(1)->getElement("name")->getValue(), "i2");

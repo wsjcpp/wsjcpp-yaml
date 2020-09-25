@@ -63,10 +63,10 @@ std::string WsjcppYamlPlaceInFile::getForLogFormat() {
 }
 
 // ---------------------------------------------------------------------
-// WsjcppYamlItem
+// WsjcppYamlNode
 
-WsjcppYamlItem::WsjcppYamlItem(
-    WsjcppYamlItem *pParent, 
+WsjcppYamlNode::WsjcppYamlNode(
+    WsjcppYamlNode *pParent, 
     const WsjcppYamlPlaceInFile &placeInFile,
     WsjcppYamlNodeType nItemType
 ) {
@@ -82,7 +82,7 @@ WsjcppYamlItem::WsjcppYamlItem(
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlItem::~WsjcppYamlItem() {
+WsjcppYamlNode::~WsjcppYamlNode() {
      for (int i = 0; i < m_vObjects.size(); i++) {
         delete m_vObjects[i];
     }
@@ -91,19 +91,19 @@ WsjcppYamlItem::~WsjcppYamlItem() {
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlItem *WsjcppYamlItem::getParent() {
+WsjcppYamlNode *WsjcppYamlNode::getParent() {
     return m_pParent;
 }
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlPlaceInFile WsjcppYamlItem::getPlaceInFile() {
+WsjcppYamlPlaceInFile WsjcppYamlNode::getPlaceInFile() {
     return m_placeInFile;
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlItem::setPlaceInFile(const WsjcppYamlPlaceInFile &placeInFile) {
+void WsjcppYamlNode::setPlaceInFile(const WsjcppYamlPlaceInFile &placeInFile) {
     m_placeInFile.setFilename(placeInFile.getFilename());
     m_placeInFile.setLine(placeInFile.getLine());
     m_placeInFile.setNumberOfLine(placeInFile.getNumberOfLine());
@@ -111,44 +111,44 @@ void WsjcppYamlItem::setPlaceInFile(const WsjcppYamlPlaceInFile &placeInFile) {
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlItem::setComment(const std::string &sComment) {
+void WsjcppYamlNode::setComment(const std::string &sComment) {
     m_sComment = sComment;
 }
 
 // ---------------------------------------------------------------------
 
-std::string WsjcppYamlItem::getComment() {
+std::string WsjcppYamlNode::getComment() {
     return m_sComment;
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlItem::setName(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
+void WsjcppYamlNode::setName(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
     m_sName = sName;
     m_nNameQuotes = nNameQuotes;
 }
 
 // ---------------------------------------------------------------------
 
-std::string WsjcppYamlItem::getName() {
+std::string WsjcppYamlNode::getName() {
     return m_sName;
 }
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlQuotes WsjcppYamlItem::getNameQuotes() {
+WsjcppYamlQuotes WsjcppYamlNode::getNameQuotes() {
     return m_nNameQuotes;
 }
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::isEmpty() {
+bool WsjcppYamlNode::isEmpty() {
     return m_nItemType == WSJCPP_YAML_NODE_EMPTY;
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlItem::doEmpty() {
+void WsjcppYamlNode::doEmpty() {
     if (m_nItemType == WSJCPP_YAML_NODE_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_NODE_EMPTY;
     } else {
@@ -158,13 +158,13 @@ void WsjcppYamlItem::doEmpty() {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::isUndefined() {
+bool WsjcppYamlNode::isUndefined() {
     return m_nItemType == WSJCPP_YAML_NODE_UNDEFINED;
 }
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlItem::doArray() {
+void WsjcppYamlNode::doArray() {
     if (m_nItemType == WSJCPP_YAML_NODE_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_NODE_ARRAY;
     } else {
@@ -174,7 +174,7 @@ void WsjcppYamlItem::doArray() {
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlItem::doMap() {
+void WsjcppYamlNode::doMap() {
     if (m_nItemType == WSJCPP_YAML_NODE_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_NODE_MAP;
     } else {
@@ -184,7 +184,7 @@ void WsjcppYamlItem::doMap() {
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlItem::doValue() {
+void WsjcppYamlNode::doValue() {
     if (m_nItemType == WSJCPP_YAML_NODE_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_NODE_VALUE;
     } else {
@@ -194,13 +194,13 @@ void WsjcppYamlItem::doValue() {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::isMap() {
+bool WsjcppYamlNode::isMap() {
     return m_nItemType == WSJCPP_YAML_NODE_MAP;
 }
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::hasElement(const std::string &sName) {
+bool WsjcppYamlNode::hasElement(const std::string &sName) {
     if (m_nItemType != WSJCPP_YAML_NODE_MAP) {
         WsjcppLog::throw_err(TAG, "hasElement('" + sName + "'): Element must be map");
     }
@@ -214,7 +214,7 @@ bool WsjcppYamlItem::hasElement(const std::string &sName) {
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlItem *WsjcppYamlItem::getElement(const std::string &sName) {
+WsjcppYamlNode *WsjcppYamlNode::getElement(const std::string &sName) {
     if (m_nItemType != WSJCPP_YAML_NODE_MAP) {
         WsjcppLog::throw_err(TAG, "getElement: Element must be map");
     }
@@ -231,7 +231,7 @@ WsjcppYamlItem *WsjcppYamlItem::getElement(const std::string &sName) {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::setElement(const std::string &sName, WsjcppYamlItem *pItem) {
+bool WsjcppYamlNode::setElement(const std::string &sName, WsjcppYamlNode *pItem) {
     if (m_nItemType == WSJCPP_YAML_NODE_UNDEFINED) {
         m_nItemType = WSJCPP_YAML_NODE_MAP; // change item type to map on first element  
     }
@@ -249,13 +249,13 @@ bool WsjcppYamlItem::setElement(const std::string &sName, WsjcppYamlItem *pItem)
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::removeElement(const std::string &sName) {
+bool WsjcppYamlNode::removeElement(const std::string &sName) {
     if (m_nItemType != WSJCPP_YAML_NODE_MAP) {
         WsjcppLog::throw_err(TAG, "removeElement: Element must be map");
     }
-    std::vector<WsjcppYamlItem *>::iterator it;
+    std::vector<WsjcppYamlNode *>::iterator it;
     for (it = m_vObjects.begin(); it != m_vObjects.end(); ++it) {
-        WsjcppYamlItem *pItem = *it;
+        WsjcppYamlNode *pItem = *it;
         if (pItem->getName() == sName) {
             m_vObjects.erase(it);
             delete pItem;
@@ -267,13 +267,13 @@ bool WsjcppYamlItem::removeElement(const std::string &sName) {
 
 // ---------------------------------------------------------------------
 
-std::vector<std::string> WsjcppYamlItem::getKeys() {
+std::vector<std::string> WsjcppYamlNode::getKeys() {
     if (m_nItemType != WSJCPP_YAML_NODE_MAP) {
         WsjcppLog::throw_err(TAG, "getKeys: Element must be map");
     }
     std::vector<std::string> vKeys;
     for (int i = 0; i < m_vObjects.size(); i++) {
-        WsjcppYamlItem *pItem = m_vObjects[i];
+        WsjcppYamlNode *pItem = m_vObjects[i];
         if (pItem->isValue() || pItem->isMap() || pItem->isArray() || pItem->isUndefined()) {
             std::string sName = pItem->getName();
             vKeys.push_back(sName);
@@ -284,7 +284,7 @@ std::vector<std::string> WsjcppYamlItem::getKeys() {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::setElementValue(
+bool WsjcppYamlNode::setElementValue(
     const std::string &sName,
     const std::string &sValue,
     WsjcppYamlQuotes nNameQuotes,
@@ -299,11 +299,11 @@ bool WsjcppYamlItem::setElementValue(
     }
     
     if (this->hasElement(sName)) {
-        WsjcppYamlItem *pItem = this->getElement(sName);
+        WsjcppYamlNode *pItem = this->getElement(sName);
         pItem->setValue(sValue, nValueQuotes);
     } else {
         WsjcppYamlPlaceInFile pl;
-        WsjcppYamlItem *pNewItem = new WsjcppYamlItem(this, pl, WSJCPP_YAML_NODE_VALUE);
+        WsjcppYamlNode *pNewItem = new WsjcppYamlNode(this, pl, WSJCPP_YAML_NODE_VALUE);
         pNewItem->setName(sName, nNameQuotes);
         pNewItem->setValue(sValue, nValueQuotes);
         this->setElement(sName, pNewItem);
@@ -313,7 +313,7 @@ bool WsjcppYamlItem::setElementValue(
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
+bool WsjcppYamlNode::createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
     if (m_nItemType != WSJCPP_YAML_NODE_MAP ) {
         WsjcppLog::throw_err(TAG, "createElementMap, Element must be 'map' for " + this->getPlaceInFile().getForLogFormat());
     }
@@ -321,7 +321,7 @@ bool WsjcppYamlItem::createElementMap(const std::string &sName, WsjcppYamlQuotes
         return false; // already exists
     }
     WsjcppYamlPlaceInFile pl;
-    WsjcppYamlItem *pNewItem = new WsjcppYamlItem(this, pl, WSJCPP_YAML_NODE_MAP);
+    WsjcppYamlNode *pNewItem = new WsjcppYamlNode(this, pl, WSJCPP_YAML_NODE_MAP);
     pNewItem->setName(sName, nNameQuotes);
     this->setElement(sName, pNewItem);
     return true;
@@ -329,19 +329,19 @@ bool WsjcppYamlItem::createElementMap(const std::string &sName, WsjcppYamlQuotes
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlItem *WsjcppYamlItem::createElementMap() {
+WsjcppYamlNode *WsjcppYamlNode::createElementMap() {
     if (m_nItemType != WSJCPP_YAML_NODE_ARRAY ) {
         WsjcppLog::throw_err(TAG, "createElementMap, Element must be 'array' for " + this->getPlaceInFile().getForLogFormat());
     }
     WsjcppYamlPlaceInFile pl;
-    WsjcppYamlItem *pNewItem = new WsjcppYamlItem(this, pl, WSJCPP_YAML_NODE_MAP);
+    WsjcppYamlNode *pNewItem = new WsjcppYamlNode(this, pl, WSJCPP_YAML_NODE_MAP);
     this->appendElement(pNewItem);
     return pNewItem;
 }
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::createElementArray(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
+bool WsjcppYamlNode::createElementArray(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
     if (m_nItemType != WSJCPP_YAML_NODE_MAP ) {
         WsjcppLog::throw_err(TAG, "createElementArray, Element must be 'map' for " + this->getPlaceInFile().getForLogFormat());
     }
@@ -349,7 +349,7 @@ bool WsjcppYamlItem::createElementArray(const std::string &sName, WsjcppYamlQuot
         return false;
     }
     WsjcppYamlPlaceInFile pl;
-    WsjcppYamlItem *pNewItem = new WsjcppYamlItem(this, pl, WSJCPP_YAML_NODE_ARRAY);
+    WsjcppYamlNode *pNewItem = new WsjcppYamlNode(this, pl, WSJCPP_YAML_NODE_ARRAY);
     pNewItem->setName(sName, nNameQuotes);
     this->setElement(sName, pNewItem);
     return true;
@@ -357,13 +357,13 @@ bool WsjcppYamlItem::createElementArray(const std::string &sName, WsjcppYamlQuot
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::isArray() {
+bool WsjcppYamlNode::isArray() {
     return m_nItemType == WSJCPP_YAML_NODE_ARRAY;
 }
 
 // ---------------------------------------------------------------------
 
-int WsjcppYamlItem::getLength() {
+int WsjcppYamlNode::getLength() {
     if (m_nItemType != WSJCPP_YAML_NODE_ARRAY) {
         WsjcppLog::throw_err(TAG, "getLength, Element must be array for " + this->getForLogFormat());
     }
@@ -378,12 +378,12 @@ int WsjcppYamlItem::getLength() {
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlItem *WsjcppYamlItem::getElement(int i) {
+WsjcppYamlNode *WsjcppYamlNode::getElement(int i) {
     if (m_nItemType != WSJCPP_YAML_NODE_ARRAY) {
         WsjcppLog::throw_err(TAG, "getElement, Element must be array");
     }
     int nCounter = -1;
-    WsjcppYamlItem *pItem = nullptr;
+    WsjcppYamlNode *pItem = nullptr;
     for (int n = 0; n < m_vObjects.size(); n++) {
         if (!m_vObjects[n]->isEmpty()) {
             nCounter++;
@@ -401,7 +401,7 @@ WsjcppYamlItem *WsjcppYamlItem::getElement(int i) {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::appendElement(WsjcppYamlItem *pItem) {
+bool WsjcppYamlNode::appendElement(WsjcppYamlNode *pItem) {
     if (pItem->isEmpty()) {
         m_vObjects.push_back(pItem); // TODO clone object
         return true;
@@ -415,24 +415,24 @@ bool WsjcppYamlItem::appendElement(WsjcppYamlItem *pItem) {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::appendElementValue(const std::string &sValue, WsjcppYamlQuotes nValueQuotes) {
+bool WsjcppYamlNode::appendElementValue(const std::string &sValue, WsjcppYamlQuotes nValueQuotes) {
     if (m_nItemType != WSJCPP_YAML_NODE_ARRAY) {
         WsjcppLog::throw_err(TAG, "appendElementValue, Element must be array for " + this->getForLogFormat());
     }
     WsjcppYamlPlaceInFile pl;
-    WsjcppYamlItem *pNewItem = new WsjcppYamlItem(this, pl, WSJCPP_YAML_NODE_VALUE);
+    WsjcppYamlNode *pNewItem = new WsjcppYamlNode(this, pl, WSJCPP_YAML_NODE_VALUE);
     pNewItem->setValue(sValue, nValueQuotes);
     return this->appendElement(pNewItem);
 }
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::removeElement(int i) {
+bool WsjcppYamlNode::removeElement(int i) {
     if (m_nItemType != WSJCPP_YAML_NODE_ARRAY) {
         WsjcppLog::throw_err(TAG, "appendElement, Element must be array for " + this->getForLogFormat());
     }
     int nCounter = -1;
-    WsjcppYamlItem *pItem = nullptr;
+    WsjcppYamlNode *pItem = nullptr;
     for (int n = 0; n < m_vObjects.size(); n++) {
         if (!m_vObjects[n]->isEmpty()) {
             nCounter++;
@@ -445,7 +445,7 @@ bool WsjcppYamlItem::removeElement(int i) {
     if (pItem == nullptr) {
         WsjcppLog::throw_err(TAG, "getElement(" + std::to_string(i) +  "), Out of range in array for '" + this->getPlaceInFile().getLine() + "'");
     }
-    std::vector<WsjcppYamlItem *>::iterator it;
+    std::vector<WsjcppYamlNode *>::iterator it;
     for (it = m_vObjects.begin(); it != m_vObjects.end(); ++it) {
         if (*it == pItem) {
             delete pItem;
@@ -458,13 +458,13 @@ bool WsjcppYamlItem::removeElement(int i) {
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYamlItem::isValue() {
+bool WsjcppYamlNode::isValue() {
     return m_nItemType == WSJCPP_YAML_NODE_VALUE;
 }
 
 // ---------------------------------------------------------------------
 
-std::string  WsjcppYamlItem::getValue() {
+std::string  WsjcppYamlNode::getValue() {
     if (m_nItemType != WSJCPP_YAML_NODE_VALUE) {
         WsjcppLog::throw_err(TAG, "getValue, Element must be value for " + this->getForLogFormat());
     }
@@ -473,7 +473,7 @@ std::string  WsjcppYamlItem::getValue() {
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlItem::setValue(const std::string &sValue, WsjcppYamlQuotes nQuotes) {
+void WsjcppYamlNode::setValue(const std::string &sValue, WsjcppYamlQuotes nQuotes) {
     if (m_nItemType != WSJCPP_YAML_NODE_VALUE) {
         WsjcppLog::throw_err(TAG, "setValue, Element must be value for " + this->getForLogFormat());
     }
@@ -483,13 +483,13 @@ void WsjcppYamlItem::setValue(const std::string &sValue, WsjcppYamlQuotes nQuote
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlQuotes WsjcppYamlItem::getValueQuotes() {
+WsjcppYamlQuotes WsjcppYamlNode::getValueQuotes() {
     return m_nValueQuotes;
 }
 
 // ---------------------------------------------------------------------
 
-std::string WsjcppYamlItem::toString(std::string sIntent) {
+std::string WsjcppYamlNode::toString(std::string sIntent) {
     std::string sRet = "";
     if (this->isValue()) {
         if (m_nValueQuotes == WSJCPP_YAML_QUOTES_DOUBLE) {
@@ -523,7 +523,7 @@ std::string WsjcppYamlItem::toString(std::string sIntent) {
         return sRet;
     } else if (this->isArray()) {
         for (int i = 0; i < m_vObjects.size(); i++) {
-            WsjcppYamlItem *pItem = m_vObjects[i];
+            WsjcppYamlNode *pItem = m_vObjects[i];
             if (pItem->isEmpty()) {
                 sRet += pItem->toString(sIntent) + "\n";
                 // sRet += "\n";
@@ -539,7 +539,7 @@ std::string WsjcppYamlItem::toString(std::string sIntent) {
         }
     } else if (this->isMap()) {
         for (int i = 0; i < m_vObjects.size(); i++) {
-            WsjcppYamlItem *pItem = m_vObjects[i];
+            WsjcppYamlNode *pItem = m_vObjects[i];
             if (pItem->isEmpty() ) {
                 sRet += pItem->toString(sIntent);
                 sRet += "\n";
@@ -584,7 +584,7 @@ std::string WsjcppYamlItem::toString(std::string sIntent) {
 
 // ---------------------------------------------------------------------
 
-std::string WsjcppYamlItem::getItemTypeAsString() {
+std::string WsjcppYamlNode::getItemTypeAsString() {
     if (m_nItemType == WSJCPP_YAML_NODE_UNDEFINED) {
         return "undefined";
     } else if (m_nItemType == WSJCPP_YAML_NODE_ARRAY) {
@@ -599,7 +599,7 @@ std::string WsjcppYamlItem::getItemTypeAsString() {
 
 // ---------------------------------------------------------------------
 
-std::string WsjcppYamlItem::getForLogFormat() {
+std::string WsjcppYamlNode::getForLogFormat() {
     return m_placeInFile.getForLogFormat();
 }
 
@@ -957,7 +957,7 @@ void WsjcppYamlParserStatus::logUnknownLine(const std::string &sPrefix) {
 // ---------------------------------------------------------------------
 // WsjcppYamlCursor
 
-WsjcppYamlCursor::WsjcppYamlCursor(WsjcppYamlItem *pCurrentNode) {
+WsjcppYamlCursor::WsjcppYamlCursor(WsjcppYamlNode *pCurrentNode) {
     m_pCurrentNode = pCurrentNode;
     TAG = "WsjcppYamlCursor";
 }
@@ -1209,7 +1209,7 @@ bool WsjcppYaml::saveToString(std::string &sBuffer) { // TODO move to WsjcppCore
 
 // ---------------------------------------------------------------------
 
-WsjcppYamlItem *WsjcppYaml::getRoot() {
+WsjcppYamlNode *WsjcppYaml::getRoot() {
     return m_pRoot;
 }
 
@@ -1257,7 +1257,7 @@ std::vector<std::string> WsjcppYaml::splitToLines(const std::string &sBuffer) {
 bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer, std::string &sError) {
     this->clear();
     if (m_pRoot == nullptr) {
-        m_pRoot = new WsjcppYamlItem(nullptr, WsjcppYamlPlaceInFile(), WSJCPP_YAML_NODE_MAP);
+        m_pRoot = new WsjcppYamlNode(nullptr, WsjcppYamlPlaceInFile(), WSJCPP_YAML_NODE_MAP);
     }
 
     std::vector<std::string> vLines = this->splitToLines(sBuffer);
@@ -1288,13 +1288,13 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
             if (st.pCurItem != nullptr) {
                 
                 if (st.pCurItem->isArray() || st.pCurItem->isMap() || st.pCurItem->isUndefined()) {
-                    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+                    WsjcppYamlNode *pItem = new WsjcppYamlNode(
                         st.pCurItem, st.placeInFile,
                         WSJCPP_YAML_NODE_EMPTY
                     );
                     st.pCurItem->appendElement(pItem);
                 } else if (st.pCurItem->getParent() != nullptr && (st.pCurItem->getParent()->isArray() || st.pCurItem->getParent()->isMap())) {
-                    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+                    WsjcppYamlNode *pItem = new WsjcppYamlNode(
                         st.pCurItem->getParent(), st.placeInFile,
                         WSJCPP_YAML_NODE_EMPTY
                     );
@@ -1360,7 +1360,7 @@ void WsjcppYaml::process_sameIntent_hasName_emptyValue_arrayItem(WsjcppYamlParse
 // ---------------------------------------------------------------------
 
 void WsjcppYaml::process_sameIntent_hasName_emptyValue_noArrayItem(WsjcppYamlParserStatus &st) {
-    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+    WsjcppYamlNode *pItem = new WsjcppYamlNode(
         st.pCurItem, st.placeInFile, 
         WSJCPP_YAML_NODE_UNDEFINED
     );
@@ -1381,7 +1381,7 @@ void WsjcppYaml::process_sameIntent_hasName_hasValue_arrayItem(WsjcppYamlParserS
     if (st.pCurItem->isUndefined()) {
         st.pCurItem->doArray();
     }
-    WsjcppYamlItem *pMapItem = new WsjcppYamlItem(
+    WsjcppYamlNode *pMapItem = new WsjcppYamlNode(
         st.pCurItem, st.placeInFile, 
         WSJCPP_YAML_NODE_MAP
     );
@@ -1389,7 +1389,7 @@ void WsjcppYaml::process_sameIntent_hasName_hasValue_arrayItem(WsjcppYamlParserS
     st.pCurItem = pMapItem;
     st.nIntent = st.nIntent + 2;
 
-    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+    WsjcppYamlNode *pItem = new WsjcppYamlNode(
         st.pCurItem, st.placeInFile, 
         WSJCPP_YAML_NODE_VALUE
     );
@@ -1404,7 +1404,7 @@ void WsjcppYaml::process_sameIntent_hasName_hasValue_arrayItem(WsjcppYamlParserS
 // ---------------------------------------------------------------------
 
 void WsjcppYaml::process_sameIntent_hasName_hasValue_noArrayItem(WsjcppYamlParserStatus &st) {
-    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+    WsjcppYamlNode *pItem = new WsjcppYamlNode(
         st.pCurItem, st.placeInFile, 
         WSJCPP_YAML_NODE_VALUE
     );
@@ -1422,7 +1422,7 @@ void WsjcppYaml::process_sameIntent_emptyName_hasValue_arrayItem(WsjcppYamlParse
     if (st.pCurItem->isUndefined()) {
         st.pCurItem->doArray();
     }
-    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+    WsjcppYamlNode *pItem = new WsjcppYamlNode(
         st.pCurItem, st.placeInFile,
         WSJCPP_YAML_NODE_VALUE
     );
@@ -1445,7 +1445,7 @@ void WsjcppYaml::process_sameIntent_emptyName_emptyValue_arrayItem(WsjcppYamlPar
     if (st.pCurItem->isUndefined()) {
         st.pCurItem->doArray();
     }
-    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+    WsjcppYamlNode *pItem = new WsjcppYamlNode(
         st.pCurItem, st.placeInFile, 
         WSJCPP_YAML_NODE_VALUE
     );
@@ -1459,7 +1459,7 @@ void WsjcppYaml::process_sameIntent_emptyName_emptyValue_arrayItem(WsjcppYamlPar
 // ---------------------------------------------------------------------
 
 void WsjcppYaml::process_sameIntent_emptyName_emptyValue_noArrayItem(WsjcppYamlParserStatus &st) {
-    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+    WsjcppYamlNode *pItem = new WsjcppYamlNode(
         st.pCurItem, st.placeInFile,
         WSJCPP_YAML_NODE_EMPTY
     );
