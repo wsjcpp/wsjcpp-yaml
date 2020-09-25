@@ -274,7 +274,7 @@ std::vector<std::string> WsjcppYamlItem::getKeys() {
     std::vector<std::string> vKeys;
     for (int i = 0; i < m_vObjects.size(); i++) {
         WsjcppYamlItem *pItem = m_vObjects[i];
-        if (pItem->isValue() || pItem->isMap() || pItem->isArray()) {
+        if (pItem->isValue() || pItem->isMap() || pItem->isArray() || pItem->isUndefined()) {
             std::string sName = pItem->getName();
             vKeys.push_back(sName);
         }
@@ -783,6 +783,7 @@ bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sE
             state = WSJCPP_YAML_PARSER_LINE_STATE_VALUE;
             m_sValue += c;
         } else if (c == ':' && state == WSJCPP_YAML_PARSER_LINE_STATE_VALUE) {
+            std::cout << m_sValue << std::endl;
             if (m_sName.length() == 0) {
                 m_sName = m_sValue;
                 m_sValue = ""; // reset value it was param name
@@ -843,6 +844,12 @@ bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sE
     }
 
     m_sComment = WsjcppCore::trim(m_sComment);
+    return true;
+}
+
+// ---------------------------------------------------------------------
+
+bool WsjcppYamlParsebleLine::canTagName(const std::string &sVal) {
     return true;
 }
 

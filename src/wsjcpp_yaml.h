@@ -160,6 +160,7 @@ class WsjcppYamlParsebleLine {
         bool parseLine(const std::string &sLine, std::string &sError);
 
     private:
+        
         std::string TAG;
         int m_nLineNumber;
 
@@ -173,6 +174,7 @@ class WsjcppYamlParsebleLine {
         bool m_bHasComment;
         bool m_bEmptyLine;
 
+        bool canTagName(const std::string &sVal);
         std::string removeStringDoubleQuotes(const std::string &sValue);
         std::string removeStringSingleQuotes(const std::string &sValue);
 };

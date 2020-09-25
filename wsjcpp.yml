@@ -63,3 +63,5 @@ unit-tests:
       description: ""
     - name: "Cursor"
       description: ""
+    - name: "TagNames"
+      description: ""
