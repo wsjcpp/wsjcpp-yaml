@@ -505,29 +505,43 @@ std::string WsjcppYamlItem::toString(std::string sIntent) {
             }
             sRet += "# " + m_sComment;
         }
+    } else if (this->isUndefined()) {
+        for (int i = 0; i < m_vObjects.size(); i++) {
+            if (m_vObjects[i]->isEmpty()) {
+                sRet += "\n";
+            } else {
+                WsjcppLog::warn(TAG, "Undefined element conatins something else");
+            }
+            // sRet += std::to_string(m_vObjects.size());
+        }
+        return sRet;
     } else if (this->isEmpty()) {
         if (m_sComment.length() > 0) {
             sRet += sIntent + "# " + m_sComment;
         }
+        // sRet += "\n";
+        return sRet;
     } else if (this->isArray()) {
         for (int i = 0; i < m_vObjects.size(); i++) {
             WsjcppYamlItem *pItem = m_vObjects[i];
             if (pItem->isEmpty()) {
-                sRet += sIntent + pItem->toString();
+                sRet += pItem->toString(sIntent) + "\n";
+                // sRet += "\n";
             } else if (pItem->isMap()) {
                 std::string s = pItem->toString(sIntent + "  ");
                 WsjcppCore::trim(s);
                 sRet += sIntent + "- " + s;
+                sRet += "\n";
             } else {
                 sRet += sIntent + "- " + pItem->toString();
+                sRet += "\n";
             }
-            sRet += "\n";
         }
     } else if (this->isMap()) {
         for (int i = 0; i < m_vObjects.size(); i++) {
             WsjcppYamlItem *pItem = m_vObjects[i];
             if (pItem->isEmpty() ) {
-                sRet += sIntent + pItem->toString();
+                sRet += pItem->toString(sIntent);
                 sRet += "\n";
             } else if (pItem->isArray() || pItem->isMap()) {
                 if (pItem->getNameQuotes() == WSJCPP_YAML_QUOTES_DOUBLE) {
@@ -543,12 +557,18 @@ std::string WsjcppYamlItem::toString(std::string sIntent) {
                 sRet += "\n";
                 sRet += pItem->toString(sIntent + "  ");
             } else {
+                std::string sVal = pItem->toString();
+                std::string sVal_ = sVal;
+                sVal_ = WsjcppCore::trim(sVal_);
+                if (sVal_.length() > 0) {
+                    sVal = " " + sVal;
+                }
                 if (pItem->getNameQuotes() == WSJCPP_YAML_QUOTES_DOUBLE) {
-                    sRet += sIntent + "\"" + pItem->getName() + "\": " + pItem->toString();
+                    sRet += sIntent + "\"" + pItem->getName() + "\":" + sVal;
                 } else if (pItem->getNameQuotes() == WSJCPP_YAML_QUOTES_SINGLE) {
-                    sRet += sIntent + "\'" + pItem->getName() + "\': " + pItem->toString();
+                    sRet += sIntent + "\'" + pItem->getName() + "\':" + sVal;
                 } else {
-                    sRet += sIntent + pItem->getName() + ": " + pItem->toString();
+                    sRet += sIntent + pItem->getName() + ":" + sVal;
                 }
                 sRet += "\n";
             }
@@ -1216,11 +1236,26 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
         int nDiffIntent = nLineIntent - st.nIntent;
         
         if (st.line.isEmptyLine()) {
-            WsjcppYamlItem *pItem = new WsjcppYamlItem(
-                st.pCurItem, st.placeInFile,
-                WsjcppYamlItemType::WSJCPP_YAML_ITEM_EMPTY
-            );
-            st.pCurItem->appendElement(pItem);
+            
+            
+            if (st.pCurItem != nullptr) {
+                
+                if (st.pCurItem->isArray() || st.pCurItem->isMap() || st.pCurItem->isUndefined()) {
+                    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+                        st.pCurItem, st.placeInFile,
+                        WsjcppYamlItemType::WSJCPP_YAML_ITEM_EMPTY
+                    );
+                    st.pCurItem->appendElement(pItem);
+                } else if (st.pCurItem->getParent() != nullptr && (st.pCurItem->getParent()->isArray() || st.pCurItem->getParent()->isMap())) {
+                    WsjcppYamlItem *pItem = new WsjcppYamlItem(
+                        st.pCurItem->getParent(), st.placeInFile,
+                        WsjcppYamlItemType::WSJCPP_YAML_ITEM_EMPTY
+                    );
+                    st.pCurItem->getParent()->appendElement(pItem);
+                } else {
+                    WsjcppLog::throw_err(TAG, "Empty element can be added only to map or to array");
+                }
+            }
             continue;
         }
 

@@ -3,6 +3,7 @@
 version: "3"
 
 services:
+  # service vote
   vote:
     build: ./vote
     command: python app.py
@@ -14,14 +15,18 @@ services:
       - front-tier
       - back-tier
 
+  # service result
   result:
     build: ./result
     command: nodemon server.js
     volumes:
       - ./result:/app
     ports:
-      - "5001:80"
+      # ports forward
+      - "5001:80" # some
+
       - "5858:5858"
+
     networks:
       - front-tier
       - back-tier
