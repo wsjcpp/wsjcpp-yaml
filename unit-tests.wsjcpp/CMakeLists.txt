@@ -49,6 +49,7 @@ list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_read_yaml.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_read_write_file.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_cursor.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_tag_names.cpp")
+list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_cleanup.cpp")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.user-custom.txt)
 

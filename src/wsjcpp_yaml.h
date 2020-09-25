@@ -254,6 +254,7 @@ class WsjcppYaml {
     public:
         WsjcppYaml();
         ~WsjcppYaml();
+        void clear();
         bool loadFromFile(const std::string &sFileName, std::string &sError);
         bool saveToFile(const std::string &sFileName);
         bool loadFromString(const std::string &sBufferName, const std::string &sBuffer, std::string &sError);

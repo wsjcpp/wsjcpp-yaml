@@ -83,7 +83,7 @@ WsjcppYamlItem::WsjcppYamlItem(
 // ---------------------------------------------------------------------
 
 WsjcppYamlItem::~WsjcppYamlItem() {
-    for (int i = 0; i < m_vObjects.size(); i++) {
+     for (int i = 0; i < m_vObjects.size(); i++) {
         delete m_vObjects[i];
     }
     m_vObjects.clear();
@@ -1129,7 +1129,7 @@ WsjcppYamlCursor WsjcppYamlCursor::operator[](const std::string &sName) const {
 // WsjcppYaml
 
 WsjcppYaml::WsjcppYaml() {
-    m_pRoot = new WsjcppYamlItem(nullptr, WsjcppYamlPlaceInFile(), WSJCPP_YAML_ITEM_MAP);
+    m_pRoot = nullptr;
     TAG = "WsjcppYaml";
 }
 
@@ -1137,6 +1137,13 @@ WsjcppYaml::WsjcppYaml() {
 
 WsjcppYaml::~WsjcppYaml() {
     delete m_pRoot;
+}
+
+// ---------------------------------------------------------------------
+
+void WsjcppYaml::clear() {
+    delete m_pRoot;
+    m_pRoot = nullptr;
 }
 
 // ---------------------------------------------------------------------
@@ -1220,6 +1227,11 @@ std::vector<std::string> WsjcppYaml::splitToLines(const std::string &sBuffer) {
 // ---------------------------------------------------------------------
 
 bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer, std::string &sError) {
+    this->clear();
+    if (m_pRoot == nullptr) {
+        m_pRoot = new WsjcppYamlItem(nullptr, WsjcppYamlPlaceInFile(), WSJCPP_YAML_ITEM_MAP);
+    }
+
     std::vector<std::string> vLines = this->splitToLines(sBuffer);
     WsjcppYamlParserStatus st;
     st.pCurItem = m_pRoot; // TODO recreate again new root element

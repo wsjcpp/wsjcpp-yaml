@@ -65,3 +65,5 @@ unit-tests:
       description: ""
     - name: "TagNames"
       description: ""
+    - name: "Cleanup"
+      description: ""
