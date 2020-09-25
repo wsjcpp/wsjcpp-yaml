@@ -48,8 +48,7 @@ void UnitTestReadYaml::executeTest() {
 
     WsjcppYamlNode *pServices = yaml.getRoot()->getElement("services");
 
-    compare("has services.vote", pServices->hasElement("vote"), true);
-    compare("has services.vote is map", pServices->getElement("vote")->isMap(), true);
+    
    
 
     /*
@@ -60,18 +59,37 @@ services:
     command: python app.py
     volumes:
      - ./vote:/app
-    ports:
-      - "5000:80"
-    networks:
-      - front-tier
-      - back-tier
 
-  result:
-    build: ./result
-    command: nodemon server.js
-    volumes:
-      - ./result:/app
     */
+    // services.vote
+    {
+        compare("has services.vote", pServices->hasElement("vote"), true);
+        compare("services.vote is map", pServices->getElement("vote")->isMap(), true);
+        compare("services.vote keys size 5", pServices->getElement("vote")->getKeys().size(), 5);
+
+        WsjcppYamlNode *pVote = pServices->getElement("vote");
+
+        compare("has services.vote.build", pVote->hasElement("build"), true);
+        compare("services.vote.build val", pVote->getElement("build")->getValue(), "./vote");
+
+        compare("has services.vote.command", pVote->hasElement("command"), true);
+        compare("services.vote.command val", pVote->getElement("command")->getValue(), "python app.py");
+
+        WsjcppYamlNode *pVolumes = pVote->getElement("volumes");
+        compare("services.vote.volumes is array", pVolumes->isArray(), true);
+        compare("services.vote.volumes size 1", pVolumes->getLength(), 1);
+        compare("services.vote.volumes val 0", pVolumes->getElement(0)->getValue(), "./vote:/app");
+
+        WsjcppYamlNode *pVotePorts = pVote->getElement("ports");
+        compare("services.vote.ports is array", pVotePorts->isArray(), true);
+        compare("services.vote.ports size 1", pVotePorts->getLength(), 1);
+        compare("services.vote.ports val 0", pVotePorts->getElement(0)->getValue(), "5000:80");
+
+        WsjcppYamlNode *pVoteNetworks = pVote->getElement("networks");
+        compare("services.vote.networks size 2", pVoteNetworks->getLength(), 2);
+        compare("services.vote.networks val 0", pVoteNetworks->getElement(0)->getValue(), "front-tier");
+        compare("services.vote.networks val 1", pVoteNetworks->getElement(1)->getValue(), "back-tier");
+    }
 
     // services.result
     {
@@ -80,6 +98,12 @@ services:
         compare("services.result keys size 5", pServices->getElement("result")->getKeys().size(), 5);
         
         WsjcppYamlNode *pResult = pServices->getElement("result");
+
+        compare("has services.result.build", pResult->hasElement("build"), true);
+        compare("services.result.build val", pResult->getElement("build")->getValue(), "./result");
+
+        compare("has services.result.command", pResult->hasElement("command"), true);
+        compare("services.result.command val", pResult->getElement("command")->getValue(), "nodemon server.js");
 
         WsjcppYamlNode *pResultVolumes = pResult->getElement("volumes");
         compare("services.result.volumes is array", pResultVolumes->isArray(), true);
