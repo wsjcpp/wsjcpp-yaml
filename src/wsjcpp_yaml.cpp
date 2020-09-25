@@ -611,7 +611,7 @@ WsjcppYamlParsebleLine::WsjcppYamlParsebleLine(int nLine) {
     m_sPrefix = "";
     m_bArrayItem = false;
     m_sComment = "";
-    m_sName = "";
+    m_sTagName = "";
     m_sValue = "";
     m_nNameQuotes = WSJCPP_YAML_QUOTES_NONE;
     m_nValueQuotes = WSJCPP_YAML_QUOTES_NONE;
@@ -665,7 +665,7 @@ bool WsjcppYamlParsebleLine::hasComment() {
 // ---------------------------------------------------------------------
 
 std::string WsjcppYamlParsebleLine::getName() {
-    return m_sName;
+    return m_sTagName;
 }
 
 // ---------------------------------------------------------------------
@@ -677,7 +677,7 @@ WsjcppYamlQuotes WsjcppYamlParsebleLine::getNameQuotes() {
 // ---------------------------------------------------------------------
 
 bool WsjcppYamlParsebleLine::isEmptyName() {
-    return m_sName.length() == 0;
+    return m_sTagName.length() == 0;
 }
 
 // ---------------------------------------------------------------------
@@ -721,7 +721,7 @@ bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sE
     m_bArrayItem = false;
     m_sPrefix = "";
     m_sComment = "";
-    m_sName = "";
+    m_sTagName = "";
     m_sValue = "";
     m_bHasComment = false;
     m_nNameQuotes = WSJCPP_YAML_QUOTES_NONE;
@@ -783,9 +783,8 @@ bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sE
             state = WSJCPP_YAML_PARSER_LINE_STATE_VALUE;
             m_sValue += c;
         } else if (c == ':' && state == WSJCPP_YAML_PARSER_LINE_STATE_VALUE) {
-            std::cout << m_sValue << std::endl;
-            if (m_sName.length() == 0) {
-                m_sName = m_sValue;
+            if (m_sTagName.length() == 0 && this->canTagName(m_sValue)) {
+                m_sTagName = m_sValue;
                 m_sValue = ""; // reset value it was param name
             } else {
                 m_sValue += c;
@@ -823,14 +822,14 @@ bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sE
         }
     }*/
     
-    m_sName = WsjcppCore::trim(m_sName);
-    if (m_sName.length() > 0 && m_sName[0] == '"') {
+    m_sTagName = WsjcppCore::trim(m_sTagName);
+    if (m_sTagName.length() > 0 && m_sTagName[0] == '"') {
         m_nNameQuotes = WSJCPP_YAML_QUOTES_DOUBLE;
-        m_sName = removeStringDoubleQuotes(m_sName);
+        m_sTagName = removeStringDoubleQuotes(m_sTagName);
     }
-    if (m_sName.length() > 0 && m_sName[0] == '\'') {
+    if (m_sTagName.length() > 0 && m_sTagName[0] == '\'') {
         m_nNameQuotes = WSJCPP_YAML_QUOTES_SINGLE;
-        m_sName = removeStringSingleQuotes(m_sName);
+        m_sTagName = removeStringSingleQuotes(m_sTagName);
     }
 
     m_sValue = WsjcppCore::trim(m_sValue);
@@ -844,12 +843,41 @@ bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sE
     }
 
     m_sComment = WsjcppCore::trim(m_sComment);
+
+    if (m_bArrayItem == false && m_sTagName.length() == 0 && m_sValue.length() > 0 ) {
+        sError = "Value of name can be empty only for array-item (line: " + sLine + ")";
+        return false;
+    }
     return true;
 }
 
 // ---------------------------------------------------------------------
 
 bool WsjcppYamlParsebleLine::canTagName(const std::string &sVal) {
+    std::string sTrim = sVal;
+    sTrim = WsjcppCore::trim(sTrim);
+    int nLen = sTrim.length();
+    if (nLen == 0) {
+        return false;
+    }
+    if (sTrim.length() > 0 && sTrim[0] == '"' && sTrim[nLen-1] == '"') {
+        return true;
+    }
+    if (sTrim.length() > 0 && sTrim[0] == '\'' && sTrim[nLen-1] == '\'') {
+        return true;
+    }
+    // check illegal char
+    for (int i = 0; i < nLen; i++) {
+        char c = sTrim[i];
+        if (
+            c != '-' && c != '_'
+            && (c < '0' || c > '9')
+            && (c < 'a' || c > 'z')
+            && (c < 'A' || c > 'Z')
+        ) {
+            return false;
+        }
+    }
     return true;
 }
 

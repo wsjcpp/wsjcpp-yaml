@@ -167,7 +167,7 @@ class WsjcppYamlParsebleLine {
         std::string m_sPrefix;
         bool m_bArrayItem;
         std::string m_sComment;
-        std::string m_sName;
+        std::string m_sTagName;
         std::string m_sValue;
         WsjcppYamlQuotes m_nNameQuotes;
         WsjcppYamlQuotes m_nValueQuotes;
