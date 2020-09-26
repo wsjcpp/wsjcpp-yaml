@@ -53,19 +53,19 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    std::cout << "yaml is " << yaml["yaml1"].getValue() << std::endl;
-    std::cout << "some-map is " << yaml["some-map"].getValue() << std::endl;
-    std::cout << "some-map2 is " << yaml["some-map2"].getValue() << std::endl;
-    std::cout << "some-array has " << std::to_string(yaml["some-array"].getLength()) << std::endl;
-    std::cout << "some-array element 0 is " << yaml["some-array"][0].getValue() << std::endl;
-    std::cout << "some-array element 1 is " << yaml["some-array"][1].getValue() << std::endl;
-    std::cout << "some-am has " << std::to_string(yaml["some-am"].getLength()) << std::endl;
+    std::cout << "yaml is " << yaml["yaml1"].valStr() << std::endl;
+    std::cout << "some-map is " << yaml["some-map"].valStr() << std::endl;
+    std::cout << "some-map2 is " << yaml["some-map2"].valStr() << std::endl;
+    std::cout << "some-array has " << std::to_string(yaml["some-array"].valStr()) << std::endl;
+    std::cout << "some-array element 0 is " << yaml["some-array"][0].valStr() << std::endl;
+    std::cout << "some-array element 1 is " << yaml["some-array"][1].valStr() << std::endl;
+    std::cout << "some-am has " << std::to_string(yaml["some-am"].size()) << std::endl;
     std::cout << "some-am is array: " << (yaml["some-am"].isArray() ? "yes" : "no") << std::endl;
-    std::cout << "some-am has comment " << yaml["some-am"].getComment() << std::endl;
-    std::cout << "some-am element 0 : p1 is  " << yaml["some-am"][0]["p1"].getValue() << std::endl;
-    std::cout << "some-am element 0 : p2 is  " << yaml["some-am"][0]["p2"].getValue() << std::endl;
-    std::cout << "some-am element 1 : p1 is  " << yaml["some-am"][1]["p1"].getValue() << std::endl;
-    std::cout << "some-am element 1 : p2 is  " << yaml["some-am"][1]["p2"].getValue() << std::endl;
+    std::cout << "some-am has comment " << yaml["some-am"].comment() << std::endl;
+    std::cout << "some-am element 0 : p1 is  " << yaml["some-am"][0]["p1"].valStr() << std::endl;
+    std::cout << "some-am element 0 : p2 is  " << yaml["some-am"][0]["p2"].valStr() << std::endl;
+    std::cout << "some-am element 1 : p1 is  " << yaml["some-am"][1]["p1"].valStr() << std::endl;
+    std::cout << "some-am element 1 : p2 is  " << yaml["some-am"][1]["p2"].valStr() << std::endl;
 
     return 0;
 }

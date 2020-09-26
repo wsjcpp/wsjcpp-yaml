@@ -77,8 +77,15 @@ WsjcppYamlNode::WsjcppYamlNode(
     m_nItemType = nItemType;
     m_nValueQuotes = WSJCPP_YAML_QUOTES_NONE;
     m_nNameQuotes = WSJCPP_YAML_QUOTES_NONE;
-    m_nNodeDiffIntent = 0;
-    m_sNodeDiffIntent = "";
+    // TODO get child intent
+    if (m_pParent != nullptr && m_pParent->getParent() != nullptr) {
+        m_nNodeDiffIntent = 2;
+        m_sNodeDiffIntent = "  ";
+    } else {
+        m_nNodeDiffIntent = 0;
+        m_sNodeDiffIntent = "";
+    }
+    
     TAG = "WsjcppYamlNode";
 }
 
@@ -327,6 +334,7 @@ bool WsjcppYamlNode::createElementMap(const std::string &sName, WsjcppYamlQuotes
     WsjcppYamlPlaceInFile pl;
     WsjcppYamlNode *pNewItem = new WsjcppYamlNode(this, pl, WSJCPP_YAML_NODE_MAP);
     pNewItem->setName(sName, nNameQuotes);
+    // pNewItem->setNodeIntents({2});
     this->setElement(sName, pNewItem);
     return true;
 }
@@ -1203,7 +1211,7 @@ WsjcppYamlCursor WsjcppYamlCursor::operator[](const std::string &sName) const {
 // WsjcppYaml
 
 WsjcppYaml::WsjcppYaml() {
-    m_pRoot = nullptr;
+    m_pRoot = new WsjcppYamlNode(nullptr, WsjcppYamlPlaceInFile(), WSJCPP_YAML_NODE_MAP);
     TAG = "WsjcppYaml";
 }
 

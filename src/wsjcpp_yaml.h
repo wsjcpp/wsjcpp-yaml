@@ -99,9 +99,9 @@ class WsjcppYamlNode {
             WsjcppYamlQuotes nValueQuotes = WSJCPP_YAML_QUOTES_NONE
         );
 
-        bool createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
+        bool createElementMap(const std::string &sName, WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE);
         WsjcppYamlNode *createElementMap();
-        bool createElementArray(const std::string &sName, WsjcppYamlQuotes nNameQuotes);
+        bool createElementArray(const std::string &sName, WsjcppYamlQuotes nNameQuotes = WSJCPP_YAML_QUOTES_NONE);
 
         bool isArray();
         int getLength();
