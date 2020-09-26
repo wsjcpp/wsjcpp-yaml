@@ -116,15 +116,19 @@ class WsjcppYamlNode {
 
         void setValue(const std::string &sValue, WsjcppYamlQuotes nQuotes = WSJCPP_YAML_QUOTES_NONE);
         WsjcppYamlQuotes getValueQuotes();
-
+        
+        std::string getSerializedName();
         std::string toString(std::string sIntent = "");
         std::string getItemTypeAsString();
 
         std::string getForLogFormat();
         void setNodeDiffIntent(int nDiffIntent);
         int getNodeDiffIntent();
+        std::string getStringNodeDiffIntent();
 
     private:
+        void throw_error(const std::string &sError);
+
         std::string TAG;
         WsjcppYamlNode *m_pParent;
         WsjcppYamlPlaceInFile m_placeInFile;
@@ -134,8 +138,9 @@ class WsjcppYamlNode {
         WsjcppYamlQuotes m_nValueQuotes;
         std::string m_sName;
         WsjcppYamlQuotes m_nNameQuotes;
-        int m_nDiffIntent;
         std::string m_sComment;
+        int m_nNodeDiffIntent;
+        std::string m_sNodeDiffIntent;
 };
 
 // ---------------------------------------------------------------------
@@ -275,11 +280,11 @@ class WsjcppYaml {
 
         // prsing line status
         void logUnknownParseLine();
-        WsjcppYamlNode *m_pParseCurrentItem;
+        WsjcppYamlNode *m_pParseCurrentParentNode;
         int m_nParseCurrentIntent;
         WsjcppYamlPlaceInFile m_parsePlaceInFile;
         WsjcppYamlParsebleLine m_parseLine;
-        
+        std::vector<int> m_vStackDiffNodeIntents;
 };
 
 #endif // WSJCPP_YAML_H
