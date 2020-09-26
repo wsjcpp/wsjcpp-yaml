@@ -1144,7 +1144,7 @@ int WsjcppYamlCursor::valInt() {
     if (m_pCurrentNode != nullptr) {
         std::string sValue = m_pCurrentNode->getValue();
         sValue = WsjcppCore::toLower(sValue);
-        int nValue = std::atoi(sValue.c_str());
+        int nValue = std::strtol(sValue.c_str(), nullptr, 10);
         if (std::to_string(nValue) != sValue) {
             throw std::runtime_error(TAG + ": valInt, Element must be int but have a string" + m_pCurrentNode->getForLogFormat());
         }
