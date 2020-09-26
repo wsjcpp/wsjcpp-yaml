@@ -31,25 +31,11 @@ bool UnitTestYamlParserSimpleArray::doBeforeTest() {
 // ---------------------------------------------------------------------
 
 void UnitTestYamlParserSimpleArray::executeTest() {
-
-    std::string sTestYaml = 
-        "# simple array test\n"
-        "param1: none value1 # it's value for something # olala  \n"
-        "array-test2 : #    some comment 2   \n"
-        "  - value21 # comment v21 \n"
-        "  - value22 # comment v22 \n"
-        "  - true # comment true \n"
-        "  # some\n"
-        "  - falsesome   \n"
-        "  - free@free   \n"
-        "  - # empty \n"
-        "  - 1\n"
-        "param2: val2 #  value 2 \n"
-    ;
-    
+   
+    std::string sFilepath = "./data-tests/parser-simple-array.yml";
     WsjcppYaml yaml;
     std::string sError;
-    if (!compare("Error parsing", yaml.loadFromString("parse_array", sTestYaml, sError), true)) {
+    if (!compare("Error parsing", yaml.loadFromFile(sFilepath, sError), true)) {
         WsjcppLog::err(TAG, sError);
         return;
     }

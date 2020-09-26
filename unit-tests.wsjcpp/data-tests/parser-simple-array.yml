@@ -1,0 +1,12 @@
+# simple array test
+param1: none value1 # it's value for something # olala  
+array-test2 : #    some comment 2   
+  - value21 # comment v21 
+  - value22 # comment v22 
+  - true # comment true 
+  # some
+  - falsesome   
+  - free@free   
+  - # empty 
+  - 1
+param2: val2 #  value 2 

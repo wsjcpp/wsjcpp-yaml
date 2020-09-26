@@ -546,16 +546,16 @@ std::string WsjcppYamlNode::toString(std::string sIntent) {
                 std::string sVal = pNode->toString();
                 sVal = WsjcppCore::trim(sVal);
                 if (sVal.length() > 0) { // empty string have content
-                    sRet += sIntent + pNode->getStringNodeDiffIntent();
+                    sRet += sIntent + pNode->getStringNodeLastIntent();
                 }
                 sRet += sVal;
             } else if (pNode->isMap()) {
-                sRet += sIntent + pNode->getStringNodeDiffIntent();
-                std::string s = pNode->toString(sIntent + m_sNodeDiffIntent);
+                sRet += sIntent + pNode->getStringNodeLastIntent();
+                std::string s = pNode->toString(sIntent + pNode->getStringNodeLastIntent());
                 WsjcppCore::trim(s);
                 sRet += "- " + s;
             } else {
-                sRet += sIntent + pNode->getStringNodeDiffIntent();
+                sRet += sIntent + pNode->getStringNodeLastIntent();
                 sRet += "- " + pNode->toString();
             }
             sRet += "\n";
@@ -568,16 +568,16 @@ std::string WsjcppYamlNode::toString(std::string sIntent) {
                 sRet += pNode->toString(sIntent);
                 sRet += "\n";
             } else if (pNode->isUndefined()) {
-                sRet += sIntent + pNode->getStringNodeDiffIntent()
+                sRet += sIntent + pNode->getStringNodeLastIntent()
                     + pNode->getSerializedName() + ":\n" + pNode->toString();
             } else if (pNode->isArray() || pNode->isMap()) {
-                sRet += sIntent + pNode->getStringNodeDiffIntent()
+                sRet += sIntent + pNode->getStringNodeLastIntent()
                  + pNode->getSerializedName() + ":";
                 if (pNode->getComment().length() > 0) {
                     sRet += " # " + pNode->getComment(); 
                 }
                 sRet += "\n";
-                sRet += pNode->toString(sIntent + pNode->getStringNodeDiffIntent());
+                sRet += pNode->toString(sIntent + pNode->getStringNodeLastIntent());
             } else {
                 std::string sVal = pNode->toString();
                 std::string sVal_ = sVal;
@@ -585,7 +585,7 @@ std::string WsjcppYamlNode::toString(std::string sIntent) {
                 if (sVal_.length() > 0) {
                     sVal = " " + sVal;
                 }
-                sRet += sIntent + pNode->getStringNodeDiffIntent()
+                sRet += sIntent + pNode->getStringNodeLastIntent()
                      + pNode->getSerializedName() + ":" + sVal;
                 sRet += "\n";
             }
@@ -593,9 +593,13 @@ std::string WsjcppYamlNode::toString(std::string sIntent) {
     } else {
         sRet = ""; // undefined element must be empty
     }
-    /*if (sIntent == "") {
-        WsjcppCore::trim(sRet);
-    }*/
+    
+    if (m_pParent == nullptr) {
+        int nLen = sRet.length();
+        if (nLen > 0 && sRet[nLen - 1] == '\n') {
+            sRet = sRet.substr(0, nLen - 1);
+        }
+    }
     return sRet;
 }
 
@@ -622,24 +626,34 @@ std::string WsjcppYamlNode::getForLogFormat() {
 
 // ---------------------------------------------------------------------
 
-void WsjcppYamlNode::setNodeDiffIntent(int nNodeDiffIntent) {
-    m_nNodeDiffIntent = nNodeDiffIntent;
-    m_sNodeDiffIntent = "";
-    for (int i = 0; i < m_nNodeDiffIntent; i++) {
-        m_sNodeDiffIntent += " ";
-    }
-}
-
-// ---------------------------------------------------------------------
-
-int WsjcppYamlNode::getNodeDiffIntent() {
+int WsjcppYamlNode::getNodeLastIntent() {
     return m_nNodeDiffIntent;
 }
 
 // ---------------------------------------------------------------------
 
-std::string WsjcppYamlNode::getStringNodeDiffIntent() {
+std::string WsjcppYamlNode::getStringNodeLastIntent() {
     return m_sNodeDiffIntent;
+}
+
+// ---------------------------------------------------------------------
+
+void WsjcppYamlNode::setNodeIntents(const std::vector<int> & vNodeIntents) {
+    m_nNodeDiffIntent = vNodeIntents.back();
+    m_sNodeDiffIntent = "";
+    for (int i = 0; i < m_nNodeDiffIntent; i++) {
+        m_sNodeDiffIntent += " ";
+    }
+    m_nNodeIntent = 0;
+    for (int i = 0; i < vNodeIntents.size(); i++) {
+        m_nNodeIntent += vNodeIntents[i];
+    }
+}
+
+// ---------------------------------------------------------------------
+
+int WsjcppYamlNode::getNodeIntent() {
+    return m_nNodeIntent;
 }
 
 // ---------------------------------------------------------------------
@@ -1317,10 +1331,7 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
         if (nDiffIntent > 0) {
             m_vStackDiffNodeIntents.push_back(nDiffIntent);
             m_nParseCurrentIntent = m_parseLine.getIntent();
-            // std::cout << "add new DiffNodeIntents " << nDiffIntent << std::endl;
         }
-
-        // std::cout << nLine << ": " << m_nParseCurrentIntent << ", " << nLineIntent << "  ; line:[" << m_parsePlaceInFile.getLine() << "]" << std::endl;
 
         if (m_parseLine.isEmptyLine()) {
             if (m_pParseCurrentParentNode != nullptr) {
@@ -1329,14 +1340,14 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
                         m_pParseCurrentParentNode, m_parsePlaceInFile,
                         WSJCPP_YAML_NODE_EMPTY
                     );
-                    pNode->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
+                    pNode->setNodeIntents(m_vStackDiffNodeIntents);
                     m_pParseCurrentParentNode->appendElement(pNode);
                 } else if (m_pParseCurrentParentNode->getParent() != nullptr && (m_pParseCurrentParentNode->getParent()->isArray() || m_pParseCurrentParentNode->getParent()->isMap())) {
                     WsjcppYamlNode *pNode = new WsjcppYamlNode(
                         m_pParseCurrentParentNode->getParent(), m_parsePlaceInFile,
                         WSJCPP_YAML_NODE_EMPTY
                     );
-                    pNode->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
+                    pNode->setNodeIntents(m_vStackDiffNodeIntents);
                     m_pParseCurrentParentNode->getParent()->appendElement(pNode);
                 } else {
                     throw std::runtime_error(TAG + ": Empty element can be added only to map or to array");
@@ -1364,11 +1375,9 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
                 sError = "Parent of current node is nullptr, line: " + std::to_string(nLine);
                 return false;
             }
-            // m_nParseCurrentIntent = m_nParseCurrentIntent - m_pParseCurrentParentNode->getParent()->getNodeDiffIntent();
             m_nParseCurrentIntent = m_nParseCurrentIntent - m_vStackDiffNodeIntents.back();
             m_vStackDiffNodeIntents.pop_back();
             m_pParseCurrentParentNode = m_pParseCurrentParentNode->getParent();
-            // std::cout << "up to [" << m_pParseCurrentParentNode->getName() << "]" << std::endl;
             if (m_nParseCurrentIntent < m_parseLine.getIntent()) {
                 sError = "Wrong intent, expected "
                     "'" + std::to_string(m_parseLine.getIntent()) + "',"
@@ -1378,24 +1387,8 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
             }
 
             if (m_nParseCurrentIntent == m_parseLine.getIntent()) {
-                // if (m_pParseCurrentParentNode->getParent() != nullptr) {
-                //    m_pParseCurrentParentNode = m_pParseCurrentParentNode->getParent();
-                // }
                 break;
             }
-
-            /*std::cout << nLine << ": nDiffIntent = " << nDiffIntent << std::endl;
-            std::cout << nLine << ": m_pParseCurrentParentNode = " << m_pParseCurrentParentNode->getNodeDiffIntent() << std::endl;
-            std::cout << nLine << ": m_pParseCurrentParentNode = " << m_pParseCurrentParentNode->getName() << std::endl;
-            int nNodeDiffIntent = m_pParseCurrentParentNode->getNodeDiffIntent();
-            if (nNodeDiffIntent == 0) {
-                sError = "Node diff intent cann't be 0 ";
-                return false;
-            }
-            m_pParseCurrentParentNode = m_pParseCurrentParentNode->getParent();
-            m_nParseCurrentIntent = m_nParseCurrentIntent - nNodeDiffIntent;
-            nDiffIntent = nLineIntent - m_nParseCurrentIntent;
-            */
         }
 
         if (m_parseLine.isEmptyName()) {
@@ -1439,6 +1432,11 @@ void WsjcppYaml::process_hasName_emptyValue_arrayItem() {
 // ---------------------------------------------------------------------
 
 void WsjcppYaml::process_hasName_emptyValue_noArrayItem() {
+    if (m_parseLine.getIntent() == m_pParseCurrentParentNode->getNodeIntent()) {
+        if (m_pParseCurrentParentNode->getParent() != nullptr) {
+            m_pParseCurrentParentNode = m_pParseCurrentParentNode->getParent();
+        }
+    }
     // std::cout << "process_hasName_emptyValue_noArrayItem " << std::endl;
     WsjcppYamlNode *pNode = new WsjcppYamlNode(
         m_pParseCurrentParentNode, m_parsePlaceInFile, 
@@ -1451,9 +1449,19 @@ void WsjcppYaml::process_hasName_emptyValue_noArrayItem() {
     int nDiffIntent = m_parseLine.getIntent() - m_nParseCurrentIntent;
     pNode->setName(m_parseLine.getName(), m_parseLine.getNameQuotes());
     pNode->setComment(m_parseLine.getComment());
-    pNode->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
+    pNode->setNodeIntents(m_vStackDiffNodeIntents);
     // std::cout << "current node [" << m_vStackDiffNodeIntents.back() << "]" << std::endl;
-
+    
+/*    if (nDiffIntent == 0 && m_pParseCurrentParentNode->isUndefined()) {
+        std::cout << "shit nDiffIntent = " << nDiffIntent << std::endl;
+        std::cout << "shit m_pParseCurrentParentNode->getName() = " << m_pParseCurrentParentNode->getName() << std::endl;
+        if (m_pParseCurrentParentNode->getParent() != nullptr) {
+            std::cout << "shit "
+                << " {" << m_pParseCurrentParentNode->getPlaceInFile().getLine() << "} "
+                << " {" << m_parsePlaceInFile.getLine() << "} " << std::endl;
+        }
+    }
+*/
     m_pParseCurrentParentNode->setElement(m_parseLine.getName(), pNode);
     m_pParseCurrentParentNode = pNode;
 }
@@ -1471,7 +1479,7 @@ void WsjcppYaml::process_hasName_hasValue_arrayItem() {
     );
     m_pParseCurrentParentNode->appendElement(pMapItem);
     m_pParseCurrentParentNode = pMapItem;
-    pMapItem->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
+    pMapItem->setNodeIntents(m_vStackDiffNodeIntents);
 
     WsjcppYamlNode *pNode = new WsjcppYamlNode(
         m_pParseCurrentParentNode, m_parsePlaceInFile, 
@@ -1481,23 +1489,26 @@ void WsjcppYaml::process_hasName_hasValue_arrayItem() {
     pNode->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
     pNode->setName(m_parseLine.getName(), m_parseLine.getNameQuotes());
     pMapItem->setElement(m_parseLine.getName(), pNode);
-    // pNode->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
+    
+    // next intents must be for map
+    m_vStackDiffNodeIntents.push_back(2); 
+    m_nParseCurrentIntent += 2;
 }
 
 // ---------------------------------------------------------------------
 
 void WsjcppYaml::process_hasName_hasValue_noArrayItem() {
-    // std::cout << "process_hasName_hasValue_noArrayItem " << std::endl;
     WsjcppYamlNode *pNode = new WsjcppYamlNode(
         m_pParseCurrentParentNode, m_parsePlaceInFile, 
         WSJCPP_YAML_NODE_VALUE
     );
     // std::cout << "m_parseLine.getName(): " << m_parseLine.getName() << std::endl;
+    // std::cout << "m_pParseCurrentParentNode: " << m_pParseCurrentParentNode->getPlaceInFile().getLine() << std::endl;
     pNode->setComment(m_parseLine.getComment());
     pNode->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
     pNode->setName(m_parseLine.getName(), m_parseLine.getNameQuotes());
+    pNode->setNodeIntents(m_vStackDiffNodeIntents);
     m_pParseCurrentParentNode->setElement(m_parseLine.getName(), pNode);
-    pNode->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
 
     // m_pParseCurrentParentNode = pItem;
 }
@@ -1517,7 +1528,7 @@ void WsjcppYaml::process_emptyName_hasValue_arrayItem() {
     pNode->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
     m_pParseCurrentParentNode->appendElement(pNode);
     // m_pParseCurrentParentNode = pNode;
-    pNode->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
+    pNode->setNodeIntents(m_vStackDiffNodeIntents);
 }
 
 // ---------------------------------------------------------------------
@@ -1531,7 +1542,6 @@ void WsjcppYaml::process_emptyName_hasValue_noArrayItem() {
 // ---------------------------------------------------------------------
 
 void WsjcppYaml::process_emptyName_emptyValue_arrayItem() {
-    // std::cout << "process_emptyName_emptyValue_arrayItem " << std::endl;
     if (m_pParseCurrentParentNode->isUndefined()) {
         m_pParseCurrentParentNode->doArray();
     }
@@ -1541,9 +1551,8 @@ void WsjcppYaml::process_emptyName_emptyValue_arrayItem() {
     );
     pNode->setComment(m_parseLine.getComment());
     pNode->setValue(m_parseLine.getValue(), m_parseLine.getValueQuotes());
+    pNode->setNodeIntents(m_vStackDiffNodeIntents);
     m_pParseCurrentParentNode->appendElement(pNode);
-    pNode->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
-    m_pParseCurrentParentNode = pNode;
 }
 
 // ---------------------------------------------------------------------
@@ -1555,7 +1564,7 @@ void WsjcppYaml::process_emptyName_emptyValue_noArrayItem() {
         WSJCPP_YAML_NODE_EMPTY
     );
     pNode->setComment(m_parseLine.getComment());
-    pNode->setNodeDiffIntent(m_vStackDiffNodeIntents.back());
+    pNode->setNodeIntents(m_vStackDiffNodeIntents);
     m_pParseCurrentParentNode->appendElement(pNode);
 }
 

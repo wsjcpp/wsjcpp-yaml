@@ -30,37 +30,29 @@ bool UnitTestRemoveElementInArray::doBeforeTest() {
 // ---------------------------------------------------------------------
 
 void UnitTestRemoveElementInArray::executeTest() {
-    std::string sTestYaml = 
-        "# Some comment 1\n"
-        "   \n"
-        "arr1: \n"
-        "\n"
-        "  - name: i1\n"
-        "    var2: 2\n"
-        "  - name: i2\n"
-        "  - name: i3\n"
-        "\n" // empty line
-    ;
 
+    std::string sFilepath = "./data-tests/remove-element-in-array.yml";
     WsjcppYaml yaml;
     std::string sError;
-    if (!compare("Error parsing", yaml.loadFromString("rm_elem_in_arr", sTestYaml, sError), true)) {
+    if (!compare("Error parsing", yaml.loadFromFile(sFilepath, sError), true)) {
         WsjcppLog::err(TAG, sError);
         return;
     }
 
     
     WsjcppYamlNode *pArr1 = yaml.getRoot()->getElement("arr1");
-    compare("arr1 len", pArr1->getLength(), 3);
+    compare("arr1 len", pArr1->getLength(), 4);
     compare("arr1 name0 ", pArr1->getElement(0)->getElement("name")->getValue(), "i1");
     compare("arr1 name1 ", pArr1->getElement(1)->getElement("name")->getValue(), "i2");
     compare("arr1 name2 ", pArr1->getElement(2)->getElement("name")->getValue(), "i3");
+    compare("arr1 name3 ", pArr1->getElement(3)->getValue(), "very different array items type");
 
     pArr1->removeElement(1);
 
-    compare("arr1 len", pArr1->getLength(), 2);
+    compare("arr1 len", pArr1->getLength(), 3);
     compare("arr1 name0 ", pArr1->getElement(0)->getElement("name")->getValue(), "i1");
     compare("arr1 name1 ", pArr1->getElement(1)->getElement("name")->getValue(), "i3");
+    compare("arr1 name2 ", pArr1->getElement(2)->getValue(), "very different array items type");
 }
 
 // ---------------------------------------------------------------------

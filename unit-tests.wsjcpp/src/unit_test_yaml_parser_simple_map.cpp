@@ -57,7 +57,7 @@ void UnitTestYamlParserSimpleMap::executeTest() {
         compare("yaml_save", sSaved,
             "# Some comment 1\n"
             "param1: value1\n"
-            "param2: value2 # some comment 2"
+            "param2: value2 # some comment 2\n"
         );
     }
 }

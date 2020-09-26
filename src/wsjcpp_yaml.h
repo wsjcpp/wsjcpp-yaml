@@ -12,11 +12,11 @@
 // ---------------------------------------------------------------------
 
 enum WsjcppYamlNodeType {
-    WSJCPP_YAML_NODE_UNDEFINED,
-    WSJCPP_YAML_NODE_EMPTY,
-    WSJCPP_YAML_NODE_ARRAY,
-    WSJCPP_YAML_NODE_MAP,
-    WSJCPP_YAML_NODE_VALUE
+    WSJCPP_YAML_NODE_UNDEFINED = 0,
+    WSJCPP_YAML_NODE_EMPTY = 1,
+    WSJCPP_YAML_NODE_ARRAY = 2,
+    WSJCPP_YAML_NODE_MAP = 3,
+    WSJCPP_YAML_NODE_VALUE = 4
 };
 
 // ---------------------------------------------------------------------
@@ -122,9 +122,10 @@ class WsjcppYamlNode {
         std::string getItemTypeAsString();
 
         std::string getForLogFormat();
-        void setNodeDiffIntent(int nDiffIntent);
-        int getNodeDiffIntent();
-        std::string getStringNodeDiffIntent();
+        int getNodeLastIntent();
+        std::string getStringNodeLastIntent();
+        void setNodeIntents(const std::vector<int> & vNodeIntents);
+        int getNodeIntent();
 
     private:
         void throw_error(const std::string &sError);
@@ -141,6 +142,7 @@ class WsjcppYamlNode {
         std::string m_sComment;
         int m_nNodeDiffIntent;
         std::string m_sNodeDiffIntent;
+        int m_nNodeIntent;
 };
 
 // ---------------------------------------------------------------------

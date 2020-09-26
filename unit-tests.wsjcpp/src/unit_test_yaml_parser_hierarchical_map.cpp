@@ -109,7 +109,7 @@ void UnitTestYamlParserHierarchicalMap::executeTest() {
             "    map123:\n"
             "      param1231: v1231\n"
             "      param1232: v1232\n"
-            "param2: v2 # some comment 2"
+            "param2: v2 # some comment 2\n"
         );
     }
 }
