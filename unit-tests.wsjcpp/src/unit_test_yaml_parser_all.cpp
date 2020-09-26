@@ -1,8 +1,19 @@
-#include "unit_test_yaml_parser_all.h"
+#include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp_core.h>
 #include <wsjcpp_yaml.h>
+
+// ---------------------------------------------------------------------
+// UnitTestYamlParserAll
+
+class UnitTestYamlParserAll : public WsjcppUnitTestBase {
+    public:
+        UnitTestYamlParserAll();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
+};
+
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserAll)
 
@@ -14,7 +25,7 @@ UnitTestYamlParserAll::UnitTestYamlParserAll()
 // ---------------------------------------------------------------------
 
 bool UnitTestYamlParserAll::doBeforeTest() {
-    // nothing
+    // do something before test
     return true;
 }
 
@@ -22,7 +33,7 @@ bool UnitTestYamlParserAll::doBeforeTest() {
 
 void UnitTestYamlParserAll::executeTest() {
 
-    std::string g_sTestYaml = 
+    std::string sTestYaml = 
         "# Some comment 1\n"
         "test10: one\n"
         "test20: two # some comment 2\n"
@@ -48,16 +59,19 @@ void UnitTestYamlParserAll::executeTest() {
     ;
 
     WsjcppYaml yaml;
-    if (!compare("Error parsing", yaml.loadFromString(g_sTestYaml), true)) {
+    std::string sError;
+    if (!compare("Error parsing", yaml.loadFromString("parse_all", sTestYaml, sError), true)) {
+        WsjcppLog::err(TAG, sError);
         return;
     }
 
-    std::string sSaved = "";
-    if (yaml.saveToString(sSaved)) {
-        WsjcppLog::info(TAG, "\n>>>>\n" + sSaved);
+    std::string sSaved1 = "";
+    if (!compare("Error saving", yaml.saveToString(sSaved1), true)) {
+        compare("yaml_saved 2-test", sSaved1, sTestYaml);
+        return;
     }
     
-    WsjcppYamlItem *pItem = nullptr;
+    WsjcppYamlNode *pItem = nullptr;
     compare("test10", yaml.getRoot()->getElement("test10")->getValue(), "one");
     compare("test20", yaml.getRoot()->getElement("test20")->getValue(), "two");
         
@@ -83,15 +97,15 @@ void UnitTestYamlParserAll::executeTest() {
     pItem = yaml.getRoot()->getElement("map60")->getElement("test80");
     compare("test80_comment", pItem->getValue(), "opa2");
 
-    sSaved = "";
-    if (compare("save yaml", yaml.saveToString(sSaved), true)) {
-        compare("yaml_save", sSaved, g_sTestYaml);
+    std::string sSaved2 = "";
+    if (compare("saving yaml", yaml.saveToString(sSaved2), true)) {
+        compare("yaml_saved 1-2", sSaved1, sSaved2);
     }
 }
 
 // ---------------------------------------------------------------------
 
 bool UnitTestYamlParserAll::doAfterTest() {
-    // nothing
+    // do something after test
     return true;
 }

@@ -1,0 +1,9 @@
+# Some comment 1
+   
+arr1: 
+
+  - name: i1
+    var2: 2
+  - name: i2
+  - name: i3
+  - very different array items type

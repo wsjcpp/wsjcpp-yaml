@@ -1,7 +1,18 @@
-#include "unit_test_line_parser.h"
+#include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
+
+// ---------------------------------------------------------------------
+// UnitTestLineParser
+
+class UnitTestLineParser : public WsjcppUnitTestBase {
+    public:
+        UnitTestLineParser();
+        virtual bool doBeforeTest() override;
+        virtual void executeTest() override;
+        virtual bool doAfterTest() override;
+};
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestLineParser)
 
@@ -13,7 +24,7 @@ UnitTestLineParser::UnitTestLineParser()
 // ---------------------------------------------------------------------
 
 bool UnitTestLineParser::doBeforeTest() {
-    // nothing
+    // do something before test
     return true;
 }
 
@@ -27,18 +38,18 @@ void UnitTestLineParser::executeTest() {
             std::string sPrefix,
             bool isArrayItem,
             std::string sName,
-            bool bNameHasQuotes,
+            WsjcppYamlQuotes nNameQuotes,
             std::string sValue,
-            bool bValueHasQuotes,
+            WsjcppYamlQuotes nValueQuotes,
             std::string sComment
         ) : nNumberOfTest(nNumberOfTest),
             sLine(sLine),
             sPrefix(sPrefix),
             isArrayItem(isArrayItem),
             sName(sName),
-            bNameHasQuotes(bNameHasQuotes),
+            nNameQuotes(nNameQuotes),
             sValue(sValue),
-            bValueHasQuotes(bValueHasQuotes),
+            nValueQuotes(nValueQuotes),
             sComment(sComment)
         {
             //    
@@ -48,35 +59,81 @@ void UnitTestLineParser::executeTest() {
         std::string sPrefix;
         bool isArrayItem;
         std::string sName;
-        bool bNameHasQuotes;
+        WsjcppYamlQuotes nNameQuotes;
         std::string sValue;
-        bool bValueHasQuotes;
+        WsjcppYamlQuotes nValueQuotes;
         std::string sComment;
     };
 
     std::vector<LineTest> vTestLines;
 
-    vTestLines.push_back(LineTest(1, "# Some comment 1 ", "", false, "", false, "", false, "Some comment 1"));
-    vTestLines.push_back(LineTest(2, "  test2: \"t\\\"wo\" # some comment 2  ", "  ", false, "test2", false, "t\"wo", true, "some comment 2"));
-    vTestLines.push_back(LineTest(3, "  test3:", "  ", false, "test3", false,  "", false,  ""));
-    vTestLines.push_back(LineTest(4, "  - test4", "  ", true, "", false,  "test4", false, ""));
-    vTestLines.push_back(LineTest(5, "", "", false, "", false,  "", false,  ""));
-    vTestLines.push_back(LineTest(6, "  - \"test4:111\"", "  ", true, "", false,  "test4:111", true, ""));
-    vTestLines.push_back(LineTest(7, "issues: https://github.com/wsjcpp/wsjcpp-yaml/issues", "", false, "issues", false,  "https://github.com/wsjcpp/wsjcpp-yaml/issues", false, ""));
+    vTestLines.push_back(LineTest(1,
+        "# Some comment 1 ", "",
+        false, // array node
+        "", WSJCPP_YAML_QUOTES_NONE, // name
+        "", WSJCPP_YAML_QUOTES_NONE, // value
+        "Some comment 1" // comment
+    ));
+    vTestLines.push_back(LineTest(2,
+        "  test2: \"t\\\"wo\" # some comment 2  ", "  ",
+        false,  // array node
+        "test2", WSJCPP_YAML_QUOTES_NONE, // name
+        "t\"wo", WSJCPP_YAML_QUOTES_DOUBLE, // value
+        "some comment 2" // comment
+    ));
+    vTestLines.push_back(LineTest(3, 
+        "  test3:", "  ",
+        false, // array node
+        "test3", WSJCPP_YAML_QUOTES_NONE, // name
+        "", WSJCPP_YAML_QUOTES_NONE, // value
+        "" // comment
+    ));
+    vTestLines.push_back(LineTest(4,
+        "  - test4", "  ",
+        true,  // array node
+        "", WSJCPP_YAML_QUOTES_NONE, // name
+        "test4", WSJCPP_YAML_QUOTES_NONE, // value
+        "" // comment
+    ));
+    vTestLines.push_back(LineTest(5,
+        "", "",
+        false, // array node
+        "", WSJCPP_YAML_QUOTES_NONE, // name
+        "", WSJCPP_YAML_QUOTES_NONE, // value
+        "" // comment
+    ));
+    vTestLines.push_back(LineTest(6,
+        "  - \"test4:111\"", "  ",
+        true, // array node
+        "", WSJCPP_YAML_QUOTES_NONE, // name
+        "test4:111", WSJCPP_YAML_QUOTES_DOUBLE, // value
+        "" // comment
+    ));
+    vTestLines.push_back(LineTest(7,
+        "issues: https://github.com/wsjcpp/wsjcpp-yaml/issues", "",
+        false, // array node
+        "issues", WSJCPP_YAML_QUOTES_NONE,  // name
+        "https://github.com/wsjcpp/wsjcpp-yaml/issues", WSJCPP_YAML_QUOTES_NONE, // value
+        "" // comment
+    ));
 
     for (int i = 0; i < vTestLines.size(); i++) {
         LineTest test = vTestLines[i];
-        
-        WsjcppYamlParsebleLine line(test.nNumberOfTest);
-        line.parseLine(test.sLine);
-
         std::string tagline = "{line:" + std::to_string(test.nNumberOfTest) + ": '" + test.sLine + "'}";
+
+        WsjcppYamlParsebleLine line(test.nNumberOfTest);
+        std::string sError;
+        if (!compare(tagline + ", parseLine", line.parseLine(test.sLine, sError), true)) {
+            WsjcppLog::err(tagline + ", parseLine", sError);
+            return;
+        }
+
         compare(tagline + ", prefix", line.getPrefix(), test.sPrefix);
         compare(tagline + ", arrayitem", line.isArrayItem(), test.isArrayItem);
         compare(tagline + ", name", line.getName(), test.sName);
-        compare(tagline + ", name-has-quotes", line.hasNameDoubleQuotes(), test.bNameHasQuotes);
+        compare(tagline + ", name-has-quotes", line.getNameQuotes(), test.nNameQuotes);
         compare(tagline + ", value", line.getValue(), test.sValue);
-        compare(tagline + ", value-has-quotes", line.hasValueDoubleQuotes(), test.bValueHasQuotes);
+        compare(tagline + ", value-quotes", line.getValueQuotes(), test.nValueQuotes);
         compare(tagline + ", comment", line.getComment(), test.sComment);
     }
 }
@@ -84,6 +141,6 @@ void UnitTestLineParser::executeTest() {
 // ---------------------------------------------------------------------
 
 bool UnitTestLineParser::doAfterTest() {
-    // nothing
+    // do somethig after test
     return true;
 }
