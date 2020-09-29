@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(unit-tests C CXX)
-add_definitions(-DWSJCPP_APP_VERSION="ut-v0.1.3")
+add_definitions(-DWSJCPP_APP_VERSION="ut-v0.1.5")
 add_definitions(-DWSJCPP_APP_NAME="unit-tests-wsjcpp-yaml")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
