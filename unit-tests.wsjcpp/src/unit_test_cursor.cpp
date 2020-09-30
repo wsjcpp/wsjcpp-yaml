@@ -133,6 +133,7 @@ void UnitTestCursor::executeTest() {
 
     // bool
     compare("array bool el 4", yaml["arr1"][4].valStr(), "true");
+    compare("array bool el 4", yaml["arr1"][4].node()->getValue(), "true");
     compare("array bool el 4", yaml["arr1"][4].valBool(), true);
     yaml["arr1"][4].val(true);
     compare("array bool el 4", yaml["arr1"][4].valStr(), "yes");

@@ -1191,6 +1191,12 @@ WsjcppYamlCursor &WsjcppYamlCursor::val(bool bValue) {
 
 // ---------------------------------------------------------------------
 
+WsjcppYamlNode *WsjcppYamlCursor::node() {
+    return m_pCurrentNode;
+}
+
+// ---------------------------------------------------------------------
+
 WsjcppYamlCursor WsjcppYamlCursor::operator[](int idx) const {
     if (m_pCurrentNode != nullptr && m_pCurrentNode->isArray() && idx < m_pCurrentNode->getLength() && idx >= 0) {
         return WsjcppYamlCursor(m_pCurrentNode->getElement(idx));

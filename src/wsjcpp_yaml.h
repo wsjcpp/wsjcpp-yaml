@@ -235,6 +235,8 @@ class WsjcppYamlCursor {
         bool valBool();
         WsjcppYamlCursor &val(bool bValue);
        
+        // node
+        WsjcppYamlNode *node();
 
         WsjcppYamlCursor operator[](int idx) const;
         WsjcppYamlCursor operator[](const std::string &sName) const;
