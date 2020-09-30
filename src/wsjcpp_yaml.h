@@ -65,6 +65,11 @@ class WsjcppYamlNode {
             const WsjcppYamlPlaceInFile &placeInFile,
             WsjcppYamlNodeType nItemType
         );
+        // WsjcppYamlNode(
+        //     WsjcppYamlNode *pParent,
+        //     WsjcppYamlNodeType nItemType
+        //     const WsjcppYamlPlaceInFile &placeInFile,
+        // );
         ~WsjcppYamlNode();
         WsjcppYamlNode *getParent();
 
@@ -119,13 +124,16 @@ class WsjcppYamlNode {
         
         std::string getSerializedName();
         std::string toString(std::string sIntent = "");
-        std::string getItemTypeAsString();
+        std::string getNodeTypeAsString();
 
         std::string getForLogFormat();
         int getNodeLastIntent();
         std::string getStringNodeLastIntent();
         void setNodeIntents(const std::vector<int> & vNodeIntents);
         int getNodeIntent();
+
+        int getNumberOfLine() const;
+        void setNumberOfLine(int nNumberOfLine);
 
     private:
         void throw_error(const std::string &sError);
