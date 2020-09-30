@@ -89,7 +89,7 @@ void UnitTestYamlParserSimpleArray::executeTest() {
     compare("param2-comment", yaml.getRoot()->getElement("param2")->getComment(), "value 2");
 
     std::string sSaved = "";
-    bool bResult = yaml.saveToString(sSaved);
+    bool bResult = yaml.saveToString(sSaved, sError);
     compare("save yaml", bResult, true);
     compare("yaml_save", sSaved, 
         "# simple array test\n" // expected

@@ -88,7 +88,7 @@ void UnitTestYamlParserHierarchicalMap::executeTest() {
     compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
     std::string sSaved = "";
-    bool bResult = yaml.saveToString(sSaved);
+    bool bResult = yaml.saveToString(sSaved, sError);
     if (compare("save yaml", bResult, true)) {
         compare("yaml_save", sSaved,
             "# Some comment 1\n"

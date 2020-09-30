@@ -104,7 +104,7 @@ void UnitTestCursor::executeTest() {
 
     compare("map use as array", yaml["map1"][0].isNull(), true);
     compare("array use as map", yaml["arr1"]["0"].isNull(), true);
-    compare("array use as map", yaml["arr1"][0].isNull(), false);
+    compare("array use as array", yaml["arr1"][0].isNull(), false);
 
     compare("array size", yaml["arr1"].comment(), "some comment array 1");
     compare("array size", yaml["arr1"].size(), 6);

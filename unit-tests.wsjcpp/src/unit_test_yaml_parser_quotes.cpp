@@ -76,7 +76,7 @@ void UnitTestYamlParserQuotes::executeTest() {
     compare("array-element0-value", yaml.getRoot()->getElement("array")->getElement(0)->getValue(), "https://github.com/wsjcpp/wsjcpp-core:v0.0.1");
 
     std::string sSaved = "";
-    compare("save yaml", yaml.saveToString(sSaved), true);
+    compare("save yaml", yaml.saveToString(sSaved, sError), true);
     compare("yaml_save", sSaved,
         "# Some comment 1\n"
         "param1: \"value1\" # v1\n"

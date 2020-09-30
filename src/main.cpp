@@ -22,8 +22,8 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     
-    if (!yaml.saveToFile(sFilePath)) {
-        WsjcppLog::err(TAG, "Could not save data to file");
+    if (!yaml.saveToFile(sFilePath, sError)) {
+        WsjcppLog::err(TAG, "Could not save data to file: " + sError);
         return -1;
     }
 

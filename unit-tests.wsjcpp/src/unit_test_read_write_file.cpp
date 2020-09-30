@@ -46,7 +46,7 @@ void UnitTestReadWriteFile::executeTest() {
 
     compare("version-value", yaml.getRoot()->getElement("version")->getValue(), "3");
 
-    if (!compare("Error parsing", yaml.saveToFile(sFilepathOutput), true)) {
+    if (!compare("Error parsing", yaml.saveToFile(sFilepathOutput, sError), true)) {
         WsjcppLog::err(TAG, sError);
         return;
     }

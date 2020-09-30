@@ -1246,9 +1246,10 @@ bool WsjcppYaml::loadFromFile(const std::string &sFileName, std::string &sError)
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYaml::saveToFile(const std::string &sFileName) {
+bool WsjcppYaml::saveToFile(const std::string &sFileName, std::string &sError) {
     std::string sBuffer = m_pRoot->toString();
     if (!WsjcppCore::writeFile(sFileName, sBuffer)) {
+        sError = "Could not save to file";
         return false;    
     }
     return true;
@@ -1262,7 +1263,7 @@ bool WsjcppYaml::loadFromString(const std::string &sBufferName, const std::strin
 
 // ---------------------------------------------------------------------
 
-bool WsjcppYaml::saveToString(std::string &sBuffer) {
+bool WsjcppYaml::saveToString(std::string &sBuffer, std::string &sError) {
     sBuffer = m_pRoot->toString();
     return true;
 }

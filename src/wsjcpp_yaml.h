@@ -255,9 +255,9 @@ class WsjcppYaml {
         ~WsjcppYaml();
         void clear();
         bool loadFromFile(const std::string &sFileName, std::string &sError);
-        bool saveToFile(const std::string &sFileName);
+        bool saveToFile(const std::string &sFileName, std::string &sError);
         bool loadFromString(const std::string &sBufferName, const std::string &sBuffer, std::string &sError);
-        bool saveToString(std::string &sBuffer);
+        bool saveToString(std::string &sBuffer, std::string &sError);
         WsjcppYamlNode *getRoot();
 
         WsjcppYamlCursor getCursor() const;
