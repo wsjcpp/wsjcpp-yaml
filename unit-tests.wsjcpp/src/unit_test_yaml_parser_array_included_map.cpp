@@ -90,7 +90,7 @@ void UnitTestYamlParserArrayIncludedMap::executeTest() {
     compare("param2-value", yaml.getRoot()->getElement("param2")->getValue(), "v2");
 
     std::string sSaved = "";
-    if (compare("save yaml", yaml.saveToString(sSaved), true)) {
+    if (compare("save yaml", yaml.saveToString(sSaved, sError), true)) {
         compare("yaml_save", sSaved, 
             "# test array included map\n" // expected
             "param1: none value1 # it's value for something # olala\n"

@@ -85,7 +85,7 @@ void UnitTestYamlParserComments::executeTest() {
     // compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
     std::string sSaved = "";
-    compare("save yaml", yaml.saveToString(sSaved), true);
+    compare("save yaml", yaml.saveToString(sSaved, sError), true);
     compare("yaml_save", sSaved,
         "# Some comment 1\n"
         "param1: value1 # comment 2 # comment\n"

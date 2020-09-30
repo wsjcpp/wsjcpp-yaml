@@ -66,7 +66,7 @@ void UnitTestYamlParserAll::executeTest() {
     }
 
     std::string sSaved1 = "";
-    if (!compare("Error saving", yaml.saveToString(sSaved1), true)) {
+    if (!compare("Error saving", yaml.saveToString(sSaved1, sError), true)) {
         compare("yaml_saved 2-test", sSaved1, sTestYaml);
         return;
     }
@@ -98,7 +98,7 @@ void UnitTestYamlParserAll::executeTest() {
     compare("test80_comment", pItem->getValue(), "opa2");
 
     std::string sSaved2 = "";
-    if (compare("saving yaml", yaml.saveToString(sSaved2), true)) {
+    if (compare("saving yaml", yaml.saveToString(sSaved2, sError), true)) {
         compare("yaml_saved 1-2", sSaved1, sSaved2);
     }
 }
