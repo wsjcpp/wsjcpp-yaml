@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(unit-tests C CXX)
-add_definitions(-DWSJCPP_APP_VERSION="ut-v0.1.6")
+add_definitions(-DWSJCPP_APP_VERSION="ut-v0.1.7")
 add_definitions(-DWSJCPP_APP_NAME="unit-tests-wsjcpp-yaml")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -27,7 +27,7 @@ list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_unit_tests.cpp")
 list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_unit_tests.h")
 list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_unit_tests_main.cpp")
 
-# wsjcpp-yaml:v0.1.6
+# wsjcpp-yaml:v0.1.7
 list (APPEND WSJCPP_INCLUDE_DIRS "../src")
 list (APPEND WSJCPP_SOURCES "../src/wsjcpp_yaml.cpp")
 list (APPEND WSJCPP_SOURCES "../src/wsjcpp_yaml.h")
