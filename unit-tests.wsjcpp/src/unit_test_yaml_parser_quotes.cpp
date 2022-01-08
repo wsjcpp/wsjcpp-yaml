@@ -88,7 +88,7 @@ void UnitTestYamlParserQuotes::executeTest() {
         "issues: https://github.com/wsjcpp/wsjcpp-yaml/issues\n"
         "empty: \"\"\n"
         "array:\n"
-        "  - \"https://github.com/wsjcpp/wsjcpp-core:v0.0.1\""
+        "  - \"https://github.com/wsjcpp/wsjcpp-core:v0.0.1\"\n"
     );
 }
 

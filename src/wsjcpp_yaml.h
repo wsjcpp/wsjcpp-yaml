@@ -137,7 +137,9 @@ class WsjcppYamlNode {
 
     private:
         void throw_error(const std::string &sError);
-
+        void removeLastCharNewLine(std::string &sLine);
+        bool hasContent(const std::string &sVal);
+        bool hasObjects();
         std::string TAG;
         WsjcppYamlNode *m_pParent;
         WsjcppYamlPlaceInFile m_placeInFile;

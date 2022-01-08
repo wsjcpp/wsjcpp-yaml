@@ -104,7 +104,7 @@ void UnitTestYamlParserArrayIncludedMap::executeTest() {
             "    submap-param2: v02\n"
             "  - submap-param1: v11\n"
             "    submap-param2: v12\n"
-            "param2: v2"
+            "param2: v2\n"
         );
     }
 }

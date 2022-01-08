@@ -556,16 +556,13 @@ std::string WsjcppYamlNode::toString(std::string sIndent) {
         for (int i = 0; i < m_vObjects.size(); i++) {
             WsjcppYamlNode *pNode = m_vObjects[i];
             if (pNode->isEmpty()) {
-                std::string sVal = pNode->toString();
-                sVal = WsjcppCore::trim(sVal);
-                if (sVal.length() > 0) { // empty string have content
-                    sRet += sIndent + pNode->getStringNodeLastIndent();
-                }
+                // std::string sVal = pNode->toString(sIndent + pNode->getStringNodeLastIndent());
+                std::string sVal = pNode->toString(sIndent);
                 sRet += sVal;
             } else if (pNode->isMap()) {
                 sRet += sIndent + pNode->getStringNodeLastIndent();
                 std::string s = pNode->toString(sIndent + pNode->getStringNodeLastIndent());
-                WsjcppCore::trim(s);
+                WsjcppCore::ltrim(s);
                 sRet += "- " + s;
             } else {
                 sRet += sIndent + pNode->getStringNodeLastIndent();
@@ -573,45 +570,70 @@ std::string WsjcppYamlNode::toString(std::string sIndent) {
             }
             sRet += "\n";
         }
+        removeLastCharNewLine(sRet);
     } else if (this->isMap()) {
-        for (int i = 0; i < m_vObjects.size(); i++) {
-            WsjcppYamlNode *pNode = m_vObjects[i];
-            if (pNode->isEmpty() ) {
-                // sRet += " * " + pNode->toString(sIndent);
-                sRet += pNode->toString(sIndent);
-                sRet += "\n";
-            } else if (pNode->isUndefined()) {
-                sRet += sIndent + pNode->getStringNodeLastIndent()
-                    + pNode->getSerializedName() + ":\n" + pNode->toString();
-            } else if (pNode->isArray() || pNode->isMap()) {
-                sRet += sIndent + pNode->getStringNodeLastIndent()
-                 + pNode->getSerializedName() + ":";
-                if (pNode->getComment().length() > 0) {
-                    sRet += " # " + pNode->getComment(); 
+        if (m_vObjects.size() > 0) {
+            // sRet += "-s-" + std::to_string(m_vObjects.size()) + "--";
+            for (int i = 0; i < m_vObjects.size(); i++) {
+                WsjcppYamlNode *pNode = m_vObjects[i];
+                if (pNode->isEmpty() ) {
+                    std::string s = pNode->toString(sIndent);
+                    // WsjcppLog::warn(TAG, "Empty");
+                    // WsjcppCore::trim(s);
+                    // sRet += s + " # rmpty";
+                    sRet += s;
+                } else if (pNode->isUndefined()) {
+                    std::string s = pNode->toString();
+                    sRet += sIndent + pNode->getStringNodeLastIndent()
+                        + pNode->getSerializedName() + ":";
+                    if (pNode->hasObjects()) {
+                        sRet += "\n" + pNode->toString();
+                        removeLastCharNewLine(sRet);
+                    }
+                } else if (pNode->isArray() || pNode->isMap()) {
+                    sRet += sIndent + pNode->getStringNodeLastIndent()
+                    + pNode->getSerializedName() + ":";
+                    if (pNode->getComment().length() > 0) {
+                        sRet += " # " + pNode->getComment(); 
+                    }
+                    std::string s = pNode->toString(sIndent + pNode->getStringNodeLastIndent());
+                    if (pNode->isMap()) {
+                        if (pNode->getKeys().size() > 0) {
+                            sRet += "\n";
+                        } else {
+                            // removeLastCharNewLine(s);
+                        }
+                    }
+                    if (pNode->isArray()) {
+                        if (pNode->getLength() > 0) {
+                            sRet += "\n";
+                        } else {
+                            // removeLastCharNewLine(s);
+                        }
+                    }
+                    sRet += s;
+                } else {
+                    std::string sVal = pNode->toString();
+                    std::string sVal_ = sVal;
+                    sVal_ = WsjcppCore::trim(sVal_);
+                    if (sVal_.length() > 0) {
+                        sVal = " " + sVal;
+                    }
+                    WsjcppCore::rtrim(sVal);
+                    sRet += sIndent + pNode->getStringNodeLastIndent()
+                        + pNode->getSerializedName() + ":" + sVal;
                 }
-                sRet += "\n";
-                sRet += pNode->toString(sIndent + pNode->getStringNodeLastIndent());
-            } else {
-                std::string sVal = pNode->toString();
-                std::string sVal_ = sVal;
-                sVal_ = WsjcppCore::trim(sVal_);
-                if (sVal_.length() > 0) {
-                    sVal = " " + sVal;
-                }
-                sRet += sIndent + pNode->getStringNodeLastIndent()
-                     + pNode->getSerializedName() + ":" + sVal;
                 sRet += "\n";
             }
+            removeLastCharNewLine(sRet);
         }
     } else {
+        WsjcppLog::warn(TAG, "????");
         sRet = ""; // undefined element must be empty
     }
     
     if (m_pParent == nullptr) {
-        int nLen = sRet.length();
-        if (nLen > 0 && sRet[nLen - 1] == '\n') {
-            sRet = sRet.substr(0, nLen - 1);
-        }
+        removeLastCharNewLine(sRet);
     }
     return sRet;
 }
@@ -675,16 +697,29 @@ int WsjcppYamlNode::getNumberOfLine() const {
     return m_placeInFile.getNumberOfLine();
 }
 
-// ---------------------------------------------------------------------
-
 void WsjcppYamlNode::setNumberOfLine(int nNumberOfLine) {
     m_placeInFile.setNumberOfLine(nNumberOfLine);
 }
 
-// ---------------------------------------------------------------------
-
 void WsjcppYamlNode::throw_error(const std::string &sError) {
     throw std::runtime_error(sError.c_str());
+}
+
+void WsjcppYamlNode::removeLastCharNewLine(std::string &sLine) {
+    int nLen = sLine.length();
+    if (nLen > 0 && sLine[nLen - 1] == '\n') {
+        sLine = sLine.substr(0, nLen - 1);
+    }
+}
+
+bool WsjcppYamlNode::hasContent(const std::string &sVal) {
+    std::string sVal_ = sVal;
+    sVal_ = WsjcppCore::trim(sVal_);
+    return sVal_.length() > 0;
+}
+
+bool WsjcppYamlNode::hasObjects() {
+    return m_vObjects.size() > 0;
 }
 
 // ---------------------------------------------------------------------
@@ -1264,7 +1299,7 @@ bool WsjcppYaml::loadFromFile(const std::string &sFileName, std::string &sError)
 // ---------------------------------------------------------------------
 
 bool WsjcppYaml::saveToFile(const std::string &sFileName, std::string &sError) {
-    std::string sBuffer = m_pRoot->toString();
+    std::string sBuffer = m_pRoot->toString() + "\n"; // last empty line must be always
     if (!WsjcppCore::writeFile(sFileName, sBuffer)) {
         sError = "Could not save to file";
         return false;    
@@ -1281,7 +1316,8 @@ bool WsjcppYaml::loadFromString(const std::string &sBufferName, const std::strin
 // ---------------------------------------------------------------------
 
 bool WsjcppYaml::saveToString(std::string &sBuffer, std::string &sError) {
-    sBuffer = m_pRoot->toString();
+    // WsjcppLog::warn(TAG, "WsjcppYaml::saveToString");
+    sBuffer = m_pRoot->toString() + "\n"; // last empty line must be always
     return true;
 }
 
@@ -1367,7 +1403,9 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
 
         if (m_parseLine.isEmptyLine()) {
             if (m_pParseCurrentParentNode != nullptr) {
+                // WsjcppLog::warn(TAG, "here empty line and parent exists " + m_parsePlaceInFile.getForLogFormat());
                 if (m_pParseCurrentParentNode->isArray() || m_pParseCurrentParentNode->isMap() || m_pParseCurrentParentNode->isUndefined()) {
+                    // WsjcppLog::warn(TAG, "array, map or undefined");
                     WsjcppYamlNode *pNode = new WsjcppYamlNode(
                         m_pParseCurrentParentNode, m_parsePlaceInFile,
                         WSJCPP_YAML_NODE_EMPTY
@@ -1375,6 +1413,7 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
                     pNode->setNodeIndents(m_vStackDiffNodeIndents);
                     m_pParseCurrentParentNode->appendElement(pNode);
                 } else if (m_pParseCurrentParentNode->getParent() != nullptr && (m_pParseCurrentParentNode->getParent()->isArray() || m_pParseCurrentParentNode->getParent()->isMap())) {
+                    // WsjcppLog::warn(TAG, "parent exists and parent map or array");
                     WsjcppYamlNode *pNode = new WsjcppYamlNode(
                         m_pParseCurrentParentNode->getParent(), m_parsePlaceInFile,
                         WSJCPP_YAML_NODE_EMPTY
@@ -1384,6 +1423,8 @@ bool WsjcppYaml::parse(const std::string &sFileName, const std::string &sBuffer,
                 } else {
                     throw std::runtime_error(TAG + ": Empty element can be added only to map or to array");
                 }
+            } else {
+               WsjcppLog::warn(TAG, "here empty line" );
             }
             continue;
         }

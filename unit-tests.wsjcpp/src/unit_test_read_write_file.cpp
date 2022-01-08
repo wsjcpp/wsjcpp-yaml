@@ -56,6 +56,7 @@ void UnitTestReadWriteFile::executeTest() {
     std::string sOutputFileContent;
     WsjcppCore::readTextFile(sFilepathOutput, sOutputFileContent);
 
+    sOriginalFileContent += "\n"; // TODO fix
     compare("compare conteent ", sOutputFileContent, sOriginalFileContent);
 
 }
