@@ -2,18 +2,21 @@ wsjcpp_version: v0.0.1
 cmake_minimum_required: 3.0
 cmake_cxx_standard: 11
 name: wsjcpp-yaml
-version: v0.1.5
+version: v0.1.6
 description: Read/Write yaml files
 issues: https://github.com/wsjcpp/wsjcpp-yaml/issues
+
 repositories:
   - type: main
     url: "https://github.com/wsjcpp/wsjcpp-yaml"
+
 keywords:
   - c++
   - yaml
   - parser
   - reader
   - writer
+
 authors:
   - name: Evgenii Sopov
     email: mrseakg@gmail.com
@@ -70,4 +73,6 @@ unit-tests:
     - name: "AppendElements"
       description: ""
     - name: "ReadWsjcppHoldYml"
+      description: ""
+    - name: "KeepFormat"
       description: ""

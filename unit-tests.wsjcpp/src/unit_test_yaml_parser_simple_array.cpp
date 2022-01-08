@@ -103,7 +103,7 @@ void UnitTestYamlParserSimpleArray::executeTest() {
         "  - free@free\n"
         "  - # empty\n"
         "  - 1\n"
-        "param2: val2 # value 2"
+        "param2: val2 # value 2\n"
     );
 }
 

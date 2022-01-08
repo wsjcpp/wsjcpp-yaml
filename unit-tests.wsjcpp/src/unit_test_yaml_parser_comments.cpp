@@ -99,7 +99,7 @@ void UnitTestYamlParserComments::executeTest() {
         "map1: # comment 9\n"
         "  p1: val 1 # comment 10\n"
         "  # comment 11\n"
-        "  p2: val 2 # comment 12"
+        "  p2: val 2 # comment 12\n"
     );
 }
 
