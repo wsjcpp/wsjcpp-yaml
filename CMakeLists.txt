@@ -2,12 +2,16 @@ cmake_minimum_required(VERSION 3.0)
 
 project(wsjcpp-yaml)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/src.wsjcpp/CMakeLists.txt)
+# include(${CMAKE_CURRENT_SOURCE_DIR}/src.wsjcpp/CMakeLists.txt)
 
 set(CMAKE_CXX_STANDARD 17)
 set(EXECUTABLE_OUTPUT_PATH ${wsjcpp-yaml_SOURCE_DIR})
 
 # Sources
+
+set (WSJCPP_LIBRARIES "")
+set (WSJCPP_INCLUDE_DIRS "")
+set (WSJCPP_SOURCES "")
 
 # include header dirs
 list (APPEND WSJCPP_INCLUDE_DIRS "src")

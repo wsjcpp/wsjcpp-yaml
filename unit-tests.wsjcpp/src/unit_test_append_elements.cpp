@@ -43,7 +43,7 @@ void UnitTestAppendElements::executeTest() {
     WsjcppYamlNode *pArrSome = pSome->getElement("arr-some");
     pArrSome->appendElementValue("1234");
     WsjcppYamlPlaceInFile placeInFile;
-    WsjcppYamlNode *pItemMap = new WsjcppYamlNode(pArrSome, placeInFile, WSJCPP_YAML_NODE_MAP);
+    WsjcppYamlNode *pItemMap = new WsjcppYamlNode(pArrSome, &yml, placeInFile, WSJCPP_YAML_NODE_MAP);
     pArrSome->appendElement(pItemMap);
     pItemMap->setElementValue("p4", "val4");
     pItemMap->setElementValue("p5", "val5");
