@@ -259,6 +259,9 @@ class WsjcppYamlCursor {
 
         WsjcppYamlCursor operator[](int idx) const;
         WsjcppYamlCursor operator[](const std::string &sName) const;
+        WsjcppYamlCursor& operator=(const std::string &sVal) noexcept {
+            return this->val(sVal);
+        }
 
     private:
         std::string TAG;

@@ -1,7 +1,9 @@
 #include <string.h>
 #include <iostream>
 #include <algorithm>
+#include "examples.h"
 #include "wsjcpp_yaml.h"
+
 // #include "wsjcpp_core.h"
 
 class MyLogger : public IWsjcppYamlLog {
@@ -53,7 +55,5 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     std::cout << "Done." << std::endl;
-    
-
     return 0;
 }

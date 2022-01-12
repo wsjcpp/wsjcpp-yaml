@@ -19,6 +19,8 @@ list (APPEND WSJCPP_INCLUDE_DIRS "src")
 list (APPEND WSJCPP_SOURCES "src/wsjcpp_yaml.h")
 list (APPEND WSJCPP_SOURCES "src/wsjcpp_yaml.cpp")
 list (APPEND WSJCPP_SOURCES "src/main.cpp")
+list (APPEND WSJCPP_SOURCES "src/examples/example_iterate_array.cpp")
+list (APPEND WSJCPP_SOURCES "src/examples/example_operators.cpp")
 
 include_directories(${WSJCPP_INCLUDE_DIRS})
 
