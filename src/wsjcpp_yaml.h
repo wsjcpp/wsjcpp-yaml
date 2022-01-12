@@ -260,12 +260,13 @@ class WsjcppYamlCursor {
 
         std::string getCurrentNodePath();
 
-        explicit operator int() const { return valInt(); };
-        explicit operator bool() const { return valBool(); }
+        operator int() const { return int(valInt()); };
+        // explicit operator bool() const { return valBool(); }
         operator std::string() const { return valStr(); };
 
         WsjcppYamlCursor operator[](int idx) const;
         WsjcppYamlCursor operator[](const std::string &sName) const;
+        WsjcppYamlCursor operator[](const char *sName) const;
 
         WsjcppYamlCursor& operator=(const char *sVal);
         WsjcppYamlCursor& operator=(const std::string &sVal);

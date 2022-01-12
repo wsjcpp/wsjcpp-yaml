@@ -1237,6 +1237,14 @@ WsjcppYamlCursor WsjcppYamlCursor::operator[](const std::string &sName) const {
     return WsjcppYamlCursor();
 }
 
+WsjcppYamlCursor WsjcppYamlCursor::operator[](const char *pName) const {
+    std::string sName(pName);
+    if (m_pCurrentNode != nullptr && m_pCurrentNode->isMap() && m_pCurrentNode->hasElement(sName)) {
+        return WsjcppYamlCursor(m_pCurrentNode->getElement(sName));
+    }
+    return WsjcppYamlCursor();
+}
+
 WsjcppYamlCursor& WsjcppYamlCursor::operator=(const char *sVal) {
     return this->val(std::string(sVal));
 }

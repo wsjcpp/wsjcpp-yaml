@@ -55,10 +55,12 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     std::cout << "Done." << std::endl;
-    std::string s = yaml["version"];
-    // int nVer = yaml["version"];
-    // bool bVer = yaml["version"];
-    std::cout << s << std::endl;
+    std::string sVer = yaml["version"];
+    int nVer = yaml["version"];
+    bool bVer = yaml["version"];
+    std::cout << sVer << std::endl;
+    std::cout << nVer << std::endl;
+    std::cout << bVer << std::endl;
 
     example_operator_1();
     return 0;
