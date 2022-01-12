@@ -1264,20 +1264,18 @@ WsjcppYaml::WsjcppYaml() {
     m_pLog = nullptr;
 }
 
-// ---------------------------------------------------------------------
-
 WsjcppYaml::~WsjcppYaml() {
     delete m_pRoot;
 }
 
-// ---------------------------------------------------------------------
+void WsjcppYaml::setLogger(IWsjcppYamlLog *pLog) {
+    m_pLog = pLog;
+}
 
 void WsjcppYaml::clear() {
     delete m_pRoot;
     m_pRoot = nullptr;
 }
-
-// ---------------------------------------------------------------------
 
 bool WsjcppYaml::loadFromFile(const std::string &sFileName, std::string &sError) {
     std::string sTextContent;
@@ -1290,6 +1288,7 @@ bool WsjcppYaml::loadFromFile(const std::string &sFileName, std::string &sError)
 // ---------------------------------------------------------------------
 
 bool WsjcppYaml::saveToFile(const std::string &sFileName, std::string &sError) {
+    this->info(TAG, "Saving to " + sFileName);
     std::string sBuffer = m_pRoot->toString() + "\n"; // last empty line must be always
     if (!WsjcppYaml::writeFile(sFileName, sBuffer)) {
         sError = "Could not save to file";

@@ -8,8 +8,6 @@ C++ YAML parser/reader and writer of *.yaml/*.yml files with keeping user format
 
 include files:
 
-- src.wsjcpp/wsjcpp_core/wsjcpp_core.h
-- src.wsjcpp/wsjcpp_core/wsjcpp_core.cpp
 - src/wsjcpp_yaml.cpp
 - src/wsjcpp_yaml.h
 
@@ -28,20 +26,33 @@ In you main file configure logger:
 #include <string.h>
 #include <iostream>
 #include "wsjcpp_yaml.h"
-#include "wsjcpp_core.h"
 
+class MyLogger : public IWsjcppYamlLog {
+    public:
+        // IWsjcppYamlLog
+        virtual void err(const std::string &TAG, const std::string &sMessage) override {
+            std::cerr << TAG << " [error] : " << sMessage << std::endl;
+        };
+        virtual void throw_err(const std::string &TAG, const std::string &sMessage) override {
+            std::cerr << TAG << " [critical_error] : " << sMessage << std::endl;
+            throw std::runtime_error(TAG + " [critical_error] : " + sMessage);
+        };
+        virtual void warn(const std::string &TAG, const std::string &sMessage) override {
+            std::cerr << TAG << " [warn] : " << sMessage << std::endl;
+        };
+        virtual void info(const std::string &TAG, const std::string &sMessage) override {
+            std::cout << TAG << " [info] : " << sMessage << std::endl;
+        };
+};
 
 int main(int argc, char* argv[]) {
     std::string TAG = "MAIN";
     std::string appLogPath = ".logs";
-    WsjcppLog::setLogDirectory(appLogPath);
-    if (!WsjcppCore::dirExists(appLogPath)) {
-        WsjcppCore::makeDir(appLogPath);
-    }
-    WsjcppLog::info(TAG, "Hello!");
+    MyLogger *pLogger = new MyLogger();
 
     // now you can use WsjcppYaml
     WsjcppYaml yaml;
+    yaml.setLogger(pLogger);
     if (yaml.loadFromString(
         "# yaml content\n"
         "yaml1: nice format\n"
@@ -57,7 +68,7 @@ int main(int argc, char* argv[]) {
         "    p2: v4 \n"
         "param2: 111\n"
     )) {
-        WsjcppLog::throw_err(TAG, "Error parsing");
+        yaml.throw_err(TAG, "Error parsing");
         return -1;
     }
 

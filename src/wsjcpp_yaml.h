@@ -270,6 +270,7 @@ class WsjcppYaml : public IWsjcppYamlLog {
         WsjcppYaml();
         ~WsjcppYaml();
         void clear();
+        void setLogger(IWsjcppYamlLog *pLog);
         bool loadFromFile(const std::string &sFileName, std::string &sError);
         bool saveToFile(const std::string &sFileName, std::string &sError);
         bool loadFromString(const std::string &sBufferName, const std::string &sBuffer, std::string &sError);
