@@ -1160,11 +1160,9 @@ WsjcppYamlCursor &WsjcppYamlCursor::comment(const std::string& sComment) {
 
 // ---------------------------------------------------------------------
 
-std::string WsjcppYamlCursor::valStr() {
+std::string WsjcppYamlCursor::valStr() const {
     return m_pCurrentNode != nullptr ? m_pCurrentNode->getValue() : "";
 }
-
-// ---------------------------------------------------------------------
 
 WsjcppYamlCursor &WsjcppYamlCursor::val(const std::string &sValue) {
     if (m_pCurrentNode != nullptr) {
@@ -1173,16 +1171,12 @@ WsjcppYamlCursor &WsjcppYamlCursor::val(const std::string &sValue) {
     return *this;
 }
 
-// ---------------------------------------------------------------------
-
 WsjcppYamlCursor &WsjcppYamlCursor::val(const char *sValue) {
     this->val(std::string(sValue));
     return *this;
 }
 
-// ---------------------------------------------------------------------
-
-int WsjcppYamlCursor::valInt() {
+int WsjcppYamlCursor::valInt() const {
     if (m_pCurrentNode != nullptr) {
         std::string sValue = m_pCurrentNode->getValue();
         sValue = WsjcppYaml::toLower(sValue);
@@ -1195,8 +1189,6 @@ int WsjcppYamlCursor::valInt() {
     return 0;
 }
 
-// ---------------------------------------------------------------------
-
 WsjcppYamlCursor &WsjcppYamlCursor::val(int nValue) {
     if (m_pCurrentNode != nullptr) {
         m_pCurrentNode->setValue(std::to_string(nValue));
@@ -1204,9 +1196,7 @@ WsjcppYamlCursor &WsjcppYamlCursor::val(int nValue) {
     return *this;
 }
 
-// ---------------------------------------------------------------------
-
-bool WsjcppYamlCursor::valBool() {
+bool WsjcppYamlCursor::valBool() const {
     if (m_pCurrentNode != nullptr) {
         std::string sValue = m_pCurrentNode->getValue();
         sValue = WsjcppYaml::toLower(sValue);
@@ -1222,8 +1212,6 @@ bool WsjcppYamlCursor::valBool() {
     return false;
 }
 
-// ---------------------------------------------------------------------
-
 WsjcppYamlCursor &WsjcppYamlCursor::val(bool bValue) {
     if (m_pCurrentNode != nullptr) {
         m_pCurrentNode->setValue((bValue ? "yes" : "no"));
@@ -1231,13 +1219,9 @@ WsjcppYamlCursor &WsjcppYamlCursor::val(bool bValue) {
     return *this;
 }
 
-// ---------------------------------------------------------------------
-
 WsjcppYamlNode *WsjcppYamlCursor::node() {
     return m_pCurrentNode;
 }
-
-// ---------------------------------------------------------------------
 
 WsjcppYamlCursor WsjcppYamlCursor::operator[](int idx) const {
     if (m_pCurrentNode != nullptr && m_pCurrentNode->isArray() && idx < m_pCurrentNode->getLength() && idx >= 0) {
@@ -1246,13 +1230,27 @@ WsjcppYamlCursor WsjcppYamlCursor::operator[](int idx) const {
     return WsjcppYamlCursor();
 }
 
-// ---------------------------------------------------------------------
-
 WsjcppYamlCursor WsjcppYamlCursor::operator[](const std::string &sName) const {
     if (m_pCurrentNode != nullptr && m_pCurrentNode->isMap() && m_pCurrentNode->hasElement(sName)) {
         return WsjcppYamlCursor(m_pCurrentNode->getElement(sName));
     }
     return WsjcppYamlCursor();
+}
+
+WsjcppYamlCursor& WsjcppYamlCursor::operator=(const char *sVal) {
+    return this->val(std::string(sVal));
+}
+
+WsjcppYamlCursor& WsjcppYamlCursor::operator=(const std::string &sVal) {
+    return this->val(sVal);
+}
+
+WsjcppYamlCursor& WsjcppYamlCursor::operator=(const int &nVal) {
+    return this->val(nVal);
+}
+
+WsjcppYamlCursor& WsjcppYamlCursor::operator=(const bool &bVal) {
+    return this->val(bVal);
 }
 
 // ---------------------------------------------------------------------

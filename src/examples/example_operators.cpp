@@ -17,6 +17,9 @@ void example_operator_1() {
     WsjcppYamlCursor cur = yaml.getCursor();
     std::cout << "before : " << cur["test"].valStr() << std::endl;
     cur["test"] = "some new string";
-    std::cout << "after : " << cur["test"].valStr() << std::endl;
-    
+    std::cout << "after 1 : " << cur["test"].valStr() << std::endl;
+    cur["test"] = 111;
+    std::cout << "after 2 : " << cur["test"].valStr() << std::endl;
+    cur["test"] = true;
+    std::cout << "after 3 : " << cur["test"].valStr() << std::endl;
 }
