@@ -27,24 +27,6 @@ In you main file configure logger:
 #include <iostream>
 #include "wsjcpp_yaml.h"
 
-class MyLogger : public IWsjcppYamlLog {
-    public:
-        // IWsjcppYamlLog
-        virtual void err(const std::string &TAG, const std::string &sMessage) override {
-            std::cerr << TAG << " [error] : " << sMessage << std::endl;
-        };
-        virtual void throw_err(const std::string &TAG, const std::string &sMessage) override {
-            std::cerr << TAG << " [critical_error] : " << sMessage << std::endl;
-            throw std::runtime_error(TAG + " [critical_error] : " + sMessage);
-        };
-        virtual void warn(const std::string &TAG, const std::string &sMessage) override {
-            std::cerr << TAG << " [warn] : " << sMessage << std::endl;
-        };
-        virtual void info(const std::string &TAG, const std::string &sMessage) override {
-            std::cout << TAG << " [info] : " << sMessage << std::endl;
-        };
-};
-
 int main(int argc, char* argv[]) {
     std::string TAG = "MAIN";
     std::string appLogPath = ".logs";
@@ -90,3 +72,244 @@ int main(int argc, char* argv[]) {
 }
 
 ```
+
+## a little doc:
+
+### class methods (WsjcppYaml)
+
+**`WsjcppYaml()`**
+
+Just a constructor
+
+**`void clear();`**
+
+Clear all nodes
+
+**`void setLogger(IWsjcppYamlLog *pLog);`**
+
+If you wanna use custom logger
+
+```cpp
+class MyLogger : public IWsjcppYamlLog {
+    public:
+        // IWsjcppYamlLog
+        virtual void err(const std::string &TAG, const std::string &sMessage) override {
+            std::cerr << TAG << " [error] : " << sMessage << std::endl;
+        };
+        virtual void throw_err(const std::string &TAG, const std::string &sMessage) override {
+            std::cerr << TAG << " [critical_error] : " << sMessage << std::endl;
+            throw std::runtime_error(TAG + " [critical_error] : " + sMessage);
+        };
+        virtual void warn(const std::string &TAG, const std::string &sMessage) override {
+            std::cerr << TAG << " [warn] : " << sMessage << std::endl;
+        };
+        virtual void info(const std::string &TAG, const std::string &sMessage) override {
+            std::cout << TAG << " [info] : " << sMessage << std::endl;
+        };
+};
+
+MyLogger *pLogger = new MyLogger();
+WsjcppYaml yaml;
+yaml.setLogger(pLogger);
+```
+
+**`bool loadFromFile(const std::string &sFileName, std::string &sError);`**
+
+load yaml from file
+
+Will retrun:
+- `true` - success 
+- `false` - failed (information about error will be in sError)
+
+**`bool saveToFile(const std::string &sFileName, std::string &sError);`**
+
+save yaml to file
+
+Will retrun:
+- `true` - success 
+- `false` - failed (information about error will be in sError)
+
+**`bool loadFromString(const std::string &sBufferName, const std::string &sBuffer, std::string &sError);`**
+
+load yaml from string
+
+**`bool saveToString(std::string &sBuffer, std::string &sError);`**
+
+save yaml to string
+
+sBuffer - here will be result.
+
+Will retrun:
+- `true` - success 
+- `false` - failed (information about error will be in sError)
+
+**`WsjcppYamlNode *getRoot();`**
+
+return root node
+
+**`WsjcppYamlCursor getCursor() const;`**
+
+return cursor (for walk by yaml tree)
+
+**`WsjcppYamlCursor operator[](int idx) const;`**
+
+return cursor if current element is array else will be error
+
+**`WsjcppYamlCursor operator[](const std::string &sName) const;`**
+
+return cursor if current element is map else will be error
+
+#### Static methods (WsjcppYaml)
+
+**`bool readTextFile(const std::string &sFilename, std::string &sOutputContent, std::string &sError);`**
+
+static method. Just read text file
+
+Will retrun:
+- `true` - success 
+- `false` - failed (information about error will be in sError)
+
+**`bool writeFile(const std::string &sFilename, const std::string &sContent);`**
+
+static method. Just write text to file
+
+Will retrun:
+- `true` - success 
+- `false` - failed 
+
+**`static std::string& ltrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");`**
+
+static method. left trim
+
+**`static std::string& rtrim(std::string& str, const std::string& chars = "\t\n\v\f\r ");`**
+
+static method. right trim
+
+**`static std::string& trim(std::string& str, const std::string& chars = "\t\n\v\f\r ");`**
+
+static method. left and right trim
+
+**`static std::string toLower(const std::string &str);`**
+
+static method. to lower characters (will be work only for latin coding)
+
+#### methods for logging (WsjcppYaml)
+
+**`void err(const std::string &TAG, const std::string &sMessage);`**
+
+default: print to std::cerr
+
+But you can override by `setLogger`
+
+**`void throw_err(const std::string &TAG, const std::string &sMessage);`**
+
+default: print to std::cerr and throw std::exception
+
+But you can override by `setLogger`
+
+**`void warn(const std::string &TAG, const std::string &sMessage);`**
+
+default: print to std::cerr
+
+But you can override by `setLogger`
+
+**`void info(const std::string &TAG, const std::string &sMessage);`**
+
+default: print to std::cout
+
+But you can override by `setLogger`
+
+
+### class method (WsjcppYamlCursor)
+
+WsjcppYamlCursor - keep a pointer to node ()
+
+
+**`bool isNull() const;`**
+
+return `true` if node is null or undefined
+
+
+**`bool isUndefined() const;`**
+
+return `true` if node is undefined.
+It's possible if definintion in yaml without value like a `some: ` - undefined node
+
+**`bool isValue() const;`**
+
+return `true` if node is a simple type with a value
+
+**`bool isArray() const;`**
+
+return `true` if node is a array
+
+**`size_t size() const;`**
+
+return size of array if node is a array
+
+**`bool isMap() const;`**
+
+return `true` if node is map
+
+**`std::vector<std::string> keys() const;`**
+
+return list of keys if node is map
+
+**`bool hasKey(const std::string &sKey) const;`**
+
+return true if node is map and key exists
+
+**`std::string comment();`**
+
+return user comment or empty for node
+
+**`WsjcppYamlCursor &comment(const std::string& sComment);`**
+
+set new comment
+
+**`std::string valStr();`**
+
+return value as string
+
+example: `yaml["some"].valStr()`
+
+**`WsjcppYamlCursor &val(const std::string &sValue);`**
+
+set new string value
+
+**`WsjcppYamlCursor &val(const char *sValue);`**
+
+set new string value
+
+**`int valInt();`**
+
+return value as integer
+
+**`WsjcppYamlCursor &val(int nValue);`**
+
+set new integer value
+
+**`bool valBool();`**
+
+return value as integer
+
+**`WsjcppYamlCursor &val(bool bValue);`**
+
+set new boolean value
+
+**`WsjcppYamlNode *node();`**
+
+return pointer to node
+
+**`WsjcppYamlCursor operator[](int idx) const;`**
+
+return node by index if current node is array
+
+example: `yaml["somearr"][0]`
+
+**`WsjcppYamlCursor operator[](const std::string &sName) const;`**
+
+return node by index if current node is map
+
+example: `yaml["some_map"]["el1"]`
+
