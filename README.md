@@ -29,13 +29,10 @@ In you main file configure logger:
 
 int main(int argc, char* argv[]) {
     std::string TAG = "MAIN";
-    std::string appLogPath = ".logs";
-    MyLogger *pLogger = new MyLogger();
 
     // now you can use WsjcppYaml
     WsjcppYaml yaml;
-    yaml.setLogger(pLogger);
-    if (yaml.loadFromString(
+    std::string sYaml =
         "# yaml content\n"
         "yaml1: nice format\n"
         "some-map: value1\n"
@@ -48,9 +45,10 @@ int main(int argc, char* argv[]) {
         "    p2: v2 \n"
         "  - p1: v3 \n"
         "    p2: v4 \n"
-        "param2: 111\n"
-    )) {
-        yaml.throw_err(TAG, "Error parsing");
+        "param2: 111\n";
+    std::string sError;
+    if (!yaml.loadFromString(sYaml, sError)) {
+        yaml.throw_err(TAG, sError);
         return -1;
     }
 
