@@ -7,6 +7,8 @@ tmp/*
 .wsjcpp/*
 unit-tests.wsjcpp/data-tests/read-write-file/docker-compose.output.yml
 
+*.log
+
 # Prerequisites
 *.d
 

@@ -26,6 +26,7 @@ dependencies:
     url: "https://github.com/wsjcpp/wsjcpp-core:master"
     origin: "https://github.com/"
     installation-dir: "./src.wsjcpp/wsjcpp_core"
+    installation-datetime: "Wed, 12 Jan 2022 14:25:07 GMT"
 
 distribution:
   - source-file: src/wsjcpp_yaml.cpp
@@ -75,3 +76,4 @@ unit-tests:
       description: ""
     - name: "KeepFormat"
       description: ""
+
