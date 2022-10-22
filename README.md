@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
         "    p2: v4 \n"
         "param2: 111\n";
     std::string sError;
-    if (!yaml.loadFromString(sYaml, sError)) {
+    if (!yaml.loadFromString("some.yaml", sYaml, sError)) {
         yaml.throw_err(TAG, sError);
         return -1;
     }
