@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(wsjcpp-yaml)
 
 # include(${CMAKE_CURRENT_SOURCE_DIR}/src.wsjcpp/CMakeLists.txt)
+add_subdirectory(unit-tests.wsjcpp)
 
 set(CMAKE_CXX_STANDARD 14)
 set(EXECUTABLE_OUTPUT_PATH ${wsjcpp-yaml_SOURCE_DIR})
