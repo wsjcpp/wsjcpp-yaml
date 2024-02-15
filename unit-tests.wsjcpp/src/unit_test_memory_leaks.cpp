@@ -1,7 +1,7 @@
 
 #include <wsjcpp_core.h>
 #include <wsjcpp_unit_tests.h>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 #include "get_current_rss.h"
 #include "process_mem_usage.h"
 
@@ -53,7 +53,7 @@ void UnitTestMemoryLeaks::executeTest() {
     double nBeforeVm, nBeforeRss;
     double nAfterVm, nAfterRss;
     std::string sFilepath = "./data-tests/for-memory-leak/some.yml";
-   
+
     // first use for memory alloc memory for work
     createManyTimesObjects();
 

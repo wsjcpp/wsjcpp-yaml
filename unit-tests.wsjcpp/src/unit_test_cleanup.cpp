@@ -1,7 +1,7 @@
 
 #include <wsjcpp_core.h>
 #include <wsjcpp_unit_tests.h>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestCleanup
@@ -30,13 +30,13 @@ bool UnitTestCleanup::doBeforeTest() {
 // ---------------------------------------------------------------------
 
 void UnitTestCleanup::executeTest() {
-    std::string sTestYaml1 = 
+    std::string sTestYaml1 =
         "# Some comment 1\n"
         "test10: one\n"
         "test20: two # some comment 2\n"
     ;
 
-    std::string sTestYaml2 = 
+    std::string sTestYaml2 =
         "# Some comment 1\n"
         "test11: one\n"
         "test20: two # some comment 2\n"

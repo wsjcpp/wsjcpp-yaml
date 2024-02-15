@@ -1,7 +1,7 @@
 
 #include <wsjcpp_core.h>
 #include <wsjcpp_unit_tests.h>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestTagNames
@@ -34,13 +34,13 @@ void UnitTestTagNames::executeTest() {
     std::string sTestYaml = "./test10: one";
     WsjcppYaml yaml;
     std::string sError;
-    // wrong 
+    // wrong
     compare("wrong name", yaml.loadFromString("wrong name", "./test10: one", sError), false);
     compare("name use quotes 1", yaml.loadFromString("name use quotes", "\"./test10\": one", sError), true);
     compare("name use quotes 2 - wrong", yaml.loadFromString("name use quotes", "\"./te\"st10\": one", sError), false);
     compare("name use quotes 3", yaml.loadFromString("name use quotes", "\"./te\\\"st10\": one", sError), true);
 
-    compare("array", yaml.loadFromString("array", 
+    compare("array", yaml.loadFromString("array",
         "arr1: \n"
         "  - ./te:11\n"
         "  - \"./te\":11\n"

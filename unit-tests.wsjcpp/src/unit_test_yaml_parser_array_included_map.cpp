@@ -1,7 +1,7 @@
 #include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestYamlParserArrayIncludedMap
@@ -32,7 +32,7 @@ bool UnitTestYamlParserArrayIncludedMap::doBeforeTest() {
 
 void UnitTestYamlParserArrayIncludedMap::executeTest() {
 
-    std::string sTestYaml = 
+    std::string sTestYaml =
         "#test array included map\n"
         "param1: none value1 # it's value for something # olala  \n"
         "array-test2 : #    some comment 2   \n"
@@ -47,14 +47,14 @@ void UnitTestYamlParserArrayIncludedMap::executeTest() {
         "    submap-param2: v12\n"
         "param2: v2\n"
     ;
-    
+
     WsjcppYaml yaml;
     std::string sError;
     if (!compare("Error parsing", yaml.loadFromString("map_in_array", sTestYaml, sError), true)) {
         WsjcppLog::err(TAG, sError);
         return;
     }
-    
+
     WsjcppYamlNode *pItem = nullptr;
 
     compare("param1-value", yaml.getRoot()->getElement("param1")->getValue(), "none value1");
@@ -78,7 +78,7 @@ void UnitTestYamlParserArrayIncludedMap::executeTest() {
     compare("array-test2-element2-comment", pItem->getComment(), "comment true");
 
     compare("array-and-map-length", yaml.getRoot()->getElement("array-and-map")->getLength(), 2);
-    
+
     pItem = yaml.getRoot()->getElement("array-and-map")->getElement(0);
     compare("array-and-map-element0-value", pItem->getElement("submap-param1")->getValue(), "v01");
     compare("array-and-map-element0-value", pItem->getElement("submap-param2")->getValue(), "v02");
@@ -91,7 +91,7 @@ void UnitTestYamlParserArrayIncludedMap::executeTest() {
 
     std::string sSaved = "";
     if (compare("save yaml", yaml.saveToString(sSaved, sError), true)) {
-        compare("yaml_save", sSaved, 
+        compare("yaml_save", sSaved,
             "# test array included map\n" // expected
             "param1: none value1 # it's value for something # olala\n"
             "array-test2: # some comment 2\n"

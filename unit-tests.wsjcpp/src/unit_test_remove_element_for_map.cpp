@@ -1,7 +1,7 @@
 
 #include <wsjcpp_core.h>
 #include <wsjcpp_unit_tests.h>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestRemoveElementForMap
@@ -30,7 +30,7 @@ bool UnitTestRemoveElementForMap::doBeforeTest() {
 // ---------------------------------------------------------------------
 
 void UnitTestRemoveElementForMap::executeTest() {
-    std::string sTestYaml = 
+    std::string sTestYaml =
         "# Some comment 1\n"
         "map1: \n"
         "  map11: \n"
@@ -52,14 +52,14 @@ void UnitTestRemoveElementForMap::executeTest() {
         "param2: v2 # some comment 2\n"
         "\n" // empty line
     ;
-    
+
     WsjcppYaml yaml;
     std::string sError;
     if (!compare("Error parsing", yaml.loadFromString("rm_elem_in_map", sTestYaml, sError), true)) {
         WsjcppLog::err(TAG, sError);
         return;
     }
-    
+
     WsjcppYamlNode *pMap1 = yaml.getRoot()->getElement("map1");
     WsjcppYamlNode *pMap11 = pMap1->getElement("map11");
 

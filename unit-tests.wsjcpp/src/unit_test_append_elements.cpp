@@ -1,7 +1,7 @@
 
 #include <wsjcpp_core.h>
 #include <wsjcpp_unit_tests.h>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestAppendElements
@@ -49,7 +49,7 @@ void UnitTestAppendElements::executeTest() {
     pItemMap->setElementValue("p5", "val5");
     yml.getRoot()->setElementValue("p6", "val6");
 
-    compare("created yaml 1", yml.getRoot()->toString(), 
+    compare("created yaml 1", yml.getRoot()->toString(),
         "p1: val1\n"
         "some:\n"
         "  p2: val2\n"

@@ -27,11 +27,6 @@ list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_unit_tests.cpp")
 list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_unit_tests.h")
 list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_unit_tests_main.cpp")
 
-# wsjcpp-yaml:v0.1.7
-list (APPEND WSJCPP_INCLUDE_DIRS "../src")
-list (APPEND WSJCPP_SOURCES "../src/wsjcpp_yaml.cpp")
-list (APPEND WSJCPP_SOURCES "../src/wsjcpp_yaml.h")
-
 # unit-tests
 list (APPEND WSJCPP_INCLUDE_DIRS "src")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_line_parser.cpp")
@@ -60,5 +55,5 @@ include_directories(${WSJCPP_INCLUDE_DIRS})
 
 add_executable ("unit-tests" ${WSJCPP_SOURCES})
 
-target_link_libraries("unit-tests" -lpthread ${WSJCPP_LIBRARIES} )
+target_link_libraries("unit-tests" -lpthread ${WSJCPP_LIBRARIES} wsjcpp::yamlcpp)
 

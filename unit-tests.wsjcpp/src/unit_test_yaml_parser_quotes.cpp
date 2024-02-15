@@ -1,7 +1,7 @@
 #include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestYamlParserQuotes
@@ -32,7 +32,7 @@ bool UnitTestYamlParserQuotes::doBeforeTest() {
 
 void UnitTestYamlParserQuotes::executeTest() {
 
-    std::string sTestYaml = 
+    std::string sTestYaml =
         "# Some comment 1\n"
         "param1: \"value1\" # v1\n"
         "param2: \" #$!!!value2\" # val 2\n"
@@ -47,7 +47,7 @@ void UnitTestYamlParserQuotes::executeTest() {
     ;
 
 
-    
+
     WsjcppYaml yaml;
     std::string sError;
     if (!compare("Error parsing", yaml.loadFromString("parse_quotes", sTestYaml, sError), true)) {
@@ -59,7 +59,7 @@ void UnitTestYamlParserQuotes::executeTest() {
 
     compare("param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
     compare("param1", yaml.getRoot()->getElement("param1")->getComment(), "v1");
-    
+
     compare("param2", yaml.getRoot()->getElement("param2")->getValue(), " #$!!!value2");
     compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "val 2");
 

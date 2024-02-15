@@ -1,7 +1,7 @@
 
 #include <wsjcpp_core.h>
 #include <wsjcpp_unit_tests.h>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestCursor
@@ -31,7 +31,7 @@ bool UnitTestCursor::doBeforeTest() {
 
 void UnitTestCursor::executeTest() {
 
-     std::string sTestYaml = 
+     std::string sTestYaml =
         "# Some comment 1\n"
         "map1: \n"
         "  map11: \n"
@@ -64,7 +64,7 @@ void UnitTestCursor::executeTest() {
         "  - False\n"
         "\n" // empty line
     ;
-    
+
     WsjcppYaml yaml;
     std::string sError;
     if (!compare("Error parsing", yaml.loadFromString("test_cursor", sTestYaml, sError), true)) {
@@ -114,7 +114,7 @@ void UnitTestCursor::executeTest() {
     compare("array el 3", yaml["arr1"][3].valStr(), "no");
     compare("array el 4", yaml["arr1"][4].valStr(), "true");
     compare("array el 5", yaml["arr1"][5].valStr(), "False");
-    
+
     compare("array bool el 2", yaml["arr1"][2].valBool(), true);
     compare("array bool el 3", yaml["arr1"][3].valBool(), false);
     compare("array bool el 4", yaml["arr1"][4].valBool(), true);
@@ -164,7 +164,7 @@ void UnitTestCursor::executeTest() {
         WsjcppYamlCursor &push(bool bVal);
         WsjcppYamlCursor &remove(int nIdx);*/
 
-    
+
 }
 
 // ---------------------------------------------------------------------

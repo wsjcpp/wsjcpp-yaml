@@ -1,7 +1,7 @@
 #include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestYamlParserSimpleArray
@@ -31,7 +31,7 @@ bool UnitTestYamlParserSimpleArray::doBeforeTest() {
 // ---------------------------------------------------------------------
 
 void UnitTestYamlParserSimpleArray::executeTest() {
-   
+
     std::string sFilepath = "./data-tests/parser-simple-array.yml";
     WsjcppYaml yaml;
     std::string sError;
@@ -39,7 +39,7 @@ void UnitTestYamlParserSimpleArray::executeTest() {
         WsjcppLog::err(TAG, sError);
         return;
     }
-    
+
     WsjcppYamlNode *pItem = nullptr;
 
     compare("param1-value", yaml.getRoot()->getElement("param1")->getValue(), "none value1");
@@ -67,7 +67,7 @@ void UnitTestYamlParserSimpleArray::executeTest() {
     compare("array-test2-element3-line", yaml.getRoot()->getElement("array-test2")->getElement(3)->getPlaceInFile().getLine(), "  - falsesome   ");
     compare("array-test2-element3-original-number-of-line", yaml.getRoot()->getElement("array-test2")->getElement(3)->getPlaceInFile().getNumberOfLine(), 7);
     compare("array-test2-element3-comment", yaml.getRoot()->getElement("array-test2")->getElement(3)->getComment(), "");
-    
+
     compare("array-test2-element4-value", yaml.getRoot()->getElement("array-test2")->getElement(4)->getValue(), "free@free");
     compare("array-test2-element4-line", yaml.getRoot()->getElement("array-test2")->getElement(4)->getPlaceInFile().getLine(), "  - free@free   ");
     compare("array-test2-element4-original-number-of-line", yaml.getRoot()->getElement("array-test2")->getElement(4)->getPlaceInFile().getNumberOfLine(), 8);
@@ -91,7 +91,7 @@ void UnitTestYamlParserSimpleArray::executeTest() {
     std::string sSaved = "";
     bool bResult = yaml.saveToString(sSaved, sError);
     compare("save yaml", bResult, true);
-    compare("yaml_save", sSaved, 
+    compare("yaml_save", sSaved,
         "# simple array test\n" // expected
         "param1: none value1 # it's value for something # olala\n"
         "array-test2: # some comment 2\n"

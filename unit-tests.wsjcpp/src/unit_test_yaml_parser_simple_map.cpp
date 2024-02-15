@@ -1,7 +1,7 @@
-#include <wsjcpp_unit_tests.h>
-#include <vector>
 #include <iostream>
-#include <wsjcpp_yaml.h>
+#include <vector>
+#include <wsjcpp/yaml/yaml.h>
+#include <wsjcpp_unit_tests.h>
 
 // ---------------------------------------------------------------------
 // UnitTestYamlParserSimpleMap
@@ -32,20 +32,19 @@ bool UnitTestYamlParserSimpleMap::doBeforeTest() {
 
 void UnitTestYamlParserSimpleMap::executeTest() {
 
-    std::string sTestYaml = 
-        "# Some comment 1\n"
-        "param1: value1\n"
-        "param2: value2 # some comment 2\n"
-        "\n" // empty line
-    ;
-    
-    WsjcppYaml yaml;
-    std::string sError;
-    if (!compare("Error parsing", yaml.loadFromString("simple_map", sTestYaml, sError), true)) {
-        WsjcppLog::err(TAG, sError);
-        return;
-    }
-    
+  std::string sTestYaml = "# Some comment 1\n"
+                          "param1: value1\n"
+                          "param2: value2 # some comment 2\n"
+                          "\n" // empty line
+      ;
+
+  WsjcppYaml yaml;
+  std::string sError;
+  if (!compare("Error parsing", yaml.loadFromString("simple_map", sTestYaml, sError), true)) {
+    WsjcppLog::err(TAG, sError);
+    return;
+  }
+
     WsjcppYamlNode *pItem = nullptr;
     compare("param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
     compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");

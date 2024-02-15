@@ -1,7 +1,7 @@
 
 #include <wsjcpp_unit_tests.h>
 #include <wsjcpp_core.h>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestRemoveElementInArray
@@ -39,7 +39,7 @@ void UnitTestRemoveElementInArray::executeTest() {
         return;
     }
 
-    
+
     WsjcppYamlNode *pArr1 = yaml.getRoot()->getElement("arr1");
     compare("arr1 len", pArr1->getLength(), 4);
     compare("arr1 name0 ", pArr1->getElement(0)->getElement("name")->getValue(), "i1");

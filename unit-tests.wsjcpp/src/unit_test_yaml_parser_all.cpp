@@ -1,7 +1,7 @@
 #include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestYamlParserAll
@@ -33,7 +33,7 @@ bool UnitTestYamlParserAll::doBeforeTest() {
 
 void UnitTestYamlParserAll::executeTest() {
 
-    std::string sTestYaml = 
+    std::string sTestYaml =
         "# Some comment 1\n"
         "test10: one\n"
         "test20: two # some comment 2\n"
@@ -70,11 +70,11 @@ void UnitTestYamlParserAll::executeTest() {
         compare("yaml_saved 2-test", sSaved1, sTestYaml);
         return;
     }
-    
+
     WsjcppYamlNode *pItem = nullptr;
     compare("test10", yaml.getRoot()->getElement("test10")->getValue(), "one");
     compare("test20", yaml.getRoot()->getElement("test20")->getValue(), "two");
-        
+
     pItem = yaml.getRoot()->getElement("array30");
     compare("array30_length", pItem->getLength(), 3);
 
@@ -90,7 +90,7 @@ void UnitTestYamlParserAll::executeTest() {
 
     pItem = yaml.getRoot()->getElement("array50");
     compare("array50_length", pItem->getLength(), 2);
-    
+
     pItem = yaml.getRoot()->getElement("map60")->getElement("test70");
     compare("test70_value", pItem->getValue(), "opa1");
 

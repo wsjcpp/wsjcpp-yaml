@@ -1,7 +1,7 @@
 #include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestYamlParserComments
@@ -32,7 +32,7 @@ bool UnitTestYamlParserComments::doBeforeTest() {
 
 void UnitTestYamlParserComments::executeTest() {
 
-    std::string sTestYaml = 
+    std::string sTestYaml =
         "# Some comment 1\n"
         "param1: value1 # comment 2 # comment\n"
         "param2: value2 # some \"comment 3\"\n"
@@ -49,7 +49,7 @@ void UnitTestYamlParserComments::executeTest() {
     ;
 
 
-    
+
     WsjcppYaml yaml;
     std::string sError;
     if (!compare("Error parsing", yaml.loadFromString("comments", sTestYaml, sError), true)) {
@@ -61,7 +61,7 @@ void UnitTestYamlParserComments::executeTest() {
 
     compare("param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
     compare("param1", yaml.getRoot()->getElement("param1")->getComment(), "comment 2 # comment");
-    
+
     compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
     compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some \"comment 3\"");
 
@@ -80,7 +80,7 @@ void UnitTestYamlParserComments::executeTest() {
     compare("map1-p1-comment", yaml.getRoot()->getElement("map1")->getElement("p1")->getComment(), "comment 10");
     compare("map1-p2-comment", yaml.getRoot()->getElement("map1")->getElement("p2")->getComment(), "comment 12");
 
-    
+
     // compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
     // compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 

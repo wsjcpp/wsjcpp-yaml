@@ -1,7 +1,7 @@
 #include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestYamlParserHierarchicalMap
@@ -32,7 +32,7 @@ bool UnitTestYamlParserHierarchicalMap::doBeforeTest() {
 
 void UnitTestYamlParserHierarchicalMap::executeTest() {
 
-    std::string sTestYaml = 
+    std::string sTestYaml =
         "# Some comment 1\n"
         "map1: \n"
         "  map11: \n"
@@ -54,24 +54,24 @@ void UnitTestYamlParserHierarchicalMap::executeTest() {
         "param2: v2 # some comment 2\n"
         "\n" // empty line
     ;
-    
+
     WsjcppYaml yaml;
     std::string sError;
     if (!compare("Error parsing", yaml.loadFromString("hard_map", sTestYaml, sError), true)) {
         WsjcppLog::err(TAG, sError);
         return;
     }
-    
+
     WsjcppYamlNode *pItem = nullptr;
 
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map111");
     compare("param1111", pItem->getElement("param1111")->getValue(), "v1111");
     compare("param1112", pItem->getElement("param1112")->getValue(), "v1112");
-    
+
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map112");
     compare("param1121", pItem->getElement("param1121")->getValue(), "v1121");
     compare("param1122", pItem->getElement("param1122")->getValue(), "v1122");
-    
+
     pItem = yaml.getRoot()->getElement("map1")->getElement("map11")->getElement("map113");
     compare("param1131", pItem->getElement("param1131")->getValue(), "v1131");
     compare("param1132", pItem->getElement("param1132")->getValue(), "v1132");

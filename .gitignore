@@ -9,6 +9,9 @@ unit-tests.wsjcpp/data-tests/read-write-file/docker-compose.output.yml
 
 *.log
 
+# Build directory
+build
+
 # Prerequisites
 *.d
 

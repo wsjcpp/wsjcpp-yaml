@@ -1,7 +1,7 @@
 
 #include <wsjcpp_core.h>
 #include <wsjcpp_unit_tests.h>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestKeepFormat
@@ -32,7 +32,7 @@ bool UnitTestKeepFormat::doBeforeTest() {
 void UnitTestKeepFormat::executeTest() {
     // https://github.com/wsjcpp/wsjcpp-yaml/issues/29
 
-    std::string sInput = 
+    std::string sInput =
         "# commet1:\n"
         "\n"
         "val1: 1\n"
@@ -71,7 +71,7 @@ void UnitTestKeepFormat::executeTest() {
         WsjcppLog::err(TAG, sError);
         return;
     }
-    
+
     if (!compare("Keep formating", sOutput, sInput)) {
         return;
     }
@@ -87,7 +87,7 @@ void UnitTestKeepFormat::executeTest() {
         WsjcppLog::err(TAG, sError);
         return;
     }
-    
+
     if (!compare("Keep formating", sOutput, sInput)) {
         return;
     }

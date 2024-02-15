@@ -1,7 +1,7 @@
 #include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp_yaml.h>
+#include <wsjcpp/yaml/yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestLineParser
@@ -52,7 +52,7 @@ void UnitTestLineParser::executeTest() {
             nValueQuotes(nValueQuotes),
             sComment(sComment)
         {
-            //    
+            //
         };
         int nNumberOfTest;
         std::string sLine;
@@ -81,7 +81,7 @@ void UnitTestLineParser::executeTest() {
         "t\"wo", WSJCPP_YAML_QUOTES_DOUBLE, // value
         "some comment 2" // comment
     ));
-    vTestLines.push_back(LineTest(3, 
+    vTestLines.push_back(LineTest(3,
         "  test3:", "  ",
         false, // array node
         "test3", WSJCPP_YAML_QUOTES_NONE, // name

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 
 void example_iterate_array();
