@@ -3,20 +3,22 @@
 #include <gtest/gtest.h>
 #include <wsjcpp_yaml.h>
 
+namespace wsjcpp {
+namespace yaml {
 namespace {
 
 // Demonstrate some basic assertions.
 TEST(WsjcppYamlTest, AppendElements) {
   static const std::string expected_yaml_string = "p1: val1\n"
-    "some:\n"
-    "  p2: val2\n"
-    "  sub-some:\n"
-    "    p3: val3\n"
-    "  arr-some:\n"
-    "    - 1234\n"
-    "    - p4: val4\n"
-    "      p5: val5\n"
-    "p6: val6";
+                                                  "some:\n"
+                                                  "  p2: val2\n"
+                                                  "  sub-some:\n"
+                                                  "    p3: val3\n"
+                                                  "  arr-some:\n"
+                                                  "    - 1234\n"
+                                                  "    - p4: val4\n"
+                                                  "      p5: val5\n"
+                                                  "p6: val6";
 
   WsjcppYaml yaml;
   yaml.getRoot()->setElementValue("p1", "val1");
@@ -40,3 +42,5 @@ TEST(WsjcppYamlTest, AppendElements) {
 }
 
 } // namespace
+} // namespace yaml
+} // namespace wsjcpp

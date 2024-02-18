@@ -3,29 +3,31 @@
 #include <gtest/gtest.h>
 #include <wsjcpp_yaml.h>
 
+namespace wsjcpp {
+namespace yaml {
 namespace {
 
 TEST(WsjcppYamlTest, Cleanup) {
   static const std::string sTestYaml1 = "# Some comment 1\n"
-    "test10: one\n"
-    "test20: two # some comment 2\n";
+                                        "test10: one\n"
+                                        "test20: two # some comment 2\n";
 
   static const std::string sTestYaml2 = "# Some comment 1\n"
-    "test11: one\n"
-    "test20: two # some comment 2\n"
-    "test22: two # some comment 2";
+                                        "test11: one\n"
+                                        "test20: two # some comment 2\n"
+                                        "test22: two # some comment 2";
 
   WsjcppYaml yaml;
   std::string sError;
 
-  ASSERT_TRUE(yaml.loadFromString("parse1", std::string{sTestYaml1}, sError));
+  ASSERT_TRUE(yaml.loadFromString("parse1", sTestYaml1, sError));
 
   EXPECT_TRUE(yaml.getRoot()->hasElement("test10"));
   EXPECT_FALSE(yaml.getRoot()->hasElement("test11"));
   EXPECT_TRUE(yaml.getRoot()->hasElement("test20"));
   EXPECT_FALSE(yaml.getRoot()->hasElement("test22"));
 
-  ASSERT_TRUE(yaml.loadFromString("parse2", std::string{sTestYaml2}, sError));
+  ASSERT_TRUE(yaml.loadFromString("parse2", sTestYaml2, sError));
 
   EXPECT_FALSE(yaml.getRoot()->hasElement("test10"));
   EXPECT_TRUE(yaml.getRoot()->hasElement("test11"));
@@ -38,3 +40,5 @@ TEST(WsjcppYamlTest, Cleanup) {
 }
 
 } // namespace
+} // namespace yaml
+} // namespace wsjcpp

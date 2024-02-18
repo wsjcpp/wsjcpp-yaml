@@ -3,29 +3,32 @@
 #include <wsjcpp_yaml.h>
 #include <wsjcpp_unit_tests.h>
 
+namespace wsjcpp {
+namespace yaml {
+namespace {
+
 // ---------------------------------------------------------------------
 // UnitTestYamlParserSimpleMap
 
 class UnitTestYamlParserSimpleMap : public WsjcppUnitTestBase {
-    public:
-        UnitTestYamlParserSimpleMap();
-        virtual bool doBeforeTest() override;
-        virtual void executeTest() override;
-        virtual bool doAfterTest() override;
+public:
+  UnitTestYamlParserSimpleMap();
+  virtual bool doBeforeTest() override;
+  virtual void executeTest() override;
+  virtual bool doAfterTest() override;
 };
 
 REGISTRY_WSJCPP_UNIT_TEST(UnitTestYamlParserSimpleMap)
 
-UnitTestYamlParserSimpleMap::UnitTestYamlParserSimpleMap()
-    : WsjcppUnitTestBase("UnitTestYamlParserSimpleMap") {
-    //
+UnitTestYamlParserSimpleMap::UnitTestYamlParserSimpleMap() : WsjcppUnitTestBase("UnitTestYamlParserSimpleMap") {
+  //
 }
 
 // ---------------------------------------------------------------------
 
 bool UnitTestYamlParserSimpleMap::doBeforeTest() {
-    // nothing
-    return true;
+  // nothing
+  return true;
 }
 
 // ---------------------------------------------------------------------
@@ -45,25 +48,28 @@ void UnitTestYamlParserSimpleMap::executeTest() {
     return;
   }
 
-    WsjcppYamlNode *pItem = nullptr;
-    compare("param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
-    compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
-    compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
+  WsjcppYamlNode *pItem = nullptr;
+  compare("param1", yaml.getRoot()->getElement("param1")->getValue(), "value1");
+  compare("param2", yaml.getRoot()->getElement("param2")->getValue(), "value2");
+  compare("param2", yaml.getRoot()->getElement("param2")->getComment(), "some comment 2");
 
-    std::string sSaved = "";
-    bool bResult = yaml.saveToString(sSaved, sError);
-    if (compare("save yaml", bResult, true)) {
-        compare("yaml_save", sSaved,
+  std::string sSaved = "";
+  bool bResult = yaml.saveToString(sSaved, sError);
+  if (compare("save yaml", bResult, true)) {
+    compare("yaml_save", sSaved,
             "# Some comment 1\n"
             "param1: value1\n"
-            "param2: value2 # some comment 2\n"
-        );
-    }
+            "param2: value2 # some comment 2\n");
+  }
 }
 
 // ---------------------------------------------------------------------
 
 bool UnitTestYamlParserSimpleMap::doAfterTest() {
-    // nothing
-    return true;
+  // nothing
+  return true;
 }
+
+} // namespace
+} // namespace yaml
+} // namespace wsjcpp

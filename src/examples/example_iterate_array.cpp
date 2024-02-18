@@ -2,6 +2,9 @@
 
 #include "examples.h"
 
+namespace wsjcpp {
+namespace yaml {
+
 void example_iterate_array() {
 
   std::string sTest =
@@ -41,3 +44,6 @@ void example_iterate_array() {
     }
   }
 }
+
+} // namespace yaml
+} // namespace wsjcpp

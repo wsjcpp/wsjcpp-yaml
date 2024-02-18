@@ -6,6 +6,8 @@
 
 #include <wsjcpp_yaml.h>
 
+namespace wsjcpp {
+namespace yaml {
 // ---------------------------------------------------------------------
 // WsjcppYamlPlaceInFile
 
@@ -1605,3 +1607,6 @@ void WsjcppYaml::logUnknownParseLine() {
                       "    filename: \"" +
                       m_pParseCurrentParentNode->getPlaceInFile().getFilename() + "\"");
 }
+
+} // namespace yaml
+} // namespace wsjcpp

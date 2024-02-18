@@ -2,6 +2,9 @@
 
 #include "examples.h"
 
+namespace wsjcpp {
+namespace yaml {
+
 void example_operator_1() {
 
   std::string sTest = "test: 'string'\n";
@@ -21,3 +24,6 @@ void example_operator_1() {
   cur["test"] = true;
   std::cout << "after 3 : " << cur["test"].valStr() << std::endl;
 }
+
+} // namespace yaml
+} // namespace wsjcpp

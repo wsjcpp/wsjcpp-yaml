@@ -8,6 +8,9 @@
 #include <string.h>
 #include <vector>
 
+namespace wsjcpp {
+namespace yaml {
+
 // ---------------------------------------------------------------------
 
 enum WsjcppYamlNodeType {
@@ -323,3 +326,6 @@ private:
   WsjcppYamlParsebleLine m_parseLine;
   std::vector<int> m_vStackDiffNodeIndents;
 };
+
+} // namespace yaml
+} // namespace wsjcpp

@@ -7,9 +7,10 @@
 
 #include "examples.h"
 
+namespace wsjcpp {
 namespace {
 
-class MyLogger : public IWsjcppYamlLog {
+class MyLogger : public yaml::IWsjcppYamlLog {
 public:
   // IWsjcppYamlLog
   virtual void err(const std::string &TAG, const std::string &sMessage) override {
@@ -33,6 +34,7 @@ public:
 };
 
 } // namespace
+} // namespace wsjcpp
 
 int main(int argc, char *argv[]) {
   std::string TAG = "MAIN";
@@ -44,9 +46,9 @@ int main(int argc, char *argv[]) {
   // if (!WsjcppCore::dirExists(appLogPath)) {
   //     WsjcppCore::makeDir(appLogPath);
   // }
-  MyLogger *pLogger = new MyLogger();
+  auto *pLogger = new wsjcpp::MyLogger();
 
-  WsjcppYaml yaml;
+  wsjcpp::yaml::WsjcppYaml yaml;
   yaml.setLogger(pLogger);
   std::string sError;
   std::string sFilePath = "./unit-tests.wsjcpp/data-tests/read-file/example-voiting-app/docker-compose.yml";
@@ -73,6 +75,6 @@ int main(int argc, char *argv[]) {
   std::cout << nVer << std::endl;
   std::cout << bVer << std::endl;
 
-  example_operator_1();
+  wsjcpp::yaml::example_operator_1();
   return 0;
 }

@@ -3,12 +3,14 @@
 #include <gtest/gtest.h>
 #include <wsjcpp_yaml.h>
 
+namespace wsjcpp {
+namespace yaml {
 namespace {
 
 TEST(WsjcppYamlTest, Failed) {
   static const std::string sTestYaml1 = "(# Some comment 1\n"
-    "test10: one\n"
-    "test20: two # some comment 2)\n";
+                                        "test10: one\n"
+                                        "test20: two # some comment 2)\n";
 
   WsjcppYaml yaml;
   std::string sError;
@@ -19,3 +21,5 @@ TEST(WsjcppYamlTest, Failed) {
 }
 
 } // namespace
+} // namespace yaml
+} // namespace wsjcpp
