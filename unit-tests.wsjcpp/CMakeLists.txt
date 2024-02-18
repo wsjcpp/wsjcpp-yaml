@@ -29,7 +29,6 @@ list (APPEND WSJCPP_SOURCES "../src.wsjcpp/wsjcpp_core/wsjcpp_unit_tests_main.cp
 
 # unit-tests
 list (APPEND WSJCPP_INCLUDE_DIRS "src")
-list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_line_parser.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_simple_array.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_simple_map.cpp")
 list (APPEND WSJCPP_SOURCES "../unit-tests.wsjcpp/src/unit_test_yaml_parser_hierarchical_map.cpp")
