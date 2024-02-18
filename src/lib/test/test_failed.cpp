@@ -1,6 +1,5 @@
-#include <string_view>
-#include <string>
 #include <gtest/gtest.h>
+#include <string>
 #include <wsjcpp_yaml.h>
 
 namespace wsjcpp {
