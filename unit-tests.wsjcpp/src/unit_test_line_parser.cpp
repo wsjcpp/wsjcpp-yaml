@@ -1,7 +1,7 @@
 #include <wsjcpp_unit_tests.h>
 #include <vector>
 #include <iostream>
-#include <wsjcpp/yaml/yaml.h>
+#include <wsjcpp_yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestLineParser

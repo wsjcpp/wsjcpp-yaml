@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string.h>
 
-#include <wsjcpp/yaml/yaml.h>
+#include <wsjcpp_yaml.h>
 
 #include "examples.h"
 

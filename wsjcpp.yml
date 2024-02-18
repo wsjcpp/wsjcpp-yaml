@@ -32,7 +32,7 @@ distribution:
   - source-file: src/wsjcpp_yaml.cpp
     target-file: wsjcpp_yaml.cpp
     type: "source-code"
-  - source-file: src/wsjcpp_yaml.h
+  - source-file: src/lib/include/wsjcpp/wsjcpp_yaml.h
     target-file: wsjcpp_yaml.h
     type: "source-code"
 

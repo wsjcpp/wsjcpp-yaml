@@ -12,9 +12,9 @@ target_include_directories(${LIB_NAME}
 
 target_sources(${LIB_NAME}
   PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/include/wsjcpp/yaml/yaml.h
+    ${CMAKE_CURRENT_LIST_DIR}/include/wsjcpp/wsjcpp_yaml.h
   PRIVATE
-  ${CMAKE_CURRENT_LIST_DIR}/src/yaml.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/src/wsjcpp_yaml.cpp
 )
 
 if(WSJCPP_${LIB_NAME}_BUILD_TEST)

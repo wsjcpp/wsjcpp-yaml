@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include <wsjcpp/yaml/yaml.h>
+#include <wsjcpp_yaml.h>
 
 using namespace std::string_view_literals;
 

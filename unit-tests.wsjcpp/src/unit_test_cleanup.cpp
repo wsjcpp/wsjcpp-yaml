@@ -1,7 +1,7 @@
 
 #include <wsjcpp_core.h>
 #include <wsjcpp_unit_tests.h>
-#include <wsjcpp/yaml/yaml.h>
+#include <wsjcpp_yaml.h>
 
 // ---------------------------------------------------------------------
 // UnitTestCleanup

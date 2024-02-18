@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <wsjcpp/yaml/yaml.h>
+#include <wsjcpp_yaml.h>
 #include <wsjcpp_unit_tests.h>
 
 // ---------------------------------------------------------------------

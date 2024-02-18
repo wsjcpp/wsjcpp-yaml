@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <sstream>
 
-#include <wsjcpp/yaml/yaml.h>
+#include <wsjcpp_yaml.h>
 
 // ---------------------------------------------------------------------
 // WsjcppYamlPlaceInFile

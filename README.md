@@ -9,7 +9,7 @@ C++ YAML parser/reader and writer of *.yaml/*.yml files with keeping user format
 include files:
 
 - src/wsjcpp_yaml.cpp
-- src/wsjcpp_yaml.h
+- src/lib/include/wsjcpp/wsjcpp_yaml.h
 
 or just
 
