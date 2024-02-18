@@ -16,6 +16,7 @@ set (WSJCPP_SOURCES "")
 
 # include header dirs
 list (APPEND WSJCPP_INCLUDE_DIRS "src")
+list (APPEND WSJCPP_INCLUDE_DIRS "src/lib/include/wsjcpp/")
 
 list (APPEND WSJCPP_SOURCES "src/main.cpp")
 list (APPEND WSJCPP_SOURCES "src/examples/example_iterate_array.cpp")

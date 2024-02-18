@@ -1,4 +1,4 @@
-set(LIB_NAME ${LIB_NAME}Test)
+set(LIB_NAME ${LIB_NAME}_tests)
 
 # According to this guide https://google.github.io/googletest/quickstart-cmake.html
 
@@ -11,8 +11,16 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+file(GLOB TEST_FILES_TO_COMPILE
+     "test_*.cpp"
+)
+
+foreach(_TEST ${TEST_FILES_TO_COMPILE})
+  message(STATUS "[tests] Found file: ${_TEST}")
+endforeach()
+
 add_executable(${LIB_NAME}
-    ${CMAKE_CURRENT_LIST_DIR}/yaml_test.cpp
+  ${TEST_FILES_TO_COMPILE}
 )
 
 target_link_libraries(${LIB_NAME}

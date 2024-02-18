@@ -7,7 +7,7 @@ add_library(wsjcpp::${LIB_NAME} ALIAS ${LIB_NAME})
 
 target_include_directories(${LIB_NAME}
   PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/include/
+    ${CMAKE_CURRENT_LIST_DIR}/include/wsjcpp
 )
 
 target_sources(${LIB_NAME}

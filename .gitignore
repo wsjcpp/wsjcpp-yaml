@@ -1,5 +1,5 @@
 wsjcpp-yaml
-yamlcppTest
+yamlcpp_tests
 tmp/*
 .wsjcpp-yaml-logs/*
 .vscode
