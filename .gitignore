@@ -6,6 +6,10 @@ tmp/*
 .wsjcpp-logs/*
 .wsjcpp/*
 unit-tests.wsjcpp/data-tests/read-write-file/docker-compose.output.yml
+*.local
+__history
+__recovery
+
 
 *.log
 
@@ -41,3 +45,10 @@ unit-tests.wsjcpp/data-tests/read-write-file/docker-compose.output.yml
 *.exe
 *.out
 *.app
+*.ilc
+*.ild
+*.ilf
+*.ils
+*.tds
+*.pdb
+*.map

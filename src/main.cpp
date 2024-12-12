@@ -26,7 +26,11 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 
 #include <string.h>
 #include <iostream>
+#include <sstream>
 #include <algorithm>
+#if defined(__CODEGEARC__)
+#include <tchar.h>
+#endif
 #include "examples.h"
 #include "wsjcpp_yaml.h"
 
@@ -35,22 +39,42 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 class MyLogger : public IWsjcppYamlLog {
     public:
         // IWsjcppYamlLog
+        #if defined(__CODEGEARC__) && !defined(__clang__)
+        virtual void err(const std::string &TAG, const std::string &sMessage) {
+        #else
         virtual void err(const std::string &TAG, const std::string &sMessage) override {
-            std::cerr << TAG << " [error] : " << sMessage << std::endl;
+        #endif
+            std::cerr << TAG.c_str() << " [error] : " << sMessage.c_str() << std::endl;
         };
+        #if defined(__CODEGEARC__) && !defined(__clang__)
+        virtual void throw_err(const std::string &TAG, const std::string &sMessage) {
+        #else
         virtual void throw_err(const std::string &TAG, const std::string &sMessage) override {
+        #endif
             std::cerr << TAG << " [critical_error] : " << sMessage << std::endl;
             throw std::runtime_error(TAG + " [critical_error] : " + sMessage);
         };
+        #if defined(__CODEGEARC__) && !defined(__clang__)
+        virtual void warn(const std::string &TAG, const std::string &sMessage) {
+        #else
         virtual void warn(const std::string &TAG, const std::string &sMessage) override {
+        #endif
             std::cerr << TAG << " [warn] : " << sMessage << std::endl;
         };
+        #if defined(__CODEGEARC__) && !defined(__clang__)
+        virtual void info(const std::string &TAG, const std::string &sMessage) {
+        #else
         virtual void info(const std::string &TAG, const std::string &sMessage) override {
+        #endif
             std::cout << TAG << " [info] : " << sMessage << std::endl;
         };
 };
 
+#if defined(__CODEGEARC__)
+int _tmain(int argc, _TCHAR* argv[]) {
+#else
 int main(int argc, char* argv[]) {
+#endif
     std::string TAG = "MAIN";
     // WsjcppCore::initRandom();
     // std::string appName = std::string(WSJCPP_APP_NAME);
