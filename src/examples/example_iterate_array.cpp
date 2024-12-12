@@ -54,19 +54,19 @@ void example_iterate_array() {
     WsjcppYaml yaml2;
     std::string sError;
     if (!yaml2.loadFromString("test", sTest, sError)) {
-        std::cerr << sError << std::endl;
+        std::cerr << sError.c_str() << std::endl;
         return;
     }
     WsjcppYamlCursor cur = yaml2.getCursor();
     std::vector<std::string> vKeys = cur.keys();
-    for (int i = 0; i < vKeys.size(); i++) {
+    for (unsigned int i = 0; i < vKeys.size(); i++) {
         std::string sKey = vKeys[i];
         int nCount = cur[sKey].size(); // musts array
         for (int n = 0; n < nCount; n++) {
             WsjcppYamlCursor el = cur[sKey][n];
             std::cout
                 << "code = " << el["code"].valInt()
-                << "; focusstr = " << el["focusstr"].valStr()
+                << "; focusstr = " << el["focusstr"].valStr().c_str()
                 << ";"
                 << std::endl;
         }
