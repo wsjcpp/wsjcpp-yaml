@@ -31,6 +31,9 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
+#if defined(__CODEGEARC__) && !defined(_WIN64)
+#include <stdlib.h>
+#endif
 
 // ---------------------------------------------------------------------
 
@@ -42,7 +45,12 @@ std::string WSJCPP_INT_TO_STR(int number) {
         0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
         0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0
     };
-    _itoa(number, buffer, 10 );
+    #if __CODEGEARC__ == 0x0770
+    // 12.2
+    _itoa(number, buffer, 10);
+    #else
+    itoa(number, buffer, 10);
+    #endif
     return std::string(buffer);
     #else
     return std::to_string(number);
