@@ -269,7 +269,7 @@ class WsjcppYamlCursor {
         // WsjcppYamlCursor &set(const std::string &sName, bool bValue);
         // WsjcppYamlCursor &remove(const std::string &sKey);
 
-        // comment 
+        // comment
         std::string comment();
         WsjcppYamlCursor &comment(const std::string& sComment);
 
@@ -279,6 +279,10 @@ class WsjcppYamlCursor {
         WsjcppYamlCursor &val(const char *sValue);
         int valInt() const;
         WsjcppYamlCursor &val(int nValue);
+        float valFloat() const;
+        WsjcppYamlCursor &val(float nValue);
+        double valDouble() const;
+        WsjcppYamlCursor &val(double nValue);
         bool valBool() const;
         WsjcppYamlCursor &val(bool bValue);
 
