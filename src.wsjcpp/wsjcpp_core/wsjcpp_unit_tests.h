@@ -17,7 +17,7 @@ class WsjcppUnitTestBase {
         virtual bool doAfterTest() = 0;
     protected:
         std::string TAG;
-        
+
         bool compareD(const std::string &sMark, double nValue, double nExpected);
         template<typename T1, typename T2> bool compare(const std::string &sMark, T1 tGotValue, T2 tExpectedValue) {
             if (tGotValue != tExpectedValue) {

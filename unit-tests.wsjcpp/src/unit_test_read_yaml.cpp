@@ -83,7 +83,7 @@ void UnitTestReadYaml::executeTest() {
         compare("has services.result", pServices->hasElement("result"), true);
         compare("services.result is map", pServices->getElement("result")->isMap(), true);
         compare("services.result keys size 5", pServices->getElement("result")->getKeys().size(), 5);
-        
+
         WsjcppYamlNode *pResult = pServices->getElement("result");
 
         compare("has services.result.build", pResult->hasElement("build"), true);
@@ -115,9 +115,9 @@ void UnitTestReadYaml::executeTest() {
         compare("has services.worker is map", pServices->getElement("worker")->isMap(), true);
         compare("services.worker keys size 3", pServices->getElement("worker")->getKeys().size(), 3);
         WsjcppYamlNode *pWorker = pServices->getElement("worker");
-        
+
         compare("has services.worker.build", pWorker->hasElement("build"), true);
-        
+
         compare("has services.worker.depends_on", pWorker->hasElement("depends_on"), true);
         compare("has services.worker.networks", pWorker->hasElement("networks"), true);
 
@@ -184,10 +184,10 @@ void UnitTestReadYaml::executeTest() {
 
         compare("has services.db.environment.POSTGRES_PASSWORD", pDbEnvironment->hasElement("POSTGRES_PASSWORD"), true);
         compare("services.db.environment.POSTGRES_PASSWORD", pDbEnvironment->getElement("POSTGRES_PASSWORD")->getValue(), "postgres");
-        
+
         compare("has services.db.volumes", pServicesDb->hasElement("volumes"), true);
         compare("services.db.volumes is array", pServicesDb->getElement("volumes")->isArray(), true);
-        
+
         WsjcppYamlNode *pDbVolumes = pServicesDb->getElement("volumes");
         compare("services.db.volumes size 1", pDbVolumes->getLength(), 1);
         compare("services.db.volumes val 0", pDbVolumes->getElement(0)->getValue(), "db-data:/var/lib/postgresql/data");
@@ -209,12 +209,12 @@ void UnitTestReadYaml::executeTest() {
 
         compare("has volumes.db-data", pVolumes->hasElement("db-data"), true);
         compare("has volumes.db-data is undefined", pVolumes->getElement("db-data")->isUndefined(), true);
-        compare("has volumes keys size 1", pVolumes->getKeys().size(), 1);  
+        compare("has volumes keys size 1", pVolumes->getKeys().size(), 1);
     }
 
     // networks
     {
-        compare("has networks", yaml.getRoot()->hasElement("networks"), true);    
+        compare("has networks", yaml.getRoot()->hasElement("networks"), true);
         compare("has networks is map", yaml.getRoot()->getElement("networks")->isMap(), true);
 
         WsjcppYamlNode *pNeworks = yaml.getRoot()->getElement("networks");

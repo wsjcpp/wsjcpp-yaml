@@ -39,6 +39,7 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 
 std::string WSJCPP_INT_TO_STR(int number) {
     #if defined(__CODEGEARC__) && !defined(_WIN64)
+    // TODO
     char buffer[] = {
         0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
         0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
@@ -55,6 +56,58 @@ std::string WSJCPP_INT_TO_STR(int number) {
     #else
     return std::to_string(number);
     #endif
+}
+
+std::string WSJCPP_FLOAT_TO_STR(float number) {
+    std::string ret;
+    #if defined(__CODEGEARC__) && !defined(_WIN64)
+    // TODO
+    char buffer[] = {
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0
+    };
+    #if __CODEGEARC__ == 0x0770
+    // 12.2
+    _itoa(number, buffer, 10);
+    #else
+    itoa(number, buffer, 10);
+    #endif
+    ret = std::string(buffer);
+    #else
+    ret = std::to_string(number);
+    #endif
+    ret.erase(std::find_if(ret.rbegin(), ret.rend(), [](unsigned char ch) {
+        return ch != '0';
+    }).base(), ret.end());
+    return ret;
+}
+
+std::string WSJCPP_DOUBLE_TO_STR(double number) {
+    std::string ret;
+    #if defined(__CODEGEARC__) && !defined(_WIN64)
+    // TODO
+    char buffer[] = {
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0
+    };
+    #if __CODEGEARC__ == 0x0770
+    // 12.2
+    _itoa(number, buffer, 10);
+    #else
+    itoa(number, buffer, 10);
+    #endif
+    ret = std::string(buffer);
+    #else
+    ret = std::to_string(number);
+    #endif
+    ret.erase(std::find_if(ret.rbegin(), ret.rend(), [](unsigned char ch) {
+        return ch != '0';
+    }).base(), ret.end());
+    return ret;
 }
 
 // ---------------------------------------------------------------------
@@ -1232,6 +1285,48 @@ int WsjcppYamlCursor::valInt() const {
         return nValue;
     }
     return 0;
+}
+
+float WsjcppYamlCursor::valFloat() const {
+    if (m_pCurrentNode != WSJCPP_NULL) {
+        std::string sValue = m_pCurrentNode->getValue();
+        float nValue = std::stof(sValue);
+        std::string sExpectedValue = WSJCPP_FLOAT_TO_STR(nValue);
+        if (sExpectedValue != sValue) {
+            std::string error_msg = TAG + ": valInt, Element must be float but have a string" + m_pCurrentNode->getForLogFormat() + "', but expected value is '" + sExpectedValue + "'";
+            throw std::runtime_error(error_msg);
+        }
+        return nValue;
+    }
+    return 0.0f;
+}
+
+WsjcppYamlCursor &WsjcppYamlCursor::val(float nValue) {
+    if (m_pCurrentNode != WSJCPP_NULL) {
+        m_pCurrentNode->setValue(WSJCPP_FLOAT_TO_STR(nValue));
+    }
+    return *this;
+}
+
+double WsjcppYamlCursor::valDouble() const {
+    if (m_pCurrentNode != WSJCPP_NULL) {
+        std::string sValue = m_pCurrentNode->getValue();
+        double nValue = std::stod(sValue);
+        std::string sExpectedValue = WSJCPP_DOUBLE_TO_STR(nValue);
+        if (sExpectedValue != sValue) {
+            std::string error_msg = TAG + ": valInt, Element must be float but have a string '" + m_pCurrentNode->getForLogFormat() + "', but expected value is '" + sExpectedValue + "'";
+            throw std::runtime_error(error_msg);
+        }
+        return nValue;
+    }
+    return 0.0f;
+}
+
+WsjcppYamlCursor &WsjcppYamlCursor::val(double nValue) {
+    if (m_pCurrentNode != WSJCPP_NULL) {
+        m_pCurrentNode->setValue(WSJCPP_DOUBLE_TO_STR(nValue));
+    }
+    return *this;
 }
 
 WsjcppYamlCursor &WsjcppYamlCursor::val(int nValue) {
