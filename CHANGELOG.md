@@ -5,14 +5,16 @@ All notable changes to wsjcpp-yaml project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v0.1.8] - 2022-01-12 (2022 Jan 12)
+## [v0.1.8] - 2025-06-03 (2025 Jun 3)
 
 - Fixed #35 Add valFloat / valDouble
 - Start migrating tests to cmake tests
 - Updated copyright
 - Fix for c++ builder 12.2
 - Make compatible code with compiler bcc32 C++ Builder
-
+- Redesign unit-test from unit-tests.wsjcpp/src/unit_test_yaml_parser_comments.cpp to src/tests/test_parser_comments.cpp
+- Removed .travis.yml
+- Prepare tests for #33
 
 ## [v0.1.7] - 2022-01-12 (2022 Jan 12)
 
