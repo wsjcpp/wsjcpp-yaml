@@ -35,9 +35,11 @@ int main() {
         ret = -1;
     }
 
+    std::string value_float = yaml["float"];
+
     std::string expected_val_str = "1.0001";
-    if (yaml.getRoot()->getElement("float")->getValue() != expected_val_str) {
-        std::cerr << "Parameter 'float' has value '" << yaml.getRoot()->getElement("float")->getValue() << "', but expected '" << expected_val_str << "'" << std::endl;
+    if (value_float != expected_val_str) {
+        std::cerr << "Parameter 'float' has value '" << value_float << "', but expected '" << expected_val_str << "'" << std::endl;
         ret = -1;
     }
 
