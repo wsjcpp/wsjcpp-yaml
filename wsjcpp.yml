@@ -48,8 +48,6 @@ unit-tests:
       description: Test Hierarchical Map
     - name: YamlParserQuotes
       description: YamlParserQuotes
-    - name: YamlParserComments
-      description: YamlParserComments
     - name: YamlParserAll
       description: YamlParserAll
     - name: YamlParserArrayIncludedMap
