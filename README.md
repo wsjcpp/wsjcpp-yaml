@@ -71,6 +71,12 @@ int main(int argc, char* argv[]) {
 
 ```
 
+More examples:
+
+- src/examples/example_iterate_array.cpp
+- src/examples/example_operators.cpp
+
+
 ## a little doc:
 
 ### class methods (WsjcppYaml)
