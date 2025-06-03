@@ -35,3 +35,10 @@ a_dict = {
 
 with open("example.yaml", 'w') as f:
     yaml.dump(a_dict, f,  default_flow_style=False, sort_keys=False)
+
+
+with open("example.yaml") as stream:
+    try:
+        print(yaml.safe_load(stream))
+    except yaml.YAMLError as exc:
+        print(exc)
