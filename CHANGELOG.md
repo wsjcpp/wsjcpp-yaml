@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [v0.1.8] - 2022-01-12 (2022 Jan 12)
 
 - Fixed #35 Add valFloat / valDouble
+- Start migrating tests to cmake tests
+- Updated copyright
+- Fix for c++ builder 12.2
+- Make compatible code with compiler bcc32 C++ Builder
+
 
 ## [v0.1.7] - 2022-01-12 (2022 Jan 12)
 

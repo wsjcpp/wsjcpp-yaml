@@ -22,43 +22,26 @@
 #
 # Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 
-cmake_minimum_required(VERSION 3.0)
-
-project(wsjcpp-yaml)
-
-# include(${CMAKE_CURRENT_SOURCE_DIR}/src.wsjcpp/CMakeLists.txt)
-
-set(CMAKE_CXX_STANDARD 17)
-set(EXECUTABLE_OUTPUT_PATH ${wsjcpp-yaml_SOURCE_DIR})
-
-# Sources
-
-set (WSJCPP_LIBRARIES "")
-set (WSJCPP_INCLUDE_DIRS "")
-set (WSJCPP_SOURCES "")
-
-# include header dirs
-list (APPEND WSJCPP_INCLUDE_DIRS "src")
-
-list (APPEND WSJCPP_SOURCES "src/wsjcpp_yaml.h")
-list (APPEND WSJCPP_SOURCES "src/wsjcpp_yaml.cpp")
-list (APPEND WSJCPP_SOURCES "src/main.cpp")
-list (APPEND WSJCPP_SOURCES "src/examples/example_iterate_array.cpp")
-list (APPEND WSJCPP_SOURCES "src/examples/example_operators.cpp")
-
-include_directories(${WSJCPP_INCLUDE_DIRS})
-
-add_executable ("wsjcpp-yaml" ${WSJCPP_SOURCES})
-
-target_link_libraries("wsjcpp-yaml" -lpthread ${WSJCPP_LIBRARIES} )
-
-install(
-    TARGETS
-        "wsjcpp-yaml"
-    RUNTIME DESTINATION
-        /usr/bin
+file(GLOB ALL_TESTS
+     "test_*.cpp"
 )
 
-# enable testing functionality
-enable_testing()
-add_subdirectory(src/tests)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY tests)
+
+list (APPEND TEST_YAML_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../wsjcpp_yaml.cpp")
+
+foreach(_TEST ${ALL_TESTS})
+    get_filename_component(TESTNAME ${_TEST} NAME_WE)
+    add_executable(${TESTNAME}
+        ${_TEST}
+        ${TEST_YAML_SOURCES}
+    )
+    target_link_libraries(${TESTNAME} -lpthread ${WSJCPP_LIBRARIES})
+
+    add_test(
+      NAME ${TESTNAME}
+      COMMAND $<TARGET_FILE:${TESTNAME}>
+    )
+    message(${CMAKE_CURRENT_BINARY_DIR}/tests)
+    set_target_properties (${TESTNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY tests)
+endforeach()
