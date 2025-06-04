@@ -1,37 +1,8 @@
-#include <wsjcpp_unit_tests.h>
-#include <vector>
 #include <iostream>
 #include <wsjcpp_yaml.h>
 
-// ---------------------------------------------------------------------
-// UnitTestLineParser
-
-class UnitTestLineParser : public WsjcppUnitTestBase {
-    public:
-        UnitTestLineParser();
-        virtual bool doBeforeTest() override;
-        virtual void executeTest() override;
-        virtual bool doAfterTest() override;
-};
-
-REGISTRY_WSJCPP_UNIT_TEST(UnitTestLineParser)
-
-UnitTestLineParser::UnitTestLineParser()
-    : WsjcppUnitTestBase("UnitTestLineParser") {
-    //
-}
-
-// ---------------------------------------------------------------------
-
-bool UnitTestLineParser::doBeforeTest() {
-    // do something before test
-    return true;
-}
-
-// ---------------------------------------------------------------------
-
-void UnitTestLineParser::executeTest() {
-    struct LineTest {
+int main() {
+     struct LineTest {
         LineTest(
             int nNumberOfTest,
             std::string sLine,
@@ -117,30 +88,55 @@ void UnitTestLineParser::executeTest() {
         "" // comment
     ));
 
+    int ret = 0;
+
     for (int i = 0; i < vTestLines.size(); i++) {
         LineTest test = vTestLines[i];
         std::string tagline = "{line:" + std::to_string(test.nNumberOfTest) + ": '" + test.sLine + "'}";
 
         WsjcppYamlParsebleLine line(test.nNumberOfTest);
         std::string sError;
-        if (!compare(tagline + ", parseLine", line.parseLine(test.sLine, sError), true)) {
-            WsjcppLog::err(tagline + ", parseLine", sError);
-            return;
+            // compare(tagline + ", parseLine",
+        if (!line.parseLine(test.sLine, sError)) {
+            std::cerr << tagline << ", parseLine: " << sError << std::endl;
+            ret = -1;
+            continue;
         }
 
-        compare(tagline + ", prefix", line.getPrefix(), test.sPrefix);
-        compare(tagline + ", arrayitem", line.isArrayItem(), test.isArrayItem);
-        compare(tagline + ", name", line.getName(), test.sName);
-        compare(tagline + ", name-has-quotes", line.getNameQuotes(), test.nNameQuotes);
-        compare(tagline + ", value", line.getValue(), test.sValue);
-        compare(tagline + ", value-quotes", line.getValueQuotes(), test.nValueQuotes);
-        compare(tagline + ", comment", line.getComment(), test.sComment);
+        if (line.getPrefix() != test.sPrefix) {
+            std::cerr << tagline << ", prefix expected '" << test.sPrefix << "', but got '" << line.getPrefix() << "'" << std::endl;
+            ret = -1;
+        }
+
+        if (line.isArrayItem() != test.isArrayItem) {
+            std::cerr << tagline << ", arrayitem expected" << std::endl;
+            ret = -1;
+        }
+
+        if (line.getName() != test.sName) {
+            std::cerr << tagline << ", name expected '" << test.sName << "', but got '" << line.getName() << "'" << std::endl;
+            ret = -1;
+        }
+
+        if (line.getValue() != test.sValue) {
+            std::cerr << tagline << ", value expected '" << test.sValue << "', but got '" << line.getValue() << "'" << std::endl;
+            ret = -1;
+        }
+
+        if (line.getComment() != test.sComment) {
+            std::cerr << tagline << ", comment expected '" << test.sComment << "', but got '" << line.getComment() << "'" << std::endl;
+            ret = -1;
+        }
+
+        if (line.getNameQuotes() != test.nNameQuotes) {
+            std::cerr << tagline << ", name-has-quotes expected" << std::endl;
+            ret = -1;
+        }
+
+        if (line.getValueQuotes() != test.nValueQuotes) {
+            std::cerr << tagline << ", value-quotes expected" << std::endl;
+            ret = -1;
+        }
     }
-}
-
-// ---------------------------------------------------------------------
-
-bool UnitTestLineParser::doAfterTest() {
-    // do somethig after test
-    return true;
+    return ret;
 }
