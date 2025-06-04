@@ -2,7 +2,7 @@ wsjcpp_version: v0.0.1
 cmake_minimum_required: 3.0
 cmake_cxx_standard: 17
 name: wsjcpp-yaml
-version: v0.1.8
+version: v0.1.9
 description: Read/Write yaml files
 issues: https://github.com/wsjcpp/wsjcpp-yaml/issues
 
@@ -74,3 +74,4 @@ unit-tests:
       description: ""
     - name: "KeepFormat"
       description: ""
+
