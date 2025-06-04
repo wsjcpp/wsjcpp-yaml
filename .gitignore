@@ -1,5 +1,6 @@
 wsjcpp-yaml
 /tmp
+/build
 .wsjcpp-yaml-logs/*
 .vscode
 .wsjcpp-cache/*

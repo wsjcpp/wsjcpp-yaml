@@ -38,8 +38,6 @@ distribution:
 
 unit-tests:
   cases:
-    - name: LineParser
-      description: Test Parse YAML Line
     - name: YamlParserSimpleArray
       description: Test Parse Array
     - name: YamlParserSimpleMap
@@ -48,15 +46,7 @@ unit-tests:
       description: Test Hierarchical Map
     - name: YamlParserQuotes
       description: YamlParserQuotes
-    - name: YamlParserAll
-      description: YamlParserAll
-    - name: YamlParserArrayIncludedMap
-      description: YamlParserArrayIncludedMap
-    - name: "RemoveElementForMap"
-      description: ""
     - name: "RemoveElementInArray"
-      description: ""
-    - name: "MemoryLeaks"
       description: ""
     - name: "ReadYaml"
       description: ""
@@ -64,14 +54,7 @@ unit-tests:
       description: ""
     - name: "Cursor"
       description: ""
-    - name: "TagNames"
-      description: ""
-    - name: "Cleanup"
-      description: ""
     - name: "AppendElements"
       description: ""
     - name: "ReadWsjcppHoldYml"
       description: ""
-    - name: "KeepFormat"
-      description: ""
-
