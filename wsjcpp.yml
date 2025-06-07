@@ -46,8 +46,6 @@ unit-tests:
       description: Test Hierarchical Map
     - name: YamlParserQuotes
       description: YamlParserQuotes
-    - name: "RemoveElementInArray"
-      description: ""
     - name: "ReadYaml"
       description: ""
     - name: "ReadWriteFile"
