@@ -325,7 +325,7 @@ bool WsjcppYamlNode::hasElement(const std::string &sName) {
 
 WsjcppYamlNode *WsjcppYamlNode::getElement(const std::string &sName) {
     if (m_nItemType != WSJCPP_YAML_NODE_MAP) {
-        throw std::runtime_error(TAG + ": getElement: Element must be map");
+        throw std::runtime_error(TAG + ": getElement (" + sName + "): Element must be map " + this->getForLogFormat());
     }
 
     for (unsigned int i = 0; i < m_vObjects.size(); i++) {
