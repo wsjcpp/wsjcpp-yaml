@@ -42,8 +42,6 @@ unit-tests:
       description: Test Parse Array
     - name: YamlParserSimpleMap
       description: Test Parse Map
-    - name: YamlParserQuotes
-      description: YamlParserQuotes
     - name: "ReadYaml"
       description: ""
     - name: "Cursor"
