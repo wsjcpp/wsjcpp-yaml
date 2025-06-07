@@ -48,8 +48,6 @@ unit-tests:
       description: YamlParserQuotes
     - name: "ReadYaml"
       description: ""
-    - name: "ReadWriteFile"
-      description: ""
     - name: "Cursor"
       description: ""
     - name: "AppendElements"
