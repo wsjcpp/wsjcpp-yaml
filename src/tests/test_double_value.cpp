@@ -30,7 +30,7 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <fstream>
 #include <wsjcpp_yaml.h>
 
-#ifdef WINDOWS
+#if defined(_WIN32)
 #include <direct.h>
 #define GetCurrentDir _getcwd
 #else
