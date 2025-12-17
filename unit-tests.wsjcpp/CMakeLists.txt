@@ -37,7 +37,6 @@ list (APPEND WSJCPP_INCLUDE_DIRS "src")
 list (APPEND WSJCPP_SOURCES "${CMAKE_SOURCE_DIR}/../unit-tests.wsjcpp/src/unit_test_yaml_parser_simple_array.cpp")
 list (APPEND WSJCPP_SOURCES "${CMAKE_SOURCE_DIR}/../unit-tests.wsjcpp/src/unit_test_yaml_parser_simple_map.cpp")
 list (APPEND WSJCPP_SOURCES "${CMAKE_SOURCE_DIR}/../unit-tests.wsjcpp/src/unit_test_read_yaml.cpp")
-list (APPEND WSJCPP_SOURCES "${CMAKE_SOURCE_DIR}/../unit-tests.wsjcpp/src/unit_test_cursor.cpp")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.user-custom.txt)
 
