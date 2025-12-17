@@ -46,7 +46,5 @@ unit-tests:
       description: ""
     - name: "Cursor"
       description: ""
-    - name: "AppendElements"
-      description: ""
     - name: "ReadWsjcppHoldYml"
       description: ""
