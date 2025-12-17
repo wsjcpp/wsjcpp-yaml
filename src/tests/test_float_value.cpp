@@ -27,6 +27,7 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <fstream>
 #include <wsjcpp_yaml.h>
 
 #ifdef WINDOWS
@@ -41,9 +42,16 @@ int main() {
     char buff[FILENAME_MAX];
     GetCurrentDir(buff, FILENAME_MAX);
     std::cout << "Current path: " << buff << std::endl;
+    std::string sFilepath = "../../../src/tests/data-tests/float-double/example.yml";
+    // find path
+    {
+        std::ifstream file_(sFilepath.c_str());
+        if (!file_) {
+            sFilepath = "../" + sFilepath;
+        }
+    }
 
     WsjcppYaml yaml;
-    std::string sFilepath = "../../../../src/tests/data-tests/float-double/example.yml";
     std::string sError;
     if (!yaml.loadFromFile(sFilepath, sError)) {
         std::cerr << "Error parsing: " << sError << std::endl;
