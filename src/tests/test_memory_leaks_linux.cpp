@@ -28,7 +28,12 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <fstream>
 #include <wsjcpp_yaml.h>
 
-#ifndef WINDOWS
+#if defined(_WIN32)
+int main() {
+    // for windows skip test
+    return 0;
+}
+#else
 
 #include "get_current_rss.h"
 #include "process_mem_usage.h"
