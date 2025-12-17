@@ -42,7 +42,5 @@ unit-tests:
       description: Test Parse Array
     - name: YamlParserSimpleMap
       description: Test Parse Map
-    - name: "ReadYaml"
-      description: ""
     - name: "ReadWsjcppHoldYml"
       description: ""
