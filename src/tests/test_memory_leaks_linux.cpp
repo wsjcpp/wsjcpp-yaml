@@ -27,6 +27,9 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <iostream>
 #include <fstream>
 #include <wsjcpp_yaml.h>
+
+#ifndef WINDOWS
+
 #include "get_current_rss.h"
 #include "process_mem_usage.h"
 
@@ -93,3 +96,5 @@ int main() {
 
     return 0;
 }
+
+#endif
