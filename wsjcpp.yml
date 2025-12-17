@@ -44,7 +44,5 @@ unit-tests:
       description: Test Parse Map
     - name: "ReadYaml"
       description: ""
-    - name: "Cursor"
-      description: ""
     - name: "ReadWsjcppHoldYml"
       description: ""
