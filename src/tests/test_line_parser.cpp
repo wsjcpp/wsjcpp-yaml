@@ -25,7 +25,30 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 */
 
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <wsjcpp_yaml.h>
+
+std::string test_line_parser_WSJCPP_INT_TO_STR(int number) {
+    #if defined(__CODEGEARC__) && !defined(_WIN64)
+    // TODO
+    char buffer[] = {
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0,
+        0x0,0x0,0x0,0x0, 0x0,0x0,0x0,0x0
+    };
+    #if __CODEGEARC__ == 0x0770
+    // 12.2
+    _itoa(number, buffer, 10);
+    #else
+    itoa(number, buffer, 10);
+    #endif
+    return std::string(buffer);
+    #else
+    return std::to_string(number);
+    #endif
+}
 
 int main() {
      struct LineTest {
@@ -118,7 +141,7 @@ int main() {
 
     for (int i = 0; i < vTestLines.size(); i++) {
         LineTest test = vTestLines[i];
-        std::string tagline = "{line:" + std::to_string(test.nNumberOfTest) + ": '" + test.sLine + "'}";
+        std::string tagline = "{line:" + test_line_parser_WSJCPP_INT_TO_STR(test.nNumberOfTest) + ": '" + test.sLine + "'}";
 
         WsjcppYamlParsebleLine line(test.nNumberOfTest);
         std::string sError;
