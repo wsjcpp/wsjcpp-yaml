@@ -35,8 +35,6 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <stdlib.h>
 #include <string.h>
 
-// ---------------------------------------------------------------------
-
 enum WsjcppYamlNodeType {
     WSJCPP_YAML_NODE_UNDEFINED = 0,
     WSJCPP_YAML_NODE_EMPTY = 1,
@@ -45,7 +43,11 @@ enum WsjcppYamlNodeType {
     WSJCPP_YAML_NODE_VALUE = 4
 };
 
-// ---------------------------------------------------------------------
+enum WsjcppYamlQuotes {
+    WSJCPP_YAML_QUOTES_NONE,
+    WSJCPP_YAML_QUOTES_DOUBLE,
+    WSJCPP_YAML_QUOTES_SINGLE
+};
 
 class WsjcppYamlPlaceInFile {
     public:
@@ -70,12 +72,6 @@ class WsjcppYamlPlaceInFile {
 
 // ---------------------------------------------------------------------
 // WsjcppYamlQuotes
-
-enum WsjcppYamlQuotes {
-    WSJCPP_YAML_QUOTES_NONE,
-    WSJCPP_YAML_QUOTES_DOUBLE,
-    WSJCPP_YAML_QUOTES_SINGLE
-};
 
 class IWsjcppYamlLog {
     public:

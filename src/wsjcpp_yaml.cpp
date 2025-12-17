@@ -716,7 +716,7 @@ void WsjcppYamlNode::throw_error(const std::string &sError) {
 }
 
 void WsjcppYamlNode::removeLastCharNewLine(std::string &sLine) {
-    int nLen = sLine.length();
+    size_t nLen = sLine.length();
     if (nLen > 0 && sLine[nLen - 1] == '\n') {
         sLine = sLine.substr(0, nLen - 1);
     }
@@ -766,7 +766,7 @@ std::string WsjcppYamlParsebleLine::getPrefix() {
 }
 
 int WsjcppYamlParsebleLine::getIndent() {
-    return m_sPrefix.length();
+    return int(m_sPrefix.length());
 }
 
 bool WsjcppYamlParsebleLine::isArrayItem() {
@@ -957,7 +957,7 @@ bool WsjcppYamlParsebleLine::parseLine(const std::string &sLine, std::string &sE
 bool WsjcppYamlParsebleLine::canTagName(const std::string &sVal) {
     std::string sTrim = sVal;
     sTrim = WsjcppYaml::trim(sTrim);
-    int nLen = sTrim.length();
+    size_t nLen = sTrim.length();
     if (nLen == 0) {
         return false;
     }
@@ -987,7 +987,7 @@ std::string WsjcppYamlParsebleLine::removeStringDoubleQuotes(const std::string &
         return sValue;
     }
     int nStartPos = 1;
-    int nEndPos = sValue.size()-1;
+    size_t nEndPos = sValue.size() - 1;
     std::string sRet = "";
     bool bEscape = false;
     for (int i = nStartPos; i < nEndPos; i++) {
@@ -1014,7 +1014,7 @@ std::string WsjcppYamlParsebleLine::removeStringSingleQuotes(const std::string &
         return sValue;
     }
     int nStartPos = 1;
-    int nEndPos = sValue.size()-1;
+    size_t nEndPos = sValue.size() - 1;
     std::string sRet = "";
     bool bEscape = false;
     for (int i = nStartPos; i < nEndPos; i++) {
@@ -1411,7 +1411,7 @@ void WsjcppYaml::info(const std::string &TAG, const std::string &sMessage) {
 std::vector<std::string> WsjcppYaml::splitToLines(const std::string &sBuffer) {
     std::vector<std::string> vLines;
     std::string sLine = "";
-    int nSize = sBuffer.length();
+    size_t nSize = sBuffer.length();
     for (int i = 0; i < nSize; i++) {
         char c = sBuffer[i];
         if (c == '\n') {
