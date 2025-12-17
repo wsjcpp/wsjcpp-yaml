@@ -50,7 +50,11 @@ include_directories(${WSJCPP_INCLUDE_DIRS})
 
 add_executable ("wsjcpp-yaml" ${WSJCPP_SOURCES})
 
-target_link_libraries("wsjcpp-yaml" -lpthread ${WSJCPP_LIBRARIES} )
+if(WIN32)
+    target_link_libraries("wsjcpp-yaml" ${WSJCPP_LIBRARIES} )
+else()
+    target_link_libraries("wsjcpp-yaml" -lpthread ${WSJCPP_LIBRARIES} )
+endif()
 
 install(
     TARGETS
