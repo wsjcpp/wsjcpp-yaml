@@ -25,12 +25,21 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 */
 
 #include <iostream>
+#include <fstream>
 #include <wsjcpp_yaml.h>
 #include "get_current_rss.h"
 #include "process_mem_usage.h"
 
 int createManyTimesObjects() {
-    const std::string sFilepath = "../../../../src/tests/data-tests/for-memory-leak/some.yml";
+    std::string sFilepath = "../../../src/tests/data-tests/for-memory-leak/some.yml";
+    // find path
+    {
+        std::ifstream file_(sFilepath.c_str());
+        if (!file_) {
+            sFilepath = "../" + sFilepath;
+        }
+    }
+
     std::string sError;
     for (int i = 0; i < 10000; i++) {
         WsjcppYaml yaml;
