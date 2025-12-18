@@ -36,8 +36,3 @@ distribution:
     target-file: wsjcpp_yaml.h
     type: "source-code"
 
-unit-tests:
-  cases:
-    - name: YamlParserSimpleArray
-      description: Test Parse Array
-
