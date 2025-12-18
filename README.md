@@ -1,6 +1,6 @@
 # wsjcpp-yaml
 
-[![Github Stars](https://img.shields.io/github/stars/wsjcpp/wsjcpp-yaml.svg?label=github%20%E2%98%85)](https://github.com/wsjcpp/wsjcpp-yaml) [![Github Stars](https://img.shields.io/github/contributors/wsjcpp/wsjcpp-yaml.svg)](https://github.com/wsjcpp/wsjcpp-yaml) [![Github Forks](https://img.shields.io/github/forks/wsjcpp/wsjcpp-yaml.svg?label=github%20forks)](https://github.com/wsjcpp/wsjcpp-yaml/network/members)
+[![Github Stars](https://img.shields.io/github/stars/wsjcpp/wsjcpp-yaml.svg?label=github%20%E2%98%85)](https://github.com/wsjcpp/wsjcpp-yaml) [![Github Stars](https://img.shields.io/github/contributors/wsjcpp/wsjcpp-yaml.svg)](https://github.com/wsjcpp/wsjcpp-yaml) [![Github Forks](https://img.shields.io/github/forks/wsjcpp/wsjcpp-yaml.svg?label=github%20forks)](https://github.com/wsjcpp/wsjcpp-yaml/network/members) [![wsjcpp-yaml C++](https://img.shields.io/badge/C++-11-green.svg)](https://github.com/wsjcpp/wsjcpp-yaml) [![wsjcpp-yaml C++](https://img.shields.io/badge/C++-17-green.svg)](https://github.com/wsjcpp/wsjcpp-yaml)
 
 C++ YAML parser/reader and writer of *.yaml/*.yml files with keeping user formatting 
 

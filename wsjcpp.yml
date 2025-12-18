@@ -1,6 +1,6 @@
-wsjcpp_version: v0.0.1
+wsjcpp_version: v0.2.4
 cmake_minimum_required: 3.0
-cmake_cxx_standard: 17
+cmake_cxx_standard: 11
 name: wsjcpp-yaml
 version: v0.1.10
 description: Read/Write yaml files

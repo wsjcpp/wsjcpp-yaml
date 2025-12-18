@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v0.1.10] - 2025-12-?? (2025 Dec ??)
 
+- Downgrade min c++ standart to C++11
 - Fixed #38: TODO escaping names
 - Fixed #24: Auto detect quotes on setValue setName
 
