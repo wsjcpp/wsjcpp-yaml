@@ -28,25 +28,12 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <sstream>
 #include <fstream>
 #include <wsjcpp_yaml.h>
+#include "helpers.h"
 
 int main() {
-    std::string sFilepath = "../../../src/tests/data/read-write-file/docker-compose.yml";
-    // find path
-    {
-        std::ifstream file_(sFilepath.c_str());
-        if (!file_) {
-            sFilepath = "../" + sFilepath;
-        }
-    }
 
-    std::string sFilepathOutput = "../../../src/tests/data/read-write-file/docker-compose.output.yml";
-    // find path
-    {
-        std::ifstream file_(sFilepathOutput.c_str());
-        if (!file_) {
-            sFilepathOutput = "../" + sFilepathOutput;
-        }
-    }
+    std::string sFilepath = find_test_data_file("data/read-write-file/docker-compose.yml");
+    std::string sFilepathOutput = find_test_data_file("data/read-write-file/docker-compose.output.yml");
 
     WsjcppYaml yaml;
     std::string sError;

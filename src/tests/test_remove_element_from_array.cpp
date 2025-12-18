@@ -25,18 +25,11 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 */
 
 #include <iostream>
-#include <fstream>
 #include <wsjcpp_yaml.h>
+#include "helpers.h"
 
 int main() {
-    std::string sFilepath = "../../../src/tests/data/remove-element-from-array.yml";
-    // find path
-    {
-        std::ifstream file_(sFilepath.c_str());
-        if (!file_) {
-            sFilepath = "../" + sFilepath;
-        }
-    }
+    std::string sFilepath = find_test_data_file("data/remove-element-from-array.yml");
 
     WsjcppYaml yaml;
     std::string sError;

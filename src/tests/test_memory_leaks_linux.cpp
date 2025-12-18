@@ -25,8 +25,8 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 */
 
 #include <iostream>
-#include <fstream>
 #include <wsjcpp_yaml.h>
+#include "helpers.h"
 
 #if defined(_WIN32)
 int main() {
@@ -39,14 +39,7 @@ int main() {
 #include "process_mem_usage.h"
 
 int createManyTimesObjects() {
-    std::string sFilepath = "../../../src/tests/data/for-memory-leak/some.yml";
-    // find path
-    {
-        std::ifstream file_(sFilepath.c_str());
-        if (!file_) {
-            sFilepath = "../" + sFilepath;
-        }
-    }
+    std::string sFilepath = find_test_data_file("data/for-memory-leak/some.yml");
 
     std::string sError;
     for (int i = 0; i < 10000; i++) {

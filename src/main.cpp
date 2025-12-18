@@ -34,8 +34,6 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include "examples.h"
 #include "wsjcpp_yaml.h"
 
-// #include "wsjcpp_core.h"
-
 class MyLogger : public IWsjcppYamlLog {
     public:
         // IWsjcppYamlLog
@@ -76,19 +74,11 @@ int _tmain(int argc, _TCHAR* argv[]) {
 int main(int argc, char* argv[]) {
 #endif
     std::string TAG = "MAIN";
-    // WsjcppCore::initRandom();
-    // std::string appName = std::string(WSJCPP_APP_NAME);
-    // std::string appVersion = std::string(WSJCPP_APP_VERSION);
-    // std::string appLogPath = ".wsjcpp-yaml-logs";
-    // WsjcppLog::setLogDirectory(appLogPath);
-    // if (!WsjcppCore::dirExists(appLogPath)) {
-    //     WsjcppCore::makeDir(appLogPath);
-    // }
     MyLogger *pLogger = new MyLogger();
 
     WsjcppYaml yaml;
     yaml.setLogger(pLogger);
-    std::string sError; 
+    std::string sError;
     std::string sFilePath = "./unit-tests.wsjcpp/data-tests/read-file/example-voiting-app/docker-compose.yml";
     std::cout << "Reading file " << sFilePath << "..." << std::endl;
     if (!yaml.loadFromFile(sFilePath, sError)) {
@@ -97,7 +87,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     std::cout << "Done." << std::endl;
-    
+
     std::cout << "Saving to file " << sFilePath << "..." << std::endl;
     if (!yaml.saveToFile(sFilePath, sError)) {
         std::cerr << "Could not save data to file: " << sFilePath.c_str() << std::endl << "Error: " << sError.c_str() << std::endl;

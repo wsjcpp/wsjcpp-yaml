@@ -29,27 +29,11 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <cmath>
 #include <fstream>
 #include <wsjcpp_yaml.h>
-
-#if defined(_WIN32)
-#include <direct.h>
-#define GetCurrentDir _getcwd
-#else
-#include <unistd.h>
-#define GetCurrentDir getcwd
-#endif
+#include "helpers.h"
 
 int main() {
-    char buff[FILENAME_MAX];
-    GetCurrentDir(buff, FILENAME_MAX );
-    std::cout << "Current path: " << buff << std::endl;
-    std::string sFilepath = "../../../src/tests/data/float-double/example.yml";
-    // find path
-    {
-        std::ifstream file_(sFilepath.c_str());
-        if (!file_) {
-            sFilepath = "../" + sFilepath;
-        }
-    }
+    std::string sFilepath = find_test_data_file("data/float-double/example.yml");
+
     WsjcppYaml yaml;
     std::string sError;
     if (!yaml.loadFromFile(sFilepath, sError)) {
