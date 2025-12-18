@@ -42,7 +42,7 @@ int main() {
     char buff[FILENAME_MAX];
     GetCurrentDir(buff, FILENAME_MAX );
     std::cout << "Current path: " << buff << std::endl;
-    std::string sFilepath = "../../../src/tests/data-tests/float-double/example.yml";
+    std::string sFilepath = "../../../src/tests/data/float-double/example.yml";
     // find path
     {
         std::ifstream file_(sFilepath.c_str());

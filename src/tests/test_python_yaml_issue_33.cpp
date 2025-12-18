@@ -33,7 +33,7 @@ int main() {
     // TODO
     return 0;
     WsjcppYaml yaml;
-    std::string sFilepath = "../../../../src/tests/data-tests/python_yaml_issue_33/example.yaml";
+    std::string sFilepath = "../../../../src/tests/data/python_yaml_issue_33/example.yaml";
     std::string sError;
     if (!yaml.loadFromFile(sFilepath, sError)) {
         std::cerr << "Error parsing: " << sError << std::endl;
