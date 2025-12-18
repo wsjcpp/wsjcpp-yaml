@@ -28,6 +28,7 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <iostream>
 #include <cmath>
 #include <fstream>
+#include <cfloat>
 #include <wsjcpp_yaml.h>
 #include "helpers.h"
 
@@ -62,7 +63,7 @@ int main() {
 
     float val_float = yaml["float"].valFloat();
     float expected_float = 1.0001f;
-    if (abs(val_float - expected_float) > std::numeric_limits<float>::epsilon()) {
+    if (abs(val_float - expected_float) > FLT_EPSILON) {
         std::cerr << "Parameter 'float' has value '" << val_float << "', but expected '" << expected_float << "'" << std::endl;
         ret = -1;
     }

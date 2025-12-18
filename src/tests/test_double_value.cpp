@@ -28,6 +28,7 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 #include <iostream>
 #include <cmath>
 #include <fstream>
+#include <cfloat>
 #include <wsjcpp_yaml.h>
 #include "helpers.h"
 
@@ -63,7 +64,7 @@ int main() {
     // std::numeric_limits<double>::epsilon() => 2.22045e-16
     // std::numeric_limits<float>::epsilon() => 1.19209e-07
     // abs(val_double - expected_double) => 3.31879e-08
-    if (abs(val_double - expected_double) > std::numeric_limits<float>::epsilon()) {
+    if (abs(val_double - expected_double) > FLT_EPSILON) {
         std::cerr << "Parameter 'double' has value number '" << val_double << "', but expected '" << expected_double << "'" << std::endl;
         ret = -1;
     }
@@ -78,13 +79,13 @@ int main() {
 
     expected_double = 1.0003f;
     val_double = yaml["double"].valDouble();
-    if (abs(val_double - expected_double) > std::numeric_limits<float>::epsilon()) {
+    if (abs(val_double - expected_double) > FLT_EPSILON) {
         std::cerr << "Parameter 'double' has value number '" << val_double << "', but expected '" << expected_double << "'" << std::endl;
         ret = -1;
     }
     float val_double_like_float = yaml["double"].valFloat();
     float expected_float = 1.0003f;
-    if (abs(val_double_like_float - expected_float) > std::numeric_limits<float>::epsilon()) {
+    if (abs(val_double_like_float - expected_float) > FLT_EPSILON) {
         std::cerr << "Parameter 'double' has value number (like float) '" << val_double_like_float << "', but expected '" << expected_float << "'" << std::endl;
         ret = -1;
     }
