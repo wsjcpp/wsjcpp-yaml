@@ -5,6 +5,11 @@ All notable changes to wsjcpp-yaml project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.1.9] - 2025-12-18 (2025 Dec 18)
+
+- Migrated unit-tests.wsjcpp to ctest
+- Fixed config for .github actions
+
 ## [v0.1.8] - 2025-06-03 (2025 Jun 3)
 
 - Fixed #35 Add valFloat / valDouble
