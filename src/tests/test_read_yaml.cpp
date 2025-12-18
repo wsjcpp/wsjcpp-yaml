@@ -28,7 +28,7 @@ Official Source Code: https://github.com/wsjcpp/wsjcpp-yaml
 
 int main() {
     WsjcppYaml yaml;
-    std::string sFilepath = "../../../../src/tests/data-tests/read-file/example-voiting-app/docker-compose.yml";
+    std::string sFilepath = "../../../../src/tests/data/read-file/example-voiting-app/docker-compose.yml";
     std::string sError;
     if (!yaml.loadFromFile(sFilepath, sError)) {
         std::cerr << "Error parsing: " << sError << std::endl;

@@ -39,7 +39,7 @@ int main() {
 #include "process_mem_usage.h"
 
 int createManyTimesObjects() {
-    std::string sFilepath = "../../../src/tests/data-tests/for-memory-leak/some.yml";
+    std::string sFilepath = "../../../src/tests/data/for-memory-leak/some.yml";
     // find path
     {
         std::ifstream file_(sFilepath.c_str());
