@@ -218,6 +218,10 @@ std::string WsjcppYamlNode::getComment() {
 
 void WsjcppYamlNode::setName(const std::string &sName, WsjcppYamlQuotes nNameQuotes) {
     m_sName = sName;
+    if (m_sName.find('\n') != std::string::npos) {
+        // automaticly set quotes double for escaping
+        nNameQuotes = WSJCPP_YAML_QUOTES_DOUBLE;
+    }
     m_nNameQuotes = nNameQuotes;
 }
 
@@ -524,6 +528,10 @@ void WsjcppYamlNode::setValue(const std::string &sValue, WsjcppYamlQuotes nQuote
     if (m_nItemType != WSJCPP_YAML_NODE_VALUE) {
         throw std::runtime_error(TAG + ": setValue, Element must be value for " + this->getForLogFormat());
     }
+    if (sValue.find('\n') != std::string::npos) {
+        // automaticly set quotes double
+        nQuotes = WSJCPP_YAML_QUOTES_DOUBLE;
+    }
     m_nValueQuotes = nQuotes;
     m_sValue = sValue;
 }
@@ -534,9 +542,8 @@ WsjcppYamlQuotes WsjcppYamlNode::getValueQuotes() {
 
 std::string WsjcppYamlNode::getSerializedName() {
     std::string sRet = "";
-    // TODO escape quotes
     if (this->getNameQuotes() == WSJCPP_YAML_QUOTES_DOUBLE) {
-        sRet += "\"" + this->getName() + "\"";
+        sRet += "\"" + escapingString(this->getName()) + "\"";
     } else if (this->getNameQuotes() == WSJCPP_YAML_QUOTES_SINGLE) {
         sRet += "\'" + this->getName() + "\'";
     } else {
@@ -549,7 +556,7 @@ std::string WsjcppYamlNode::toString(std::string sIndent) {
     std::string sRet = "";
     if (this->isValue()) {
         if (m_nValueQuotes == WSJCPP_YAML_QUOTES_DOUBLE) {
-            sRet = "\"" + m_sValue + "\"";
+            sRet = "\"" + escapingString(m_sValue) + "\"";
         } else if (m_nValueQuotes == WSJCPP_YAML_QUOTES_SINGLE) {
             sRet = "\'" + m_sValue + "\'";
         } else {
@@ -720,6 +727,19 @@ void WsjcppYamlNode::removeLastCharNewLine(std::string &sLine) {
     if (nLen > 0 && sLine[nLen - 1] == '\n') {
         sLine = sLine.substr(0, nLen - 1);
     }
+}
+
+std::string WsjcppYamlNode::escapingString(const std::string &sVal) {
+    size_t nLen = sVal.length();
+    std::string res;
+    for (int i = 0; i < nLen; i++) {
+        if (sVal[i] == '\n') {
+            res += "\\n";
+        } else {
+            res += sVal[i];
+        }
+    }
+    return res;
 }
 
 bool WsjcppYamlNode::hasContent(const std::string &sVal) {

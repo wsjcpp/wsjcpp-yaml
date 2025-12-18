@@ -169,6 +169,7 @@ class WsjcppYamlNode {
     private:
         void throw_error(const std::string &sError);
         void removeLastCharNewLine(std::string &sLine);
+        std::string escapingString(const std::string &sVal);
         bool hasContent(const std::string &sVal);
         bool hasObjects();
         std::string TAG;
