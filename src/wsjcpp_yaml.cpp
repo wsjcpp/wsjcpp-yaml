@@ -318,7 +318,20 @@ bool WsjcppYamlNode::setElement(const std::string &sName, WsjcppYamlNode *pItem)
             "(" + m_placeInFile.getFilename() + ":" + WSJCPP_INT_TO_STR(m_placeInFile.getNumberOfLine()) + ") "
             "already has element with this name: '" + sName + "'");
     }
-    m_vObjects.push_back(pItem); // TODO create clone
+
+    if (m_vObjects.size() == 0 || getParent() == WSJCPP_NULL) {
+        m_vObjects.push_back(pItem); // TODO create clone
+        return true;
+    }
+
+    // fix issue 30
+    WsjcppYamlNode *prevNode = m_vObjects[m_vObjects.size()-1];
+    if (prevNode != WSJCPP_NULL && prevNode->isEmpty() && prevNode->getComment() == "") {
+        m_vObjects[m_vObjects.size()-1] = pItem; // TODO create clone
+        m_vObjects.push_back(prevNode); // TODO create clone
+    } else {
+        m_vObjects.push_back(pItem); // TODO create clone
+    }
     return true;
 }
 

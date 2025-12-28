@@ -71,7 +71,7 @@ int main() {
     }
 
     if (sOutput != sInput) {
-        std::cerr << "sOutput != sInput" << std::endl;
+        std::cerr << "sOutput != sInput" << "Expected: \n-----\n" << sInput << "\n-----\nbut got: \n-----\n" << sOutput << "\n-----\n" << std::endl;
         return -1;
     }
 
