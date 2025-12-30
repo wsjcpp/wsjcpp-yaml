@@ -5,6 +5,9 @@ All notable changes to wsjcpp-yaml project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.1.11] - 2025-12-?? (2026 Dec ??)
+
+
 ## [v0.1.10] - 2025-12-30 (2025 Dec 30)
 
 - Downgrade min c++ standart to C++11
