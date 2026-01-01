@@ -44,14 +44,25 @@ int main() {
         return -1;
     }
 
-    WsjcppYamlNode *pSome = yaml.getRoot()->getElement("some")->getElement(0);
-    pSome->setElementValue("n3", "3");
+    WsjcppYamlNode *pSome = yaml.getRoot()->getElement("some");
+    WsjcppYamlNode *pSome0 = pSome->getElement(0);
+    pSome0->setElementValue("n3", "3");
+
+    // WsjcppYamlNode *pDist = m_yamlPackageInfo.getRoot()->getElement("distribution");
+    WsjcppYamlPlaceInFile placeInFile;
+
+    WsjcppYamlNode *pItemMap = new WsjcppYamlNode(pSome, &yaml, placeInFile, WSJCPP_YAML_NODE_MAP);
+    pSome->appendElement(pItemMap);
+    pItemMap->setElementValue("p4", "val4");
+    pItemMap->setElementValue("p5", "val5");
 
     std::string sExpectedYaml =
         "some:\n"
         "  - n1: 1\n"
         "    n2: 2\n"
         "    n3: 3\n"
+        "  - p4: val4\n"
+        "    p5: val5\n"
         "\n"
         "some2: r"
     ;
