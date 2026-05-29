@@ -499,7 +499,7 @@ bool WsjcppYamlNode::appendElementValue(const std::string &sValue, WsjcppYamlQuo
 
 bool WsjcppYamlNode::removeElement(int i) {
     if (m_nItemType != WSJCPP_YAML_NODE_ARRAY) {
-        throw std::runtime_error(TAG + ": appendElement, Element must be array for " + this->getForLogFormat());
+        throw std::runtime_error(TAG + ": removeElement, Element must be array for " + this->getForLogFormat());
     }
     int nCounter = -1;
     WsjcppYamlNode *pItem = WSJCPP_NULL;
@@ -513,7 +513,7 @@ bool WsjcppYamlNode::removeElement(int i) {
         }
     }
     if (pItem == WSJCPP_NULL) {
-        throw std::runtime_error(TAG + ": getElement(" + WSJCPP_INT_TO_STR(i) +  "), Out of range in array for '" + this->getPlaceInFile().getLine() + "'");
+        throw std::runtime_error(TAG + ": removeElement(" + WSJCPP_INT_TO_STR(i) +  "), Out of range in array for '" + this->getPlaceInFile().getLine() + "'");
     }
     std::vector<WsjcppYamlNode *>::iterator it;
     for (it = m_vObjects.begin(); it != m_vObjects.end(); ++it) {
